@@ -9,7 +9,8 @@
 
 ## 🙋🏻‍♀️ Page Partner의 FE Developer를 소개합니다!
 
-| <a href="https://github.com/yeon-yeon1"><img src="https://avatars.githubusercontent.com/u/158417764?v=4" width="120px;" alt=""/></a>| --- |
+| <a href="https://github.com/yeon-yeon1"><img src="https://avatars.githubusercontent.com/u/158417764?v=4" width="120px;" alt=""/></a>|
+| --- |
 | 노진경 |
 
 <br>
@@ -168,7 +169,6 @@ develop ← 작업 브랜치
  ┃ ┣ 📂pages
  ┃ ┃ ┣ 📂auth
  ┃ ┃ ┣ 📂splash
- ┃ ┃ ┣ 📂landing
  ┃ ┃ ┣ 📂qna
  ┃ ┃ ┣ 📂map
  ┃ ┃ ┗ 📂notFound

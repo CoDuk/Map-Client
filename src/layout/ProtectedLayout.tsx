@@ -1,16 +1,16 @@
-import { Outlet, Navigate } from "react-router-dom"
-
-// TODO: 실제 인증 상태는 Context API, Redux 등에서 가져오기
-const isAuthenticated = false
+import { Outlet, Navigate } from "react-router-dom";
+import { getAccessToken } from "@/apis/client";
 
 export default function ProtectedLayout() {
+  const isAuthenticated = Boolean(getAccessToken());
+
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/" replace />;
   }
 
   return (
     <div className="protected-layout">
       <Outlet />
     </div>
-  )
+  );
 }
