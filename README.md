@@ -16,7 +16,8 @@
 <br>
 
 <!-- repobeats 인사이트 추가하기 -->
-<!-- https://repobeats.axiom.co/configs/b988b79a458e3b8628ca05ca906f60a8bd25b06a -->
+## 📊 Insights
+![Aanalyticst](https://repobeats.axiom.co/api/embed/e8b2686ca01a8e3a949e83f0e8a8997c7af974fc.svg "Repobeats analytics image")
 
 ## 📚 서비스 소개
 
