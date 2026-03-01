@@ -1,7 +1,7 @@
 
 <div align="center">
 
-# 서비스명
+# Map in Duksung
 
 </div>
 
@@ -9,9 +9,8 @@
 
 ## 🙋🏻‍♀️ Page Partner의 FE Developer를 소개합니다!
 
-| 해당 사람 이미지| <a href="https://github.com/yeon-yeon1"><img src="https://avatars.githubusercontent.com/u/158417764?v=4" width="120px;" alt=""/></a> |
-| --- | --- |
-| 사람 | 노진경 
+| <a href="https://github.com/yeon-yeon1"><img src="https://avatars.githubusercontent.com/u/158417764?v=4" width="120px;" alt=""/></a>| --- |
+| 노진경 |
 
 <br>
 
@@ -20,8 +19,11 @@
 ![Aanalyticst](https://repobeats.axiom.co/api/embed/e8b2686ca01a8e3a949e83f0e8a8997c7af974fc.svg "Repobeats analytics image")
 
 ## 📚 서비스 소개
-
+Map In Duksung은
+덕성여자대학교 학생들을 위한 덕성 메일 인증 기반 캠퍼스 맵 웹 서비스입니다.
 <br>
+학교 건물의 구조와 공간 정보를
+한눈에, 정확하게, 그리고 빠르게 확인할 수 있도록 설계되었습니다.
 
 ## 💻 기술 스택
 
