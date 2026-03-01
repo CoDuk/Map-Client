@@ -1,10 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Logo from '@/assets/logo.svg'
 import LogoName from '@/assets/logoName.svg'
 import AlertIcon from '@/assets/alert.svg'
 import NextIcon from '@/assets/nextB.svg'
 import NextIconB from '@/assets/nextburgun.svg'
 import { sendAuthEmailCode } from '@/apis/auth/email'
+import { verifyAuthEmailCode } from '@/apis/auth/verify'
+import MailVerificationSkeleton from '@/pages/splash/components/MailVerificationSkeleton'
 
 export default function SplashPage() {
   const [animate, setAnimate] = useState(false)
@@ -17,7 +20,13 @@ export default function SplashPage() {
   const [secondsLeft, setSecondsLeft] = useState(0)
   const [otp, setOtp] = useState<string[]>(Array(6).fill(''))
   const otpRefs = useRef<Array<HTMLInputElement | null>>([])
+  const lastVerifyCodeRef = useRef<string>('')
   const [isResending, setIsResending] = useState(false)
+  const [isVerifying, setIsVerifying] = useState(false)
+  const [sendError, setSendError] = useState<string | null>(null)
+  const [verifyError, setVerifyError] = useState<string | null>(null)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -54,15 +63,27 @@ export default function SplashPage() {
 
   const handleSendCode = async () => {
     if (!email || isSending || didSend) return
+
     try {
+      setSendError(null)
       setIsSending(true)
-      await sendAuthEmailCode(email)
-    } catch (e) {
-      console.error(e)
-    } finally {
+      const res = await sendAuthEmailCode(email)
+
+      if (!res?.isSuccess) {
+        throw new Error(res?.message || '인증 코드 발송에 실패했습니다.')
+      }
+
       setDidSend(true)
       setShowOtp(false)
       setOtp(Array(6).fill(''))
+      setVerifyError(null)
+      lastVerifyCodeRef.current = ''
+
+    } catch (e) {
+      const message = e instanceof Error ? e.message : '인증 코드 발송에 실패했습니다.'
+      setSendError(message)
+      setDidSend(false)
+    } finally {
       setIsSending(false)
     }
   }
@@ -71,17 +92,25 @@ export default function SplashPage() {
     if (!email || isResending) return
     try {
       setIsResending(true)
-      await sendAuthEmailCode(email)
+      const res = await sendAuthEmailCode(email)
+
+      if (!res?.isSuccess) {
+        throw new Error(res?.message || '인증 코드 재전송에 실패했습니다.')
+      }
+
+      setOtp(Array(6).fill(''))
+      setVerifyError(null)
+      lastVerifyCodeRef.current = ''
+      setSecondsLeft(300)
     } catch (e) {
       console.error(e)
     } finally {
-      setOtp(Array(6).fill(''))
-      setSecondsLeft(300)
       setIsResending(false)
     }
   }
 
   const handleOtpChange = (index: number, value: string) => {
+    setVerifyError(null)
     const v = value.replace(/[^0-9]/g, '').slice(-1)
     setOtp((prev) => {
       const next = [...prev]
@@ -98,6 +127,82 @@ export default function SplashPage() {
       otpRefs.current[index - 1]?.focus()
     }
   }
+
+  const getDeviceId = () => {
+    const key = 'x-device-id'
+    const existing = localStorage.getItem(key)
+    if (existing) return existing
+
+    const next =
+      typeof crypto !== 'undefined' && 'randomUUID' in crypto
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(16).slice(2)}`
+
+    localStorage.setItem(key, next)
+    return next
+  }
+
+  const handleOtpPaste = (index: number, e: React.ClipboardEvent<HTMLInputElement>) => {
+    const raw = e.clipboardData.getData('text')
+    const digits = raw.replace(/[^0-9]/g, '').slice(0, 6).split('')
+    if (digits.length === 0) return
+
+    e.preventDefault()
+
+    setOtp((prev) => {
+      const next = [...prev]
+      for (let i = 0; i < 6 - index; i += 1) {
+        if (!digits[i]) break
+        next[index + i] = digits[i]
+      }
+      return next
+    })
+
+    const lastIndex = Math.min(index + digits.length - 1, 5)
+    otpRefs.current[lastIndex]?.focus()
+  }
+
+  useEffect(() => {
+    if (!showOtp) return
+    if (!email) return
+    if (isVerifying) return
+
+    const code = otp.join('')
+    const isComplete = code.length === 6 && otp.every((d) => d.length === 1)
+
+    if (!isComplete) {
+      lastVerifyCodeRef.current = ''
+      return
+    }
+
+    if (lastVerifyCodeRef.current === code) return
+    lastVerifyCodeRef.current = code
+
+    ;(async () => {
+      try {
+        setVerifyError(null)
+        setIsVerifying(true)
+        const deviceId = getDeviceId()
+        const res = await verifyAuthEmailCode({ duksungId: email, code, deviceId })
+
+        if (res?.result?.accessToken) {
+          localStorage.setItem('accessToken', res.result.accessToken)
+          navigate('/main')
+        }
+      } catch (e) {
+        const raw = e instanceof Error ? e.message : ''
+        const lower = raw.toLowerCase()
+        if (raw.includes('만료') || lower.includes('expired')) {
+          setVerifyError('인증번호가 만료되었습니다.')
+        } else {
+          setVerifyError('인증번호가 일치하지 않습니다.')
+        }
+        lastVerifyCodeRef.current = ''
+      } finally {
+        setIsVerifying(false)
+      }
+    })()
+  }, [email, otp, showOtp])
 
   return (
     <div className="relative min-h-screen bg-cream-100 overflow-hidden">
@@ -136,6 +241,12 @@ export default function SplashPage() {
                     onChange={handleChange}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault()
+                        handleSendCode()
+                      }
+                    }}
                     className={`w-full bg-transparent outline-none text-center text-[14px] font-medium truncate ${
                       isCommitted ? 'text-rose-300' : 'text-neutral-300'
                     } placeholder-neutral-100`}
@@ -163,6 +274,16 @@ export default function SplashPage() {
               ) : null}
             </div>
 
+            {sendError ? (
+              <div className="mt-2 w-[317px] text-center text-primary text-[12px] font-medium">
+                {sendError}
+              </div>
+            ) : null}
+
+            {isSending && !didSend ? (
+              <MailVerificationSkeleton className="mt-6" />
+            ) : null}
+
             {didSend && !showOtp ? (
               <a
                 href="https://mail.duksung.ac.kr/account/login.do"
@@ -172,7 +293,7 @@ export default function SplashPage() {
                 className="mt-[18px] text-primary text-[14px] font-bold flex items-center"
               >
                 덕성 메일 바로 가기
-              <img src={NextIconB} alt="next" />
+                <img src={NextIconB} alt="next" />
               </a>
             ) : null}
 
@@ -189,8 +310,10 @@ export default function SplashPage() {
                         value={digit}
                         onChange={(e) => handleOtpChange(i, e.target.value)}
                         onKeyDown={(e) => handleOtpKeyDown(i, e)}
+                        onPaste={(e) => handleOtpPaste(i, e)}
                         inputMode="numeric"
                         maxLength={1}
+                        disabled={isVerifying}
                         className="w-[35px] bg-transparent outline-none text-center text-primary text-[36px] font-bold"
                       />
                       <div className="w-[35px] h-[2px] bg-primary" />
@@ -202,16 +325,27 @@ export default function SplashPage() {
                   </div>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={handleResend}
-                  disabled={isResending}
-                  className={`mt-[20px] text-primary-dark text-[10px] font-medium underline ${
-                    isResending ? 'opacity-60' : 'opacity-100'
-                  }`}
-                >
-                  인증 번호 재전송
-                </button>
+                {verifyError ? (
+                  <div className="mt-3 w-[317px] text-center text-primary text-[12px] font-medium">
+                    {verifyError}
+                  </div>
+                ) : null}
+
+                {isResending ? (
+                  <MailVerificationSkeleton className="mt-6" />
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleResend}
+                    className="mt-[20px] text-primary-dark text-[10px] font-medium underline"
+                  >
+                    <a
+                      href="https://mail.duksung.ac.kr/account/login.do"
+                      target="_blank">
+                    인증 번호 재전송
+                    </a>
+                  </button>
+                )}
               </div>
             ) : null}
 

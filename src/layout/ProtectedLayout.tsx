@@ -1,16 +1,16 @@
-import { Outlet, Navigate } from "react-router-dom"
-
+import { Outlet, Navigate } from "react-router-dom";
+import { getAccessToken } from "@/apis/client";
 
 export default function ProtectedLayout() {
-  const isAuthenticated = true // TODO: 실제 인증 상태로 변경
+  const isAuthenticated = Boolean(getAccessToken());
 
   if (!isAuthenticated) {
-    return <Navigate to="/landing" replace />
+    return <Navigate to="/" replace />;
   }
 
   return (
     <div className="protected-layout">
       <Outlet />
     </div>
-  )
+  );
 }
