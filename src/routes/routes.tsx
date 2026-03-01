@@ -1,18 +1,28 @@
 import { createBrowserRouter } from "react-router-dom"
 import type { RouteObject } from "react-router-dom"
-import HomePage from "@/pages/Home/HomePage"
-import LoginPage from "@/pages/Auth/LoginPage"
-import NotFoundPage from "@/pages/NotFound/NotFoundPage"
-import RootLayout from "@/components/RootLayout"
-import ProtectedLayout from "@/components/ProtectedLayout"
+import SplashPage from "@/pages/splash/SplashPage"
+import LandingPage from "@/pages/landing/LandingPage"
+import LoginPage from "@/pages/auth/LoginPage"
+import MainPage from "@/pages/map/MainPage"
+import MapPage from "@/pages/map/MapPage"
+import QnaPage from "@/pages/qna/QnaPage"
+import AdminMode from "@/pages/qna/AdminMode"
+import NotFoundPage from "@/pages/notFound/NotFoundPage"
+import RootLayout from "@/layout/RootLayout"
+import ProtectedLayout from "@/layout/ProtectedLayout"
 
 const publicChildren: RouteObject[] = [
-  { index: true, element: <LoginPage /> },
+  { index: true, element: <SplashPage /> },
+  { path: "splash", element: <SplashPage /> },
+  { path: "landing", element: <LandingPage /> },
   { path: "login", element: <LoginPage /> },
 ]
 
 const protectedChildren: RouteObject[] = [
-  { path: "home", element: <HomePage /> },
+  { path: "main", element: <MainPage /> },
+  { path: "map", element: <MapPage /> },
+  { path: "qna", element: <QnaPage /> },
+  { path: "admin", element: <AdminMode /> },
 ]
 
 const routes: RouteObject[] = [

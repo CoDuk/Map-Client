@@ -152,7 +152,7 @@ develop ← 작업 브랜치
 ## 📂 프로젝트 구조
 <!-- 프로젝트 이름 및 폴더구조 변경 필요 -->
 ```
-📦프로젝트 이름
+📦Map in Duksung
  ┣ 📂.github
  ┃ ┣ 📂ISSUE_TEMPLATE
  ┃ ┗ 📜pull_request_template.md
@@ -163,13 +163,15 @@ develop ← 작업 브랜치
  ┃ ┣ 📂apis
  ┃ ┣ 📂assets
  ┃ ┣ 📂components
- ┃ ┣ 📂constants
  ┃ ┣ 📂hooks
  ┃ ┣ 📂layouts
  ┃ ┣ 📂pages
- ┃ ┃ ┣ 📂Auth
- ┃ ┃ ┣ 📂Home
- ┃ ┃ ┗ 📂NotFound
+ ┃ ┃ ┣ 📂auth
+ ┃ ┃ ┣ 📂splash
+ ┃ ┃ ┣ 📂landing
+ ┃ ┃ ┣ 📂qna
+ ┃ ┃ ┣ 📂map
+ ┃ ┃ ┗ 📂notFound
  ┃ ┣ 📂routes
  ┃ ┣ 📂types
  ┃ ┣ 📂utils
