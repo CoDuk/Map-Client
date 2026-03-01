@@ -168,7 +168,6 @@ develop ← 작업 브랜치
  ┃ ┣ 📂pages
  ┃ ┃ ┣ 📂auth
  ┃ ┃ ┣ 📂splash
- ┃ ┃ ┣ 📂landing
  ┃ ┃ ┣ 📂qna
  ┃ ┃ ┣ 📂map
  ┃ ┃ ┗ 📂notFound

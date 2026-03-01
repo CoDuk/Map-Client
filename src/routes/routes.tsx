@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router-dom"
 import type { RouteObject } from "react-router-dom"
 import SplashPage from "@/pages/splash/SplashPage"
-import LandingPage from "@/pages/landing/LandingPage"
 import LoginPage from "@/pages/auth/LoginPage"
 import MainPage from "@/pages/map/MainPage"
 import MapPage from "@/pages/map/MapPage"
@@ -14,7 +13,6 @@ import ProtectedLayout from "@/layout/ProtectedLayout"
 const publicChildren: RouteObject[] = [
   { index: true, element: <SplashPage /> },
   { path: "splash", element: <SplashPage /> },
-  { path: "landing", element: <LandingPage /> },
   { path: "login", element: <LoginPage /> },
 ]
 

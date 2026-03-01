@@ -1,1 +1,114 @@
+
 @import "tailwindcss";
+
+/* Pretendard 폰트 */
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  src: url("/fonts/Pretendard-Thin.woff2") format("woff2");
+  font-weight: 100;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  src: url("/fonts/Pretendard-ExtraLight.woff2") format("woff2");
+  font-weight: 200;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  src: url("/fonts/Pretendard-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  src: url("/fonts/Pretendard-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  src: url("/fonts/Pretendard-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  src: url("/fonts/Pretendard-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  src: url("/fonts/Pretendard-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  src: url("/fonts/Pretendard-ExtraBold.woff2") format("woff2");
+  font-weight: 800;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  src: url("/fonts/Pretendard-Black.woff2") format("woff2");
+  font-weight: 900;
+  font-display: swap;
+}
+
+@theme {
+  /* Primary */
+  --color-primary: #981B45;
+  --color-primary-dark: #50001B;
+
+  /* Pink / Rose */
+  --color-rose-100: #F6F1EC;
+  --color-rose-200: #E7C9D0;
+  --color-rose-300: #92747E;
+
+  /* Beige / Cream */
+  --color-cream-100: #FDFAF7;
+  --color-cream-200: #F5E9D5;
+  --color-cream-300: #EFD097;
+  --color-cream-400: #DFD3C6;
+
+  /* Neutral */
+  --color-neutral-100: #C6C6C5;
+  --color-neutral-300: #424242;
+  --color-neutral-500: #3F2629;
+  --color-black: #000000;
+
+  /* Accent */
+  --color-accent-blue: #08397A;
+  --color-accent-blue-light: #C2D6F1;
+  --color-accent-orange: #E99015;
+  --color-accent-green: #005208;
+  --color-accent-green-light: #D2D8C9;
+}
+
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
