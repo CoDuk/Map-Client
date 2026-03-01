@@ -1,8 +1,8 @@
 import { createBrowserRouter } from "react-router-dom"
 import type { RouteObject } from "react-router-dom"
-import HomePage from "@/pages/HomePage"
-import LoginPage from "@/pages/LoginPage"
-import NotFoundPage from "@/pages/NotFoundPage"
+import HomePage from "@/pages/Home/HomePage"
+import LoginPage from "@/pages/Auth/LoginPage"
+import NotFoundPage from "@/pages/NotFound/NotFoundPage"
 import RootLayout from "@/components/RootLayout"
 import ProtectedLayout from "@/components/ProtectedLayout"
 
