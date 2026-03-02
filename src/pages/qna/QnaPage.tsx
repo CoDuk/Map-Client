@@ -353,7 +353,7 @@ export default function QnaPage() {
   }, [scrollToTopAfterPost, threads.length])
 
   return (
-    <div className="h-[calc(100vh-56px)] bg-cream-100 flex flex-col">
+    <div className="h-[calc(100dvh-61px-var(--sat))] bg-cream-100 flex flex-col">
       {showAdminModal ? (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40">
           <div className="bg-cream-100 rounded-2xl w-[280px] p-5 flex flex-col gap-4">
@@ -737,9 +737,11 @@ export default function QnaPage() {
               if (!el) return
               el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' })
             }}
-            className="sticky bottom-0 w-full h-[66px] flex items-center justify-center [background:linear-gradient(180deg,rgba(255,255,255,0)_0%,rgba(67,55,45,0.44)_100%)] [box-shadow:0_4px_4px_0_rgba(0,0,0,0.25)]"
+            className="sticky bottom-(--sab) w-full"
           >
-            <img src={ScrollToBottomIcon} alt="scroll to bottom" className="w-[20px] h-[20px] mt-[20px]" />
+            <div className="w-full h-16.5 flex items-center justify-center [background:linear-gradient(180deg,rgba(246,241,236,0)_0%,rgba(245,233,213,0.9)_100%)]">
+              <img src={ScrollToBottomIcon} alt="scroll to bottom" className="w-5 h-5 mt-5" />
+            </div>
           </button>
         ) : null}
       </div>

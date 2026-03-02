@@ -33,7 +33,7 @@ export default function FloatingMenu() {
   }, [pathname])
 
   return (
-    <div className="fixed right-[21px] z-50 bottom-[43px] flex flex-col items-center gap-[8px]">
+    <div className="fixed right-[21px] z-50 bottom-[calc(43px+var(--sab))] flex flex-col items-center gap-2">
       <button type="button" onClick={() => navigate(primary.to)} className="block">
         <img src={primary.icon} alt={primary.alt} className="block" />
       </button>

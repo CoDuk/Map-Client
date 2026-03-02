@@ -9,8 +9,8 @@ export default function Header() {
   const isMy = useMemo(() => pathname.toLowerCase().includes('my'), [pathname])
 
   return (
-    <header className="sticky top-0 z-50 h-[61px] w-full bg-cream-0 [box-shadow:0_3px_10px_0_rgba(0,0,0,0.25)]">
-      <div className="h-full flex items-center justify-center px-4">
+    <header className="sticky top-0 z-50 w-full bg-cream-0 [box-shadow:0_3px_10px_0_rgba(0,0,0,0.25)] [padding-top:var(--sat)]">
+      <div className="h-[61px] flex items-center justify-center px-4">
         {isQna ? (
           <h1 className="text-primary-dark text-[20px] font-bold">문의 사항</h1>
         ) : isMy ? (
