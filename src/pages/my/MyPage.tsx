@@ -79,16 +79,16 @@ export default function MyPage() {
           className="w-full flex flex-col items-center gap-[50px]"
           style={{ transform: 'translateY(-45px)' }}
         >
-          <div className="w-[300px] h-[300px] rounded-full bg-white/40 flex items-center justify-center">
+          <div className="w-[200px] h-[200px] rounded-full bg-white/40 flex items-center justify-center">
             {avatarUrl ? (
               <img
                 src={avatarUrl}
                 alt="profile"
-                className="w-[300px] h-[300px] rounded-full object-contain select-none"
+                className="w-[200px] h-[200px] rounded-full object-contain select-none"
                 draggable={false}
               />
             ) : (
-              <div className="w-[300px] h-[300px] rounded-full bg-white/30" />
+              <div className="w-[200px] h-[200px] rounded-full bg-white/30" />
             )}
           </div>
 

@@ -25,7 +25,7 @@ export default function MyPageModal({ open, onConfirm, onClose }: Props) {
             <img
               src={sosadduk}
               alt="withdraw"
-              className="w-[300px] h-[300px] object-contain select-none"
+              className="w-[180px] h-[180px] object-contain select-none"
               draggable={false}
             />
             <p className="mt-4 text-[18px] font-normal text-neutral-500">정말 탈퇴하시겠습니까?</p>
