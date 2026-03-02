@@ -738,10 +738,10 @@ export default function QnaPage() {
             if (!el) return
             el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' })
           }}
-          className={`absolute bottom-(--sab) left-0 right-0 transition-opacity duration-150 ${showScrollToBottom ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+          className={`absolute bottom-0 left-0 right-0 transition-opacity duration-150 ${showScrollToBottom ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         >
-          <div className="w-full h-16.5 flex items-center justify-center [background:linear-gradient(180deg,rgba(246,241,236,0)_0%,rgba(245,233,213,0.9)_100%)]">
-            <img src={ScrollToBottomIcon} alt="scroll to bottom" className="w-5 h-5 mt-5" />
+          <div className="w-full min-h-16.5 flex justify-center pt-5 pb-(--sab) [background:linear-gradient(180deg,rgba(246,241,236,0)_0%,rgba(245,233,213,0.9)_100%)]">
+            <img src={ScrollToBottomIcon} alt="scroll to bottom" className="w-5 h-5" />
           </div>
         </button>
       </div>
