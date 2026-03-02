@@ -1,8 +1,15 @@
-import { Outlet } from "react-router-dom"
+import { Outlet, useLocation } from 'react-router-dom'
+import Header from '@/components/Header'
+import FloatingMenu from '@/components/FloatingMenu'
 
 export default function RootLayout() {
+  const { pathname } = useLocation()
+  const hideHeader = pathname === '/' || pathname === '/splash' || pathname.toLowerCase().includes('auth')
+
   return (
     <div className="root-layout">
+      {!hideHeader ? <Header /> : null}
+      {!hideHeader ? <FloatingMenu /> : null}
       <Outlet />
     </div>
   )
