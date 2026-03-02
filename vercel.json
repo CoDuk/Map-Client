@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://api.duksung-map.site/:path*"
+      "destination": "https://www.api.duksung-map.site/:path*"
     },
     {
       "source": "/(.*)",
