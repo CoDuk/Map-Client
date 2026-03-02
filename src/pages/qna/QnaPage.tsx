@@ -22,8 +22,9 @@ export default function QnaPage() {
   const [content, setContent] = useState('')
   const MAX_CHARS = 500
 
-  const isAdmin =
+  const [isAdmin, setIsAdmin] = useState(() =>
     typeof window !== 'undefined' && localStorage.getItem('dev:isAdmin') === '1'
+  )
 
   const [activeThreadId, setActiveThreadId] = useState<number | null>(null)
   const [expandedThreadId, setExpandedThreadId] = useState<number | null>(null)
@@ -38,8 +39,12 @@ export default function QnaPage() {
   const listRef = useRef<HTMLDivElement | null>(null)
   const [showScrollToBottom, setShowScrollToBottom] = useState(false)
   const [scrollToTopAfterPost, setScrollToTopAfterPost] = useState(false)
+  const [showAdminModal, setShowAdminModal] = useState(false)
+  const [adminPassword, setAdminPassword] = useState('')
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+  const adminClickCountRef = useRef(0)
+  const adminClickTimerRef = useRef<number | null>(null)
   const MAX_LINES = 3
   const LINE_HEIGHT = 20
   const MAX_HEIGHT = MAX_LINES * LINE_HEIGHT
@@ -349,7 +354,90 @@ export default function QnaPage() {
 
   return (
     <div className="h-[calc(100vh-56px)] bg-cream-100 flex flex-col">
-      <div className="bg-rose-100 flex items-center py-[16px] px-[17px]">
+      {showAdminModal ? (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40">
+          <div className="bg-cream-100 rounded-2xl w-[280px] p-5 flex flex-col gap-4">
+            <div className="text-neutral-300 text-[14px] font-semibold text-center">
+              관리자 비밀번호 입력
+            </div>
+            <input
+              type="password"
+              value={adminPassword}
+              onChange={(e) => setAdminPassword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  if (adminPassword === 'coduk0204!') {
+                    localStorage.setItem('dev:isAdmin', '1')
+                    setIsAdmin(true)
+                    alert('관리자모드로 전환합니다.')
+                  } else {
+                    alert('비밀번호가 틀렸습니다.')
+                    return
+                  }
+                  setShowAdminModal(false)
+                  setAdminPassword('')
+                }
+              }}
+              className="w-full rounded-lg px-3 py-2 text-[14px] outline-none border border-primary"
+              placeholder="비밀번호"
+              autoFocus
+            />
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowAdminModal(false)
+                  setAdminPassword('')
+                }}
+                className="flex-1 py-2 rounded-lg bg-neutral-300 text-cream-100 text-[13px]"
+              >
+                취소
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (adminPassword === 'coduk0204!') {
+                    localStorage.setItem('dev:isAdmin', '1')
+                    setIsAdmin(true)
+                    alert('관리자모드로 전환합니다.')
+                  } else {
+                    alert('비밀번호가 틀렸습니다.')
+                    return
+                  }
+                  setShowAdminModal(false)
+                  setAdminPassword('')
+                }}
+                className="flex-1 py-2 rounded-lg bg-primary text-cream-100 text-[13px]"
+              >
+                확인
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+      <div
+        className="bg-rose-100 flex items-center py-[16px] px-[17px]"
+        onClick={(e) => {
+          const rect = (e.currentTarget as HTMLDivElement).getBoundingClientRect()
+          const isRightArea = e.clientX > rect.right - 80
+          if (!isRightArea) return
+
+          adminClickCountRef.current += 1
+
+          if (adminClickTimerRef.current) {
+            window.clearTimeout(adminClickTimerRef.current)
+          }
+
+          adminClickTimerRef.current = window.setTimeout(() => {
+            adminClickCountRef.current = 0
+          }, 1000)
+
+          if (adminClickCountRef.current >= 5) {
+            adminClickCountRef.current = 0
+            setShowAdminModal(true)
+          }
+        }}
+      >
         <div className="w-full flex items-center gap-3">
           <div className="flex-1 min-h-[44px] rounded-[20px] bg-cream-100 px-5 py-[12px] flex items-start [filter:drop-shadow(1px_1px_4px_rgba(72,37,7,0.1))]">
             <textarea
@@ -557,18 +645,18 @@ export default function QnaPage() {
                           </div>
                         </button>
                       ) : (
-  <button
-    type="button"
-    onClick={() => {
-      setExpandedThreadId((prev) => (prev === t.threadId ? null : t.threadId))
-    }}
-    className="block text-left w-full"
-  >
-    <div className="px-4 pt-3 pb-3 text-[12px] font-normal leading-5 whitespace-pre-wrap break-all">
-      {t.content}
-    </div>
-  </button>
-)}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setExpandedThreadId((prev) => (prev === t.threadId ? null : t.threadId))
+                          }}
+                          className="block text-left w-full"
+                        >
+                          <div className="px-4 pt-3 pb-3 text-[12px] font-normal leading-5 whitespace-pre-wrap break-all">
+                            {t.content}
+                          </div>
+                        </button>
+                      )}
 
                       
                       {showAnswerSection ? (
