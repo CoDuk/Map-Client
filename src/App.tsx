@@ -5,6 +5,10 @@ import { router } from "@/routes/routes"
 function App() {
   useEffect(() => {
     const handleOffline = () => {
+      const current = window.location.pathname + window.location.search + window.location.hash
+      if (current !== '/offline.html') {
+        sessionStorage.setItem('lastPathBeforeOffline', current)
+      }
       window.location.href = "/offline.html"
     }
 

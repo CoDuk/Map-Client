@@ -71,7 +71,7 @@
 </head>
 <body>
   <div class="container">
-    <img src="404bird.svg" alt="offline bird" class="bird" />
+    <img src="404bird.svg" alt="offline bird" class="bird" id="offlineBird" />
     <h1>인터넷 연결이 끊어졌어요</h1>
     <p>
       네트워크 연결을 확인한 후 다시 시도해주세요.<br />
@@ -79,18 +79,52 @@
     </p>
     <button class="button" id="retryBtn">
         다시 시도
-        <img src="retry.svg" art="" class="retry" />
+        <img src="retry.svg" alt="retry" class="retry" id="retryIcon" />
     </button>
   </div>
   <script>
     const retryBtn = document.getElementById('retryBtn');
+    const birdImg = document.getElementById('offlineBird');
+    const retryIcon = document.getElementById('retryIcon');
+
+    const getReturnUrl = () => {
+      const raw = sessionStorage.getItem('lastPathBeforeOffline');
+      if (!raw || raw === '/offline.html') return '/';
+      return raw;
+    };
+
+    birdImg.addEventListener('error', () => {
+      birdImg.style.display = 'none';
+      const fallback = document.createElement('div');
+      fallback.setAttribute('aria-hidden', 'true');
+      fallback.style.width = '160px';
+      fallback.style.height = '160px';
+      fallback.style.margin = '0 auto 24px';
+      fallback.style.borderRadius = '50%';
+      fallback.style.background = 'rgba(142, 27, 58, 0.08)';
+      fallback.style.display = 'flex';
+      fallback.style.alignItems = 'center';
+      fallback.style.justifyContent = 'center';
+      fallback.style.fontSize = '44px';
+      fallback.style.color = '#8E1B3A';
+      fallback.textContent = '📡';
+      birdImg.parentElement.insertBefore(fallback, birdImg.parentElement.firstChild);
+    }, { once: true });
+
+    retryIcon.addEventListener('error', () => {
+      retryIcon.style.display = 'none';
+    }, { once: true });
 
     retryBtn.addEventListener('click', () => {
-      window.location.href = window.location.pathname + window.location.search;
+      if (!navigator.onLine) {
+        alert('아직 인터넷이 연결되지 않았어요. 네트워크를 확인해주세요.');
+        return;
+      }
+      window.location.href = getReturnUrl();
     });
 
     window.addEventListener('online', () => {
-      window.location.reload();
+      window.location.href = getReturnUrl();
     });
   </script>
 </body>
