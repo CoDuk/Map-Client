@@ -6,7 +6,7 @@ export default function NotFoundPage() {
 
   return (
     <div className="min-h-screen bg-cream-100 flex items-center justify-center px-6">
-      <div className="w-full max-w-[420px] flex flex-col items-center text-center">
+      <div className="w-full max-w-[420px] flex flex-col items-center text-center mt-[50px]">
         <div className="relative w-full max-w-[320px] mx-auto flex items-center justify-center">
           <img
             src={Bird404}
