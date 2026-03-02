@@ -476,17 +476,18 @@ export default function QnaPage() {
         </div>
       </div>
 
-      <div
-        ref={listRef}
-        onScroll={() => {
-          const el = listRef.current
-          if (!el) return
-          const diff = el.scrollHeight - el.scrollTop - el.clientHeight
-          const atBottom = diff <= 8
-          setShowScrollToBottom(!atBottom)
-        }}
-        className="relative pt-[20px] flex-1 overflow-y-auto space-y-4 no-scrollbar"
-      >
+      <div className="relative flex-1 min-h-0">
+        <div
+          ref={listRef}
+          onScroll={() => {
+            const el = listRef.current
+            if (!el) return
+            const diff = el.scrollHeight - el.scrollTop - el.clientHeight
+            const atBottom = diff <= 8
+            setShowScrollToBottom(!atBottom)
+          }}
+          className="absolute inset-0 pt-[20px] overflow-y-auto no-scrollbar [-webkit-overflow-scrolling:touch]"
+        >
         <div className="mb-[40px] flex flex-col gap-3 px-[17px]">
         {threadsQuery.isLoading ? (
           <ThreadsSkeleton />
@@ -729,21 +730,20 @@ export default function QnaPage() {
           })
         )}
         </div>
-        {showScrollToBottom ? (
-          <button
-            type="button"
-            onClick={() => {
-              const el = listRef.current
-              if (!el) return
-              el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' })
-            }}
-            className="sticky bottom-(--sab) w-full"
-          >
-            <div className="w-full h-16.5 flex items-center justify-center [background:linear-gradient(180deg,rgba(246,241,236,0)_0%,rgba(245,233,213,0.9)_100%)]">
-              <img src={ScrollToBottomIcon} alt="scroll to bottom" className="w-5 h-5 mt-5" />
-            </div>
-          </button>
-        ) : null}
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            const el = listRef.current
+            if (!el) return
+            el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' })
+          }}
+          className={`absolute bottom-(--sab) left-0 right-0 transition-opacity duration-150 ${showScrollToBottom ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        >
+          <div className="w-full h-16.5 flex items-center justify-center [background:linear-gradient(180deg,rgba(246,241,236,0)_0%,rgba(245,233,213,0.9)_100%)]">
+            <img src={ScrollToBottomIcon} alt="scroll to bottom" className="w-5 h-5 mt-5" />
+          </div>
+        </button>
       </div>
     </div>
   )

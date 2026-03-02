@@ -86,11 +86,11 @@
     const retryBtn = document.getElementById('retryBtn');
 
     retryBtn.addEventListener('click', () => {
-      location.reload();
+      window.location.href = window.location.pathname + window.location.search;
     });
 
     window.addEventListener('online', () => {
-      window.location.href = '/main';
+      window.location.reload();
     });
   </script>
 </body>

@@ -36,6 +36,7 @@ export default defineConfig({
       },
       workbox: {
         navigateFallback: '/offline.html',
+        navigateFallbackDenylist: [/^\/api/],
       },
     }),
   ],
