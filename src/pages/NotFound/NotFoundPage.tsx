@@ -53,7 +53,7 @@ export default function NotFoundPage() {
 
         <button
           type="button"
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/main')}
           className="mt-[51px] rounded-[35px] bg-primary text-cream-100 text-[15px] font-semibold px-[45px] py-[10px]"
         >
           HOME
