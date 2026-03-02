@@ -435,8 +435,8 @@ export default function QnaPage() {
             const displayAnswer = localAnswerContent ?? detailAnswer ?? t.answer ?? ''
 
             const bubbleBg = showAnswerSection
-              ? 'bg-rose-200 text-primary'
-              : 'bg-cream-200 text-neutral-500'
+              ? 'bg-rose-200 text-neutral-300'
+              : 'bg-cream-200 text-neutral-300'
 
             return (
               <div key={t.threadId} ref={showAnswerSection ? activeBubbleRef : undefined} className={`w-full ${showAnswerSection ? 'pb-3' : ''}`}>
@@ -582,21 +582,21 @@ export default function QnaPage() {
                                   onChange={(e) => setAnswerDraft(e.target.value)}
                                   placeholder="답변을 입력해주세요."
                                   rows={3}
-                                  className="w-full bg-transparent outline-none resize-none text-[12px] font-normal leading-5 whitespace-pre-wrap break-all"
+                                  className="w-full bg-transparent outline-none resize-none text-[12px] text-primary font-normal leading-5 whitespace-pre-wrap break-all"
                                   autoFocus
                                 />
                               ) : (
                                 <button
                                   type="button"
                                   onClick={() => setIsAnswerEditing(true)}
-                                  className="w-full text-left text-[12px] font-normal leading-5 whitespace-pre-wrap break-all"
+                                  className="w-full text-left text-[12px] font-normal leading-5 whitespace-pre-wrap break-all text-primary"
                                 >
                                   {displayAnswer || ''}
                                 </button>
                               )
                             ) : (
-                              <div className="w-full text-[12px] font-normal leading-5 whitespace-pre-wrap break-all">
-                                {displayAnswer}
+                              <div className={`w-full text-[12px] font-normal leading-5 whitespace-pre-wrap text-primary break-all ${!displayAnswer ? 'opacity-50' : ''}`}>
+                                {displayAnswer || '답변을 준비하고 있어요.'}
                               </div>
                             )}
                           </div>
