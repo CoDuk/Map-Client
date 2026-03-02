@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios'
 import type { InternalAxiosRequestConfig } from 'axios'
 import { refreshAccessToken } from '@/apis/auth/refresh'
 
-const BASE_URL = import.meta.env.VITE_SERVER_API_URL
+const BASE_URL = import.meta.env.PROD ? '' : (import.meta.env.VITE_SERVER_API_URL ?? '')
 
 let refreshingPromise: Promise<string> | null = null
 
