@@ -486,7 +486,7 @@ export default function QnaPage() {
             const atBottom = diff <= 8
             setShowScrollToBottom(!atBottom)
           }}
-          className="absolute inset-0 pt-[20px] overflow-y-auto no-scrollbar [-webkit-overflow-scrolling:touch]"
+          className="absolute inset-0 pt-[20px] overflow-y-auto overscroll-y-contain no-scrollbar [-webkit-overflow-scrolling:touch]"
         >
         <div className="mb-[40px] flex flex-col gap-3 px-[17px]">
         {threadsQuery.isLoading ? (

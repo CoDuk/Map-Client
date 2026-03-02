@@ -7,7 +7,7 @@ export default function RootLayout() {
   const hideHeader = pathname === '/' || pathname === '/splash' || pathname.toLowerCase().includes('auth')
 
   return (
-    <div className="root-layout">
+    <div className="root-layout h-full">
       {!hideHeader ? <Header /> : null}
       {!hideHeader ? <FloatingMenu /> : null}
       <Outlet />
