@@ -2,6 +2,7 @@ import { api } from '@/apis/client'
 
 export type Thread = {
   threadId: number
+  userId: number
   content: string
   answered: boolean
   createdAt: string

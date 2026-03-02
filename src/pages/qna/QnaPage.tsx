@@ -20,7 +20,7 @@ import {
 export default function QnaPage() {
   const qc = useQueryClient()
   const [content, setContent] = useState('')
-  const MAX_CHARS = 85
+  const MAX_CHARS = 500
 
   const isAdmin =
     typeof window !== 'undefined' && localStorage.getItem('dev:isAdmin') === '1'
@@ -124,14 +124,14 @@ export default function QnaPage() {
   })
 
   const dukAvatarMap = useMemo(() => {
-    const mods = import.meta.glob('/src/assets/nobgduk*.svg', {
+    const mods = import.meta.glob('/src/assets/duk*.svg', {
       eager: true,
       import: 'default',
     }) as Record<string, string>
 
     const ordered = Object.entries(mods)
       .map(([path, url]) => {
-        const m = path.match(/nobgduk(\d+)\.svg$/)
+        const m = path.match(/duk(\d+)\.svg$/)
         const n = m ? Number(m[1]) : NaN
         return { n, url }
       })
@@ -155,11 +155,11 @@ export default function QnaPage() {
     try {
       localStorage.setItem('qna-avatar-map', JSON.stringify(avatarByUser))
     } catch {
-      // ignore
+      //  ignore
     }
   }, [avatarByUser])
 
-  const getUserKey = (threadId: number) => String(threadId % 7)
+  const getUserKey = (userId: number) => String(userId)
 
   const getAvatarUrl = (userKey: string) => {
     if (dukAvatarMap.length === 0) return ''
@@ -290,7 +290,7 @@ export default function QnaPage() {
 
     const neededKeys = new Set<string>()
     for (const t of threads) {
-      neededKeys.add(getUserKey(t.threadId))
+      neededKeys.add(getUserKey(t.userId))
     }
 
     const missing: string[] = []
@@ -300,14 +300,35 @@ export default function QnaPage() {
 
     if (missing.length === 0) return
 
+    
+    const used = new Set<number>()
+    Object.values(avatarByUser).forEach((v) => {
+      if (typeof v === 'number') used.add(((v % dukAvatarMap.length) + dukAvatarMap.length) % dukAvatarMap.length)
+    })
+
+    const available: number[] = []
+    for (let i = 0; i < dukAvatarMap.length; i += 1) {
+      if (!used.has(i)) available.push(i)
+    }
+
+    const pickRandom = (arr: number[]) => arr[Math.floor(Math.random() * arr.length)]
+
     const newAvatars: Record<string, number> = {}
     for (const k of missing) {
-      newAvatars[k] = Math.floor(Math.random() * dukAvatarMap.length)
+      if (available.length > 0) {
+        const idx = Math.floor(Math.random() * available.length)
+        const chosen = available[idx]
+        available.splice(idx, 1)
+        newAvatars[k] = chosen
+      } else {
+        newAvatars[k] = pickRandom([...Array(dukAvatarMap.length).keys()])
+      }
     }
+
     requestAnimationFrame(() => {
       setAvatarByUser((prev) => ({ ...prev, ...newAvatars }))
     })
-  }, [dukAvatarMap.length, threads.length])
+  }, [dukAvatarMap.length, threads.length, avatarByUser])
 
   useEffect(() => {
     if (!scrollToTopAfterPost) return
@@ -390,9 +411,9 @@ export default function QnaPage() {
           </div>
         ) : (
           threads.map((t, idx) => {
-            const userKey = getUserKey(t.threadId)
+            const userKey = getUserKey(t.userId)
             const next = threads[idx + 1]
-            const nextUserKey = next ? getUserKey(next.threadId) : null
+            const nextUserKey = next ? getUserKey(next.userId) : null
             const isLastOfUser = nextUserKey !== userKey
 
             const avatarUrl = isLastOfUser ? getAvatarUrl(userKey) : ''
