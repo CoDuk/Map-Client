@@ -238,18 +238,45 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick }: Props) {
     }
   }, [svgContent, hotspots])
 
-  const tryHitPlace = useCallback((clientX: number, clientY: number) => {
-    const el = document.elementFromPoint(clientX, clientY)
-    const roomEl = el?.closest('[data-place-id]')
-    const placeId = roomEl?.getAttribute('data-place-id')
-    if (!placeId) return false
+  const tryHitPlace = useCallback((clientX: number, clientY: number): boolean => {
+    const svg = svgRef.current
+    if (!svg) return false
 
     const now = performance.now()
-    if (now - lastHandledTsRef.current < 120) return true // debounce duplicate delivery
+    if (now - lastHandledTsRef.current < 120) return true // debounce
 
-    lastHandledTsRef.current = now
-    onRoomClick(placeId)
-    return true
+    // Convert screen coordinates → SVG user-space via combined transform matrix.
+    // This accounts for both the SVG's viewBox mapping and any CSS pan/zoom transform,
+    // making hit-testing reliable on mobile without relying on elementFromPoint.
+    let svgPt: SVGPoint
+    try {
+      const rawPt = svg.createSVGPoint()
+      rawPt.x = clientX
+      rawPt.y = clientY
+      const ctm = svg.getScreenCTM()
+      if (!ctm) return false
+      svgPt = rawPt.matrixTransform(ctm.inverse())
+    } catch {
+      return false
+    }
+
+    const hotspotEls = svg.querySelectorAll<SVGGeometryElement>('[data-place-id]')
+    for (const el of hotspotEls) {
+      try {
+        if (el.isPointInFill(svgPt)) {
+          const placeId = el.getAttribute('data-place-id')
+          if (placeId) {
+            lastHandledTsRef.current = now
+            onRoomClick(placeId)
+            return true
+          }
+        }
+      } catch {
+        // isPointInFill not available on this element, skip
+      }
+    }
+
+    return false
   }, [onRoomClick])
 
   // Fallback click handler for browsers where pointer events misbehave (some mobile cases).
