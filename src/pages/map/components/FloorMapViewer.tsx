@@ -296,7 +296,8 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick }: Props) {
   }, [])
 
   const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    e.currentTarget.setPointerCapture(e.pointerId)
+    // Some mobile browsers (older iOS) throw on setPointerCapture; guard to keep handling alive.
+    try { e.currentTarget.setPointerCapture(e.pointerId) } catch { /* no-op */ }
     pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
     hasDraggedRef.current = false
     if (e.pointerType === 'touch') {
