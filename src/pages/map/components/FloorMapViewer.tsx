@@ -225,6 +225,7 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick }: Props) {
       }
       el.setAttribute('data-place-id', placeId)
       el.setAttribute('fill', 'transparent')
+      el.setAttribute('pointer-events', 'all')
       svg.appendChild(el)
     }
   }, [svgContent, hotspots])
@@ -257,7 +258,7 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick }: Props) {
     const dx = e.clientX - prev.x
     const dy = e.clientY - prev.y
 
-    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) hasDraggedRef.current = true
+    if (Math.abs(dx) > 8 || Math.abs(dy) > 8) hasDraggedRef.current = true
 
     pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
 
