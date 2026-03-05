@@ -11,7 +11,7 @@
 <rect x="49" y="58" width="22" height="32" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
 <rect x="77" y="58" width="31" height="32" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
 <rect x="108" y="58" width="88" height="115" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
-<rect x="196" y="58" width="445" height="115" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
+<rect data-place-id="chaB1" x="196" y="58" width="445" height="115" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
 <rect x="108" y="134" width="62" height="39" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
 <rect x="49" y="200" width="79" height="61" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
 <rect x="193" y="200" width="79" height="61" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
