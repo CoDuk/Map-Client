@@ -94,6 +94,11 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick }: Props) {
     hotspotCache.get(`${cfg.subId}-${floorKey}`) ?? null
   )
 
+  // Track the latest touch coordinates for iOS Safari's "click" synthesis that uses last touch
+  // position instead of the pointerup position, causing elementFromPoint to miss in some cases.
+  const lastTouchRef = useRef<{ x: number; y: number } | null>(null)
+  const lastHandledTsRef = useRef(0)
+
   const containerRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement | null>(null)
   const transformRef = useRef<Transform>({ scale: 1, x: 0, y: 0, rotation: 0 })
@@ -244,14 +249,39 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick }: Props) {
         return
       }
 
-      const roomEl = (e.target as Element | null)?.closest('[data-place-id]')
-      const placeId = roomEl?.getAttribute('data-place-id')
-      if (placeId) onRoomClick(placeId)
+      const touchPos = lastTouchRef.current
+      const cx = touchPos?.x ?? e.clientX
+      const cy = touchPos?.y ?? e.clientY
+
+      // Try closest on target, then elementFromPoint as a fallback for composed paths
+      const target = e.target as Element | null
+      let roomEl = target?.closest('[data-place-id]')
+      if (!roomEl) {
+        // Use last touch position if available to avoid iOS synthesised click offset issues
+        const el = document.elementFromPoint(cx, cy)
+        roomEl = el?.closest('[data-place-id]') || null
+      }
+
+      if (roomEl) tryHitPlace(cx, cy)
     }
 
     svg.addEventListener('click', handleClick)
     return () => svg.removeEventListener('click', handleClick)
-  }, [onRoomClick, svgContent, hotspots])
+  }, [tryHitPlace, svgContent, hotspots])
+
+  const tryHitPlace = useCallback((clientX: number, clientY: number) => {
+    const el = document.elementFromPoint(clientX, clientY)
+    const roomEl = el?.closest('[data-place-id]')
+    const placeId = roomEl?.getAttribute('data-place-id')
+    if (!placeId) return false
+
+    const now = performance.now()
+    if (now - lastHandledTsRef.current < 120) return true // debounce duplicate delivery
+
+    lastHandledTsRef.current = now
+    onRoomClick(placeId)
+    return true
+  }, [onRoomClick])
 
   const applyTransform = useCallback((t: Transform) => {
     // Re-resolve svgRef if null or detached from DOM (happens when floor/building changes
@@ -269,6 +299,9 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick }: Props) {
     e.currentTarget.setPointerCapture(e.pointerId)
     pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
     hasDraggedRef.current = false
+    if (e.pointerType === 'touch') {
+      lastTouchRef.current = { x: e.clientX, y: e.clientY }
+    }
     if (pointersRef.current.size === 2) {
       lastPinchDistRef.current = getPinchDist(pointersRef.current)
       lastPinchAngleRef.current = getPinchAngle(pointersRef.current)
@@ -280,6 +313,10 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick }: Props) {
     const prev = pointersRef.current.get(e.pointerId)!
     const dx = e.clientX - prev.x
     const dy = e.clientY - prev.y
+
+    if (e.pointerType === 'touch') {
+      lastTouchRef.current = { x: e.clientX, y: e.clientY }
+    }
 
     if (Math.abs(dx) > 8 || Math.abs(dy) > 8) hasDraggedRef.current = true
 
@@ -331,26 +368,47 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick }: Props) {
     applyTransform(transformRef.current)
   }, [applyTransform])
 
-  const onPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    // Prevent the follow-up synthetic click from re-firing on Room taps when pointer events worked.
-    ignoreNextClickRef.current = true
+  const onClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (ignoreNextClickRef.current) {
+      ignoreNextClickRef.current = false
+      return
+    }
+    const touchPos = lastTouchRef.current
+    const cx = touchPos?.x ?? e.clientX
+    const cy = touchPos?.y ?? e.clientY
+    tryHitPlace(cx, cy)
+  }, [tryHitPlace])
 
+  const onTouchEndCapture = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
+    // Ignore multi-touch end here; pinch/rotate handled by pointer events
+    if (e.touches.length > 0) return
+    if (e.changedTouches.length !== 1) return
+    const t = e.changedTouches[0]
+    lastTouchRef.current = { x: t.clientX, y: t.clientY }
+    const handled = tryHitPlace(t.clientX, t.clientY)
+    if (handled) ignoreNextClickRef.current = true
+  }, [tryHitPlace])
+
+  const onPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     const wasTap = !hasDraggedRef.current && pointersRef.current.size === 1
+    let handled = false
 
     if (wasTap) {
       // elementFromPoint bypasses pointer capture target override
-      const el = document.elementFromPoint(e.clientX, e.clientY)
-      const roomEl = el?.closest('[data-place-id]')
-      const placeId = roomEl?.getAttribute('data-place-id')
-      if (placeId) {
-        onRoomClick(placeId)
-      }
+      const touchPos = e.pointerType === 'touch' ? lastTouchRef.current : null
+      const clientX = touchPos?.x ?? e.clientX
+      const clientY = touchPos?.y ?? e.clientY
+
+      handled = tryHitPlace(clientX, clientY)
     }
+
+    // Only suppress the follow-up synthetic click when we already handled the tap here.
+    ignoreNextClickRef.current = handled
 
     pointersRef.current.delete(e.pointerId)
     lastPinchDistRef.current = null
     lastPinchAngleRef.current = null
-  }, [onRoomClick])
+  }, [tryHitPlace])
 
   const onWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
     e.preventDefault()
@@ -389,6 +447,8 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick }: Props) {
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
           onWheel={onWheel}
+          onClick={onClick}
+          onTouchEndCapture={onTouchEndCapture}
           // biome-ignore lint/security/noDangerouslySetInnerHtml: trusted floor plan SVG
           dangerouslySetInnerHTML={{ __html: svgContent }}
         />
