@@ -238,6 +238,20 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick }: Props) {
     }
   }, [svgContent, hotspots])
 
+  const tryHitPlace = useCallback((clientX: number, clientY: number) => {
+    const el = document.elementFromPoint(clientX, clientY)
+    const roomEl = el?.closest('[data-place-id]')
+    const placeId = roomEl?.getAttribute('data-place-id')
+    if (!placeId) return false
+
+    const now = performance.now()
+    if (now - lastHandledTsRef.current < 120) return true // debounce duplicate delivery
+
+    lastHandledTsRef.current = now
+    onRoomClick(placeId)
+    return true
+  }, [onRoomClick])
+
   // Fallback click handler for browsers where pointer events misbehave (some mobile cases).
   useEffect(() => {
     const svg = svgRef.current
@@ -268,20 +282,6 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick }: Props) {
     svg.addEventListener('click', handleClick)
     return () => svg.removeEventListener('click', handleClick)
   }, [tryHitPlace, svgContent, hotspots])
-
-  const tryHitPlace = useCallback((clientX: number, clientY: number) => {
-    const el = document.elementFromPoint(clientX, clientY)
-    const roomEl = el?.closest('[data-place-id]')
-    const placeId = roomEl?.getAttribute('data-place-id')
-    if (!placeId) return false
-
-    const now = performance.now()
-    if (now - lastHandledTsRef.current < 120) return true // debounce duplicate delivery
-
-    lastHandledTsRef.current = now
-    onRoomClick(placeId)
-    return true
-  }, [onRoomClick])
 
   const applyTransform = useCallback((t: Transform) => {
     // Re-resolve svgRef if null or detached from DOM (happens when floor/building changes
