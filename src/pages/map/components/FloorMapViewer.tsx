@@ -101,6 +101,7 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick }: Props) {
   const lastPinchDistRef = useRef<number | null>(null)
   const lastPinchAngleRef = useRef<number | null>(null)
   const hasDraggedRef = useRef(false)
+  const ignoreNextClickRef = useRef(false)
 
   // Load SVG when cfg/floor/view changes
   useEffect(() => {
@@ -224,11 +225,33 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick }: Props) {
         el.setAttribute('d', shape.d)
       }
       el.setAttribute('data-place-id', placeId)
-      el.setAttribute('fill', 'transparent')
+      // Fully transparent pixels sometimes miss hit-testing on mobile Safari/Chrome — keep a
+      // nearly-transparent fill so the geometry remains clickable without altering visuals.
+      el.setAttribute('fill', 'rgba(255,255,255,0.001)')
       el.setAttribute('pointer-events', 'all')
       svg.appendChild(el)
     }
   }, [svgContent, hotspots])
+
+  // Fallback click handler for browsers where pointer events misbehave (some mobile cases).
+  useEffect(() => {
+    const svg = svgRef.current
+    if (!svg) return
+
+    const handleClick = (e: MouseEvent) => {
+      if (ignoreNextClickRef.current) {
+        ignoreNextClickRef.current = false
+        return
+      }
+
+      const roomEl = (e.target as Element | null)?.closest('[data-place-id]')
+      const placeId = roomEl?.getAttribute('data-place-id')
+      if (placeId) onRoomClick(placeId)
+    }
+
+    svg.addEventListener('click', handleClick)
+    return () => svg.removeEventListener('click', handleClick)
+  }, [onRoomClick, svgContent, hotspots])
 
   const applyTransform = useCallback((t: Transform) => {
     // Re-resolve svgRef if null or detached from DOM (happens when floor/building changes
@@ -309,6 +332,9 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick }: Props) {
   }, [applyTransform])
 
   const onPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    // Prevent the follow-up synthetic click from re-firing on Room taps when pointer events worked.
+    ignoreNextClickRef.current = true
+
     const wasTap = !hasDraggedRef.current && pointersRef.current.size === 1
 
     if (wasTap) {
