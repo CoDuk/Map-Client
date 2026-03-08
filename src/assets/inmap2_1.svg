@@ -132,15 +132,15 @@
 <path d="M436.111 165.5V165.505M430 170H440M431.667 170V162C431.667 161.735 431.784 161.48 431.992 161.293C432.2 161.105 432.483 161 432.778 161H437.222C437.517 161 437.8 161.105 438.008 161.293C438.216 161.48 438.333 161.735 438.333 162V170" stroke="#EFEAE3" stroke-linecap="round" stroke-linejoin="round"/>
 <ellipse cx="19" cy="163.5" rx="9" ry="9.5" fill="#3F2629"/>
 <path d="M20.1111 163.5V163.505M14 168H24M15.6667 168V160C15.6667 159.735 15.7837 159.48 15.9921 159.293C16.2005 159.105 16.4831 159 16.7778 159H21.2222C21.5169 159 21.7995 159.105 22.0079 159.293C22.2163 159.48 22.3333 159.735 22.3333 160V168" stroke="#EFEAE3" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M507 275.5V286H482V275.5H507Z" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
-<path d="M495 239V260H409V239H495Z" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
+<path data-place-id="in2Fsofa1" d="M507 275.5V286H482V275.5H507Z" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
+<path data-place-id="in2Fsofa2" d="M495 239V260H409V239H495Z" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
 <rect x="781" y="157" width="44" height="6" transform="rotate(-90 781 157)" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
 <rect x="787" y="157" width="44" height="6" transform="rotate(-90 787 157)" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
 <rect x="797" y="157" width="43" height="6" transform="rotate(-90 797 157)" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
 <rect x="803" y="157" width="41" height="6" transform="rotate(-90 803 157)" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
 <rect x="813" y="157" width="37" height="6" transform="rotate(-90 813 157)" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
 <rect x="819" y="157" width="27" height="6" transform="rotate(-90 819 157)" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
-<path d="M776 105.976C787.678 105.681 796.811 105.713 804.075 106.651C811.528 107.613 816.912 109.517 821.019 112.909C825.125 116.3 828.07 121.275 830.454 128.607C832.769 135.725 834.527 144.977 836.338 157H829.9C828.779 146.214 827.427 137.944 825.397 131.634C823.307 125.133 820.474 120.629 816.364 117.595C812.27 114.573 807.029 113.102 800.312 112.415C793.821 111.75 785.835 111.81 776 111.982V105.976Z" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
+<path data-place-id="in2Fsofa3" d="M776 105.976C787.678 105.681 796.811 105.713 804.075 106.651C811.528 107.613 816.912 109.517 821.019 112.909C825.125 116.3 828.07 121.275 830.454 128.607C832.769 135.725 834.527 144.977 836.338 157H829.9C828.779 146.214 827.427 137.944 825.397 131.634C823.307 125.133 820.474 120.629 816.364 117.595C812.27 114.573 807.029 113.102 800.312 112.415C793.821 111.75 785.835 111.81 776 111.982V105.976Z" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
 <rect x="792" y="170" width="27" height="6" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
 <rect x="543" y="170" width="17" height="6" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
 <rect x="580" y="170" width="45" height="6" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>

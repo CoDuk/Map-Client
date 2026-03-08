@@ -17,13 +17,10 @@ export default function DetailModal({ place, onClose }: Props) {
 
   return (
     <>
-      {/* Transparent backdrop for outside click */}
-      <div className="fixed inset-0 z-40" onClick={onClose} />
-
       {/* Bottom sheet */}
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-cream-0 rounded-t-[24px] shadow-[0_-4px_20px_rgba(0,0,0,0.15)] pb-(--sab)">
-        {/* Handle bar */}
-        <div className="flex justify-center pt-3 pb-1">
+        {/* Handle bar — tap to close */}
+        <div className="flex justify-center pt-3 pb-1" onClick={onClose}>
           <div className="w-10 h-1 rounded-full bg-neutral-100" />
         </div>
 

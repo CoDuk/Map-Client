@@ -7,6 +7,7 @@ type Props = {
   activeBuilding: string
   onBuildingClick: (buildingId: string) => void
   onSearchClick: () => void
+  onEmptyClick?: () => void // 건물이 아닌 빈 영역 탭 시 호출
 }
 
 type Transform = { scale: number; x: number; y: number; rotation: number }
@@ -34,8 +35,10 @@ function getPinchAngle(pointers: PointerMap) {
   return Math.atan2(b.y - a.y, b.x - a.x) * (180 / Math.PI)
 }
 
-export default function CampusMap({ activeBuilding, onBuildingClick, onSearchClick }: Props) {
+export default function CampusMap({ activeBuilding, onBuildingClick, onSearchClick, onEmptyClick }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
+  // svgWrapperRef: transform 적용 대상. React가 절대 innerHTML을 건드리지 않는 div.
+  const svgWrapperRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement | null>(null)
   const transformRef = useRef<Transform>({ scale: 1, x: 0, y: 0, rotation: 0 })
 
@@ -44,11 +47,12 @@ export default function CampusMap({ activeBuilding, onBuildingClick, onSearchCli
   const lastPinchAngleRef = useRef<number | null>(null)
   const hasDraggedRef = useRef(false)
 
+  // transform을 SVG가 아닌 wrapper div에 적용 → React re-render와 완전 분리
   const applyTransform = useCallback((t: Transform) => {
-    const svg = svgRef.current
-    if (!svg) return
-    svg.style.transformOrigin = '0 0'
-    svg.style.transform = `translate(${t.x}px, ${t.y}px) rotate(${t.rotation}deg) scale(${t.scale})`
+    const wrapper = svgWrapperRef.current
+    if (!wrapper) return
+    wrapper.style.transformOrigin = '0 0'
+    wrapper.style.transform = `translate(${t.x}px, ${t.y}px) rotate(${t.rotation}deg) scale(${t.scale})`
   }, [])
 
   const updateHighlight = useCallback((buildingId: string) => {
@@ -94,14 +98,20 @@ export default function CampusMap({ activeBuilding, onBuildingClick, onSearchCli
   }, [])
 
   useEffect(() => {
-    const container = containerRef.current
-    if (!container) return
-    const svg = container.querySelector<SVGSVGElement>('svg')
+    const wrapper = svgWrapperRef.current
+    if (!wrapper) return
+
+    // innerHTML을 useEffect에서 딱 한 번 명령형으로 설정.
+    // dangerouslySetInnerHTML을 JSX에서 제거했으므로
+    // React는 이 wrapper의 자식을 절대 건드리지 않는다.
+    // eslint-disable-next-line no-unsanitized/property
+    wrapper.innerHTML = mapSvg
+
+    const svg = wrapper.querySelector<SVGSVGElement>('svg')
     if (!svg) return
     svgRef.current = svg
     svg.style.width = '100%'
     svg.style.height = '100%'
-    svg.style.transformOrigin = '0 0'
     svg.setAttribute('preserveAspectRatio', 'xMidYMid meet')
 
     svg.querySelectorAll<SVGElement>('[data-building]').forEach(el => {
@@ -119,12 +129,20 @@ export default function CampusMap({ activeBuilding, onBuildingClick, onSearchCli
   }, [activeBuilding, updateHighlight])
 
   const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    // 첫 손가락(새 제스처 시작): 이전 잔존 포인터 전부 정리 후 상태 초기화
+    if (e.isPrimary) {
+      pointersRef.current.clear()
+      lastPinchDistRef.current = null
+      lastPinchAngleRef.current = null
+      hasDraggedRef.current = false
+    }
     e.currentTarget.setPointerCapture(e.pointerId)
     pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
-    hasDraggedRef.current = false
     if (pointersRef.current.size === 2) {
       lastPinchDistRef.current = getPinchDist(pointersRef.current)
       lastPinchAngleRef.current = getPinchAngle(pointersRef.current)
+      // 두 손가락 제스처는 탭이 아님
+      hasDraggedRef.current = true
     }
   }, [])
 
@@ -187,21 +205,41 @@ export default function CampusMap({ activeBuilding, onBuildingClick, onSearchCli
   const onPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     const wasTap = !hasDraggedRef.current && pointersRef.current.size === 1
 
-    if (wasTap) {
-      // elementFromPoint bypasses pointer capture target override
-      const el = document.elementFromPoint(e.clientX, e.clientY)
-      const buildingEl = el?.closest('[data-building]')
-      const svgBuildingId = buildingEl?.getAttribute('data-building')
-      if (svgBuildingId) {
-        const building = BUILDINGS.find(b => b.svgId === svgBuildingId)
-        if (building) onBuildingClick(building.id)
-      }
-    }
-
+    // 콜백 호출 전에 먼저 정리 — onBuildingClick이 state 업데이트를 유발해도 안전
     pointersRef.current.delete(e.pointerId)
     lastPinchDistRef.current = null
     lastPinchAngleRef.current = null
-  }, [onBuildingClick])
+
+    if (wasTap) {
+      const el = document.elementFromPoint(e.clientX, e.clientY)
+      const buildingEl = el?.closest('[data-building]')
+      let svgBuildingId = buildingEl?.getAttribute('data-building')
+
+      // 하나의 폴리곤이 두 건물 영역을 덮는 경우: SVG 좌표 기준으로 분기
+      // getBoundingClientRect + viewBox 직접 계산 (getScreenCTM은 CSS transform을 일부 브라우저에서 미반영)
+      const splitY = buildingEl?.getAttribute('data-split-y')
+      if (splitY && svgRef.current) {
+        const svg = svgRef.current
+        const svgRect = svg.getBoundingClientRect()
+        const vb = svg.viewBox.baseVal
+        if (vb.width > 0 && vb.height > 0) {
+          const scale = Math.min(svgRect.width / vb.width, svgRect.height / vb.height)
+          const offsetY = (svgRect.height - vb.height * scale) / 2
+          const svgY = vb.y + (e.clientY - svgRect.top - offsetY) / scale
+          if (svgY > parseFloat(splitY)) {
+            svgBuildingId = buildingEl?.getAttribute('data-building-secondary') ?? svgBuildingId
+          }
+        }
+      }
+
+      const building = svgBuildingId ? BUILDINGS.find(b => b.svgId === svgBuildingId) : undefined
+      if (building) {
+        onBuildingClick(building.id)
+      } else {
+        onEmptyClick?.()
+      }
+    }
+  }, [onBuildingClick, onEmptyClick])
 
   const onWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
     e.preventDefault()
@@ -233,9 +271,14 @@ export default function CampusMap({ activeBuilding, onBuildingClick, onSearchCli
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
         onWheel={onWheel}
-        // biome-ignore lint/security/noDangerouslySetInnerHtml: trusted local SVG asset
-        dangerouslySetInnerHTML={{ __html: mapSvg }}
-      />
+      >
+        {/*
+          svgWrapperRef div: SVG map의 transform 대상.
+          innerHTML은 useEffect에서 한 번만 설정하고 React는 이 div의 자식을 관리하지 않는다.
+          Re-render 시에도 transform·SVG 스타일이 유지된다.
+        */}
+        <div ref={svgWrapperRef} className="absolute inset-0" />
+      </div>
 
       {/* Search button */}
       <button

@@ -38,8 +38,8 @@ function getPinchAngle(pointers: PointerMap) {
 }
 
 function getSvgFilename(subId: string, view: ViewKey, floor: string): string {
-  const suffix = view === 'locker' ? 'lock' : view === 'amenity' ? 'util' : ''
-  return `${subId}map${suffix}${floor}.svg`
+  const suffix = view === 'locker' ? '_1' : view === 'amenity' ? '_2' : ''
+  return `${subId}map${floor}${suffix}.svg`
 }
 
 type Props = {
@@ -205,9 +205,10 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick }: Props) {
     const wasTap = !hasDraggedRef.current && pointersRef.current.size === 1
 
     if (wasTap) {
-      // elementFromPoint bypasses pointer capture target override
-      const el = document.elementFromPoint(e.clientX, e.clientY)
-      const placeEl = el?.closest('[data-place-id]')
+      // elementsFromPoint returns all elements at the point regardless of pointer-events,
+      // so decorative SVG paths on top don't block clicks on room rects below
+      const els = document.elementsFromPoint(e.clientX, e.clientY)
+      const placeEl = els.find(el => el.hasAttribute('data-place-id'))
       const placeId = placeEl?.getAttribute('data-place-id')
       if (placeId) onRoomClick(placeId)
     }

@@ -7,7 +7,9 @@ type Props = {
 }
 
 export default function CategoryTabs({ active, onChange, hideAll }: Props) {
-  const items = hideAll ? BUILDINGS.filter(b => b.id !== '전체') : BUILDINGS
+  const items = hideAll
+    ? BUILDINGS.filter(b => b.id !== '전체' && !b.noTab)
+    : BUILDINGS.filter(b => !b.noTab)
   return (
     <div className="flex gap-2 px-4 py-3 overflow-x-auto no-scrollbar shrink-0">
       {items.map(building => (

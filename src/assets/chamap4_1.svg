@@ -64,12 +64,12 @@
 <path d="M156.999 364V366H183.999V364V362H156.999V364Z" fill="#A27578" mask="url(#path-59-inside-1_572_121)"/>
 <path d="M162.416 395.667H169.499V398.333H162.416V395.667ZM163.833 393H170.916V395.667H163.833V393ZM165.249 390.333H172.333V393H165.249V390.333ZM166.666 387.667H173.749V390.333H166.666V387.667Z" stroke="#A27578" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M169.499 398.333H176.582V387.667H173.749" stroke="#A27578" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<rect x="805.999" y="145" width="31" height="15" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
-<rect x="427.999" y="319" width="45" height="8" transform="rotate(-90 427.999 319)" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
-<rect x="427.999" y="218" width="42" height="8" transform="rotate(-90 427.999 218)" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
-<rect x="489.999" y="356" width="25" height="11" transform="rotate(-90 489.999 356)" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
-<rect x="484.999" y="242" width="12" height="16" transform="rotate(-90 484.999 242)" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
-<path d="M445.999 398.39H475.325V365H488.999V416H445.999V398.39Z" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
+<rect data-place-id="cha4Fsofa1" x="805.999" y="145" width="31" height="15" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
+<rect data-place-id="cha4Fsofa2" x="427.999" y="319" width="45" height="8" transform="rotate(-90 427.999 319)" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
+<rect data-place-id="cha4Fsofa3" x="427.999" y="218" width="42" height="8" transform="rotate(-90 427.999 218)" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
+<rect data-place-id="cha4Fsofa4" x="489.999" y="356" width="25" height="11" transform="rotate(-90 489.999 356)" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
+<rect data-place-id="cha4Fsofa5" x="484.999" y="242" width="12" height="16" transform="rotate(-90 484.999 242)" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
+<path data-place-id="cha4Fsofa6" d="M445.999 398.39H475.325V365H488.999V416H445.999V398.39Z" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
 <rect x="427.999" y="266" width="39" height="8" transform="rotate(-90 427.999 266)" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
 <rect x="480.999" y="218" width="20" height="8" transform="rotate(-90 480.999 218)" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
 <rect x="480.999" y="187" width="20" height="8" transform="rotate(-90 480.999 187)" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
