@@ -47,6 +47,7 @@ type Props = {
   floorKey: string
   viewKey: ViewKey
   onRoomClick: (placeId: string) => void
+  focusPlaceId?: string
 }
 
 const LEGEND_ITEMS: Record<ViewKey, { color?: string; icon?: string; label: string }[]> = {
@@ -65,7 +66,7 @@ const LEGEND_ITEMS: Record<ViewKey, { color?: string; icon?: string; label: stri
   ],
 }
 
-function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick }: Props) {
+function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick, focusPlaceId }: Props) {
   const [svgContent, setSvgContent] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -110,7 +111,17 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick }: Props) {
     hasDraggedRef.current = false
   }, [cfg.subId, viewKey, floorKey])
 
-  // After SVG content renders, wire up the SVG ref and reset transform
+  const applyTransform = useCallback((t: Transform) => {
+    if (!svgRef.current || !svgRef.current.isConnected) {
+      svgRef.current = containerRef.current?.querySelector<SVGSVGElement>('svg') ?? null
+    }
+    const svg = svgRef.current
+    if (!svg) return
+    svg.style.transformOrigin = '0 0'
+    svg.style.transform = `translate(${t.x}px, ${t.y}px) rotate(${t.rotation}deg) scale(${t.scale})`
+  }, [])
+
+  // After SVG content renders, wire up the SVG ref and reset/center transform
   useLayoutEffect(() => {
     const container = containerRef.current
     if (!container || !svgContent) {
@@ -124,19 +135,29 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick }: Props) {
     svg.style.height = '100%'
     svg.style.transformOrigin = '0 0'
     svg.setAttribute('preserveAspectRatio', 'xMidYMid meet')
-    transformRef.current = { scale: 1, x: 0, y: 0, rotation: 0 }
-    svg.style.transform = ''
-  }, [svgContent, cfg.subId, viewKey, floorKey])
 
-  const applyTransform = useCallback((t: Transform) => {
-    if (!svgRef.current || !svgRef.current.isConnected) {
-      svgRef.current = containerRef.current?.querySelector<SVGSVGElement>('svg') ?? null
+    // Reset to identity first — required before reading element positions
+    svg.style.transform = ''
+    transformRef.current = { scale: 1, x: 0, y: 0, rotation: 0 }
+
+    // If a place should be centered, find its element and compute the transform
+    if (focusPlaceId) {
+      const el = container.querySelector(`[data-place-id="${focusPlaceId}"]`)
+      if (el) {
+        // getBoundingClientRect() forces a synchronous layout flush,
+        // so we get positions relative to the identity-transform SVG
+        const containerRect = container.getBoundingClientRect()
+        const elRect = el.getBoundingClientRect()
+        const elCX = elRect.left - containerRect.left + elRect.width / 2
+        const elCY = elRect.top  - containerRect.top  + elRect.height / 2
+        const s = clamp(2.5, MIN_SCALE, MAX_SCALE)
+        const tx = containerRect.width  / 2 - elCX * s
+        const ty = containerRect.height / 2 - elCY * s
+        transformRef.current = { scale: s, x: tx, y: ty, rotation: 0 }
+        applyTransform(transformRef.current)
+      }
     }
-    const svg = svgRef.current
-    if (!svg) return
-    svg.style.transformOrigin = '0 0'
-    svg.style.transform = `translate(${t.x}px, ${t.y}px) rotate(${t.rotation}deg) scale(${t.scale})`
-  }, [])
+  }, [svgContent, cfg.subId, viewKey, floorKey, focusPlaceId, applyTransform])
 
   const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     e.currentTarget.setPointerCapture(e.pointerId)

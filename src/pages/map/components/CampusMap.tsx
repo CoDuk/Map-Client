@@ -4,10 +4,9 @@ import mapSvg from '@/assets/mapAll.svg?raw'
 import { BUILDINGS } from '@/data/places'
 
 type Props = {
-  activeBuilding: string
   onBuildingClick: (buildingId: string) => void
-  onSearchClick: () => void
-  onEmptyClick?: () => void // 건물이 아닌 빈 영역 탭 시 호출
+  onEmptyClick?: () => void
+  focusBuildingId?: string
 }
 
 type Transform = { scale: number; x: number; y: number; rotation: number }
@@ -35,9 +34,9 @@ function getPinchAngle(pointers: PointerMap) {
   return Math.atan2(b.y - a.y, b.x - a.x) * (180 / Math.PI)
 }
 
-export default function CampusMap({ activeBuilding, onBuildingClick, onSearchClick, onEmptyClick }: Props) {
+export default function CampusMap({ onBuildingClick, onEmptyClick, focusBuildingId }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
-  // svgWrapperRef: transform 적용 대상. React가 절대 innerHTML을 건드리지 않는 div.
+  
   const svgWrapperRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement | null>(null)
   const transformRef = useRef<Transform>({ scale: 1, x: 0, y: 0, rotation: 0 })
@@ -47,7 +46,7 @@ export default function CampusMap({ activeBuilding, onBuildingClick, onSearchCli
   const lastPinchAngleRef = useRef<number | null>(null)
   const hasDraggedRef = useRef(false)
 
-  // transform을 SVG가 아닌 wrapper div에 적용 → React re-render와 완전 분리
+  
   const applyTransform = useCallback((t: Transform) => {
     const wrapper = svgWrapperRef.current
     if (!wrapper) return
@@ -55,56 +54,14 @@ export default function CampusMap({ activeBuilding, onBuildingClick, onSearchCli
     wrapper.style.transform = `translate(${t.x}px, ${t.y}px) rotate(${t.rotation}deg) scale(${t.scale})`
   }, [])
 
-  const updateHighlight = useCallback((buildingId: string) => {
-    const svg = svgRef.current
-    if (!svg) return
-    const elements = svg.querySelectorAll<SVGElement>('[data-building]')
-
-    elements.forEach(el => {
-      const elSvgId = el.getAttribute('data-building')
-      const building = BUILDINGS.find(b => b.svgId === elSvgId)
-      if (!building) return
-
-      const isActive = buildingId !== '전체' && building.id === buildingId
-      const isCircle = el.tagName.toLowerCase() === 'circle'
-      const origFill = el.getAttribute('data-orig-fill') || '#E7C9D0'
-
-      if (buildingId === '전체') {
-        el.setAttribute('fill', origFill)
-        el.removeAttribute('opacity')
-        if (isCircle) {
-          el.setAttribute('stroke', '#08397A')
-          el.setAttribute('r', '6')
-        }
-      } else if (isActive) {
-        if (isCircle) {
-          el.setAttribute('fill', '#981B45')
-          el.setAttribute('stroke', '#50001B')
-          el.setAttribute('r', '9')
-        } else {
-          el.setAttribute('fill', '#E7C9D0')
-          el.setAttribute('opacity', '1')
-        }
-      } else {
-        el.setAttribute('fill', origFill)
-        el.setAttribute('opacity', '0.35')
-        if (isCircle) {
-          el.setAttribute('fill', '#C2D6F1')
-          el.setAttribute('stroke', '#08397A')
-          el.setAttribute('r', '6')
-        }
-      }
-    })
-  }, [])
 
   useEffect(() => {
     const wrapper = svgWrapperRef.current
     if (!wrapper) return
 
-    // innerHTML을 useEffect에서 딱 한 번 명령형으로 설정.
-    // dangerouslySetInnerHTML을 JSX에서 제거했으므로
-    // React는 이 wrapper의 자식을 절대 건드리지 않는다.
-    // eslint-disable-next-line no-unsanitized/property
+    
+    
+    
     wrapper.innerHTML = mapSvg
 
     const svg = wrapper.querySelector<SVGSVGElement>('svg')
@@ -114,22 +71,40 @@ export default function CampusMap({ activeBuilding, onBuildingClick, onSearchCli
     svg.style.height = '100%'
     svg.setAttribute('preserveAspectRatio', 'xMidYMid meet')
 
-    svg.querySelectorAll<SVGElement>('[data-building]').forEach(el => {
-      if (!el.getAttribute('data-orig-fill')) {
-        el.setAttribute('data-orig-fill', el.getAttribute('fill') || '#E7C9D0')
-      }
-    })
-
-    updateHighlight(activeBuilding)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, [])
 
+  // 검색에서 건물/장소 선택 시 해당 path를 화면 중앙으로 이동
   useEffect(() => {
-    updateHighlight(activeBuilding)
-  }, [activeBuilding, updateHighlight])
+    if (!focusBuildingId) return
+    const container = containerRef.current
+    const wrapper = svgWrapperRef.current
+    if (!container || !wrapper) return
+
+    const building = BUILDINGS.find(b => b.id === focusBuildingId)
+    if (!building?.svgId) return
+
+    const el = wrapper.querySelector(`[data-building="${building.svgId}"]`)
+    if (!el) return
+
+    // Reset to identity first so we read natural positions
+    wrapper.style.transformOrigin = '0 0'
+    wrapper.style.transform = ''
+    transformRef.current = { scale: 1, x: 0, y: 0, rotation: 0 }
+
+    const containerRect = container.getBoundingClientRect()
+    const elRect = el.getBoundingClientRect()
+    const elCX = elRect.left - containerRect.left + elRect.width  / 2
+    const elCY = elRect.top  - containerRect.top  + elRect.height / 2
+    const s = clamp(2.0, MIN_SCALE, MAX_SCALE)
+    const tx = containerRect.width  / 2 - elCX * s
+    const ty = containerRect.height / 2 - elCY * s
+    transformRef.current = { scale: s, x: tx, y: ty, rotation: 0 }
+    applyTransform(transformRef.current)
+  }, [focusBuildingId, applyTransform])
 
   const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    // 첫 손가락(새 제스처 시작): 이전 잔존 포인터 전부 정리 후 상태 초기화
+    
     if (e.isPrimary) {
       pointersRef.current.clear()
       lastPinchDistRef.current = null
@@ -141,7 +116,7 @@ export default function CampusMap({ activeBuilding, onBuildingClick, onSearchCli
     if (pointersRef.current.size === 2) {
       lastPinchDistRef.current = getPinchDist(pointersRef.current)
       lastPinchAngleRef.current = getPinchAngle(pointersRef.current)
-      // 두 손가락 제스처는 탭이 아님
+      
       hasDraggedRef.current = true
     }
   }, [])
@@ -165,13 +140,13 @@ export default function CampusMap({ activeBuilding, onBuildingClick, onSearchCli
     } else if (pointersRef.current.size === 2) {
       const rect = container.getBoundingClientRect()
 
-      // Scale
+      
       const newDist = getPinchDist(pointersRef.current)
       const oldDist = lastPinchDistRef.current ?? newDist
       const scaleDelta = newDist / oldDist
       lastPinchDistRef.current = newDist
 
-      // Rotation
+      
       const newAngle = getPinchAngle(pointersRef.current)
       const oldAngle = lastPinchAngleRef.current ?? newAngle
       const dAngle = newAngle - oldAngle
@@ -184,7 +159,7 @@ export default function CampusMap({ activeBuilding, onBuildingClick, onSearchCli
       const newScale = clamp(t.scale * scaleDelta, MIN_SCALE, MAX_SCALE)
       const scaleFactor = newScale / t.scale
 
-      // Rotate + scale around pinch center
+      
       const rad = dAngle * (Math.PI / 180)
       const cos = Math.cos(rad)
       const sin = Math.sin(rad)
@@ -205,7 +180,7 @@ export default function CampusMap({ activeBuilding, onBuildingClick, onSearchCli
   const onPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     const wasTap = !hasDraggedRef.current && pointersRef.current.size === 1
 
-    // 콜백 호출 전에 먼저 정리 — onBuildingClick이 state 업데이트를 유발해도 안전
+    
     pointersRef.current.delete(e.pointerId)
     lastPinchDistRef.current = null
     lastPinchAngleRef.current = null
@@ -215,8 +190,8 @@ export default function CampusMap({ activeBuilding, onBuildingClick, onSearchCli
       const buildingEl = el?.closest('[data-building]')
       let svgBuildingId = buildingEl?.getAttribute('data-building')
 
-      // 하나의 폴리곤이 두 건물 영역을 덮는 경우: SVG 좌표 기준으로 분기
-      // getBoundingClientRect + viewBox 직접 계산 (getScreenCTM은 CSS transform을 일부 브라우저에서 미반영)
+      
+      
       const splitY = buildingEl?.getAttribute('data-split-y')
       if (splitY && svgRef.current) {
         const svg = svgRef.current
@@ -280,33 +255,21 @@ export default function CampusMap({ activeBuilding, onBuildingClick, onSearchCli
         <div ref={svgWrapperRef} className="absolute inset-0" />
       </div>
 
-      {/* Search button */}
-      <button
-        type="button"
-        onClick={onSearchClick}
-        className="absolute top-3 right-3 z-10 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center"
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-label="검색">
-          <circle cx="11" cy="11" r="7" stroke="#50001B" strokeWidth="2" />
-          <path d="M16.5 16.5L21 21" stroke="#50001B" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-      </button>
-
-      {/* Legend */}
-      <div className="absolute top-3 left-3 z-10 bg-white/90 rounded-xl px-3 py-2 flex flex-col gap-1.5 shadow-sm">
-        <LegendItem color="#E99015" label="흡연 구역" />
-        <LegendItem color="#424242" label="음식물 쓰레기통" />
-        <LegendItem color="#005208" label="폐지 처리 장소" />
+{/* Legend */}
+      <div className="absolute top-3 left-3 z-10 bg-cream-100 border-[1.5px] border-cream-200 rounded-[15px] px-[18px] py-[15px] flex flex-col gap-1.5 shadow-sm">
+        <LegendItem color="#C2D6F1" stroke="#08397A" label="흡연 구역" />
+        <LegendItem color="#EFD097" stroke="#E99015" label="음식물 쓰레기통" />
+        <LegendItem color="#C6C6C5" stroke="#424242" label="폐지 처리 장소" />
       </div>
     </div>
   )
 }
 
-function LegendItem({ color, label }: { color: string; label: string }) {
+function LegendItem({ color, stroke, label }: { color: string; stroke?: string; label: string }) {
   return (
     <div className="flex items-center gap-1.5">
-      <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: color }} />
-      <span className="text-[11px] text-neutral-300 font-medium">{label}</span>
+      <span className="w-[8px] h-[8px] rounded-full shrink-0" style={{ backgroundColor: color, outline: stroke ? `1px solid ${stroke}` : undefined }} />
+      <span className="text-[9px] text-neutral-300 font-medium">{label}</span>
     </div>
   )
 }

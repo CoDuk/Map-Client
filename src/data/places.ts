@@ -682,18 +682,116 @@ export function searchPlaces(query: string): Place[] {
   const q = query.trim().toLowerCase()
   if (!q) return []
   return PLACES.filter(p =>
-    p.name.toLowerCase().includes(q) ||
+    // 건물 레벨 항목(floor 없음)은 건물 검색(searchBuildings)에서만 처리
+    p.floor !== null &&
+    (p.name.toLowerCase().includes(q) ||
     (p.floor?.toLowerCase().includes(q) ?? false) ||
     (p.category?.toLowerCase().includes(q) ?? false) ||
-    p.notes.some(n => n.toLowerCase().includes(q))
+    p.notes.some(n => n.toLowerCase().includes(q)))
   )
+}
+
+// ── 건물 별칭 검색 ─────────────────────────────────────────────
+
+export type BuildingResult = {
+  id: string
+  label: string
+  sub?: string  // 자연관 A/B/C용 sub-id
+}
+
+const BUILDING_ALIASES: Array<{ aliases: string[]; result: BuildingResult }> = [
+  { aliases: ['인대', '인문사회관', '인문관', '인문', '인사관'],          result: { id: 'hum',        label: '인문사회관' } },
+  { aliases: ['차관', '차미관', '차미리사관', '차미리'],                  result: { id: 'cha',        label: '차미리사관' } },
+  { aliases: ['학관', '학생관', '학생회관'],                              result: { id: 'stu',        label: '학생회관' } },
+  { aliases: ['대강의동', '대강의', '대강'],                              result: { id: 'dae',        label: '대강의동' } },
+  { aliases: ['자연대', '자대', '자연관'],                                result: { id: 'nat',        label: '자연관' } },
+  { aliases: ['자A', '자대A', '자연관A', '자연대A'],                      result: { id: 'nat',        label: '자연관 A동', sub: 'natA' } },
+  { aliases: ['자B', '자대B', '자연관B', '자연대B'],                      result: { id: 'nat',        label: '자연관 B동', sub: 'natB' } },
+  { aliases: ['자C', '자대C', '자연관C', '자연대C'],                      result: { id: 'nat',        label: '자연관 C동', sub: 'natC' } },
+  { aliases: ['예술관', '예대', '예관'],                                  result: { id: 'art',        label: '예술관' } },
+  { aliases: ['도서관'],                                                  result: { id: 'lib',        label: '도서관' } },
+  { aliases: ['대학본부', '본부'],                                        result: { id: 'main',       label: '대학본부' } },
+  { aliases: ['약학관', '약관'],                                          result: { id: 'yak',        label: '약학관' } },
+  { aliases: ['라온센터', '라온'],                                        result: { id: 'la',         label: '라온센터' } },
+  { aliases: ['덕우당', '덕우'],                                          result: { id: 'duk',        label: '덕우당' } },
+  { aliases: ['유아교육관', '유아관', '유아교육'],                        result: { id: 'yu',         label: '유아교육관' } },
+  { aliases: ['파워플랜트', '파워 플랜트', '파워'],                       result: { id: 'power',      label: '파워 플랜트' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-1', label: '흡연 구역 1' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-2', label: '흡연 구역 2' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-3', label: '흡연 구역 3' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-4', label: '흡연 구역 4' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-5', label: '흡연 구역 5' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-6', label: '흡연 구역 6' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-7', label: '흡연 구역 7' } },
+  { aliases: ['음식물쓰레기', '음식물 쓰레기', '음쓰', '음식물'],        result: { id: 'food-waste', label: '음식물 쓰레기 처리 장소' } },
+  { aliases: ['폐지처리', '폐지 처리', '폐지'],                          result: { id: 'paper-waste', label: '폐지 처리 장소' } },
+]
+
+export function searchBuildings(query: string): BuildingResult[] {
+  const q = query.trim().toLowerCase()
+  if (!q) return []
+  const seen = new Set<string>()
+  const results: BuildingResult[] = []
+  for (const { aliases, result } of BUILDING_ALIASES) {
+    const key = result.id + (result.sub ?? '')
+    if (seen.has(key)) continue
+    if (aliases.some(a => a.toLowerCase().startsWith(q) || q.startsWith(a.toLowerCase()))) {
+      results.push(result)
+      seen.add(key)
+    }
+  }
+  return results
 }
 
 export function getBuildingLabel(place: Place): string {
   if (place.id.startsWith('cha')) return '차미리사관'
   if (place.id.startsWith('dae')) return '대강의동'
+  if (place.id.startsWith('in')) return '인문사회관'
+  if (place.id.startsWith('natA') || place.id.startsWith('jaA')) return '자연관 A동'
+  if (place.id.startsWith('natB') || place.id.startsWith('jaB')) return '자연관 B동'
+  if (place.id.startsWith('natC') || place.id.startsWith('jaC')) return '자연관 C동'
+  if (place.id.startsWith('stu') || place.id.startsWith('hak')) return '학생회관'
   if (place.id === 'main_office') return '대학본부'
   return '기타'
+}
+
+// ── 장소 → 건물 지도 URL 변환 ────────────────────────────────
+
+export type PlaceNav = {
+  url: string
+  floorKey: string
+  viewKey: ViewKey
+}
+
+// Place IDs whose data-place-id lives in the amenity (_2) SVG, not the basic SVG
+const AMENITY_VIEW_IDS = new Set([
+  'cha1Fprinter',
+  'hak1Fcert', 'hak1Fatm', 'hak1Fduksae',
+  'hak4Flaundry',
+  'in1Fpiano',
+  'in2Fshower1', 'in2FbwPrint', 'in2FcolorPrint',
+  'in3Fshower1',
+  'jaB2FbwPrint',
+])
+
+function floorLabelToKey(floor: string | null): string {
+  if (!floor) return '1'
+  // '1F' → '1', '2F' → '2', 'B1' → 'b1', 'B1F' → 'b1'
+  return floor.toLowerCase().replace('f', '')
+}
+
+export function getPlaceNavigation(place: Place): PlaceNav | null {
+  const floorKey = floorLabelToKey(place.floor)
+  const id = place.id
+  const viewKey: ViewKey = AMENITY_VIEW_IDS.has(id) ? 'amenity' : 'basic'
+  if (id.startsWith('cha'))                                      return { url: '/map?building=cha',            floorKey, viewKey }
+  if (id.startsWith('dae'))                                      return { url: '/map?building=dae',            floorKey, viewKey }
+  if (id.startsWith('in'))                                       return { url: '/map?building=hum',            floorKey, viewKey }
+  if (id.startsWith('natA') || id.startsWith('jaA'))            return { url: '/map?building=nat&sub=natA',   floorKey, viewKey }
+  if (id.startsWith('natB') || id.startsWith('jaB'))            return { url: '/map?building=nat&sub=natB',   floorKey, viewKey }
+  if (id.startsWith('natC') || id.startsWith('jaC'))            return { url: '/map?building=nat&sub=natC',   floorKey, viewKey }
+  if (id.startsWith('stu') || id.startsWith('hak'))             return { url: '/map?building=stu',            floorKey, viewKey }
+  return null
 }
 
 // ── MapPage 전용 설정 ────────────────────────────────────────
