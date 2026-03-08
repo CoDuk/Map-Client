@@ -240,12 +240,13 @@ export default function CampusMap({ onBuildingClick, onEmptyClick, focusBuilding
     <div className="relative flex-1 min-h-0 overflow-hidden bg-rose-100">
       <div
         ref={containerRef}
-        className="absolute inset-0 overflow-hidden touch-none"
+        className="absolute inset-0 overflow-hidden touch-none select-none"
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
         onWheel={onWheel}
+        onDragStart={e => e.preventDefault()}
       >
         {/*
           svgWrapperRef div: SVG map의 transform 대상.

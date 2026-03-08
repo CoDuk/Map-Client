@@ -270,12 +270,13 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick, focusPlaceId }: P
       ) : svgContent ? (
         <div
           ref={containerRef}
-          className="absolute inset-0 overflow-hidden touch-none"
+          className="absolute inset-0 overflow-hidden touch-none select-none"
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
           onWheel={onWheel}
+          onDragStart={e => e.preventDefault()}
           // biome-ignore lint/security/noDangerouslySetInnerHtml: trusted floor plan SVG
           dangerouslySetInnerHTML={{ __html: svgContent }}
         />
