@@ -5,6 +5,7 @@ export type Place = {
   category: string | null
   images: string[]
   notes: string[]
+  aliases?: string[]
 }
 
 export const PLACES: Place[] = [
@@ -235,8 +236,8 @@ export const PLACES: Place[] = [
   { id: 'cha123', name: '차123', floor: '1F', category: '강의실', images: ['/images/cha123.jpg'], notes: [] },
   { id: 'cha124', name: '차124', floor: '1F', category: '강의실', images: ['/images/cha124.jpg'], notes: [] },
   { id: 'cha125', name: '차125', floor: '1F', category: '강의실', images: ['/images/cha125.jpg'], notes: ['기후데이터 분석 및 실습실'] },
-  { id: 'cha126', name: '차126', floor: '1F', category: '강의실', images: ['/images/cha126.jpg', '/images/cha126-1.jpg'], notes: ['글로벌커뮤니케이션센터', '차미리사교양교육연구소'] },
-  { id: 'cha127', name: '차127', floor: '1F', category: '강의실', images: ['/images/cha127.jpg', '/images/cha127-1.jpg'], notes: ['차미리사교양대학 교학과', '차미리사교양대학 학장실'] },
+  { id: 'cha126', name: '차126', floor: '1F', category: '강의실', images: ['/images/cha126.jpg', '/images/cha126-1.jpg'], notes: ['글로벌커뮤니케이션센터', '차미리사교양교육연구소'], aliases: ['차126-1', '126-1'] },
+  { id: 'cha127', name: '차127', floor: '1F', category: '강의실', images: ['/images/cha127.jpg', '/images/cha127-1.jpg'], notes: ['차미리사교양대학 교학과', '차미리사교양대학 학장실'], aliases: ['차127-1', '127-1'] },
   { id: 'cha128', name: '차128', floor: '1F', category: '강의실', images: [], notes: ['연구실 구역'] },
   { id: 'cha129', name: '차129', floor: '1F', category: '강의실', images: [], notes: ['연구실 구역'] },
   { id: 'cha130', name: '차130', floor: '1F', category: '강의실', images: [], notes: ['연구실 구역'] },
@@ -307,7 +308,7 @@ export const PLACES: Place[] = [
   { id: 'cha3Fsofa5', name: '차미리사관 3층 소파존', floor: '3F', category: '복합공간', images: [], notes: [] },
   // 3F
   { id: 'cha319', name: '차319', floor: '3F', category: '강의실', images: [], notes: [] },
-  { id: 'cha320', name: '차320', floor: '3F', category: '강의실', images: [], notes: [] },
+  { id: 'cha320', name: '차320', floor: '3F', category: '강의실', images: [], notes: [], aliases: ['차320-1', '320-1'] },
   { id: 'cha321', name: '차321', floor: '3F', category: '강의실', images: [], notes: [] },
   { id: 'cha323', name: '차323', floor: '3F', category: '강의실', images: [], notes: [] },
   { id: 'cha324', name: '차324', floor: '3F', category: '강의실', images: [], notes: [] },
@@ -326,7 +327,7 @@ export const PLACES: Place[] = [
   { id: 'cha336', name: '차336', floor: '3F', category: '강의실', images: [], notes: [] },
   { id: 'cha337', name: '차337', floor: '3F', category: '강의실', images: [], notes: [] },
   { id: 'cha338', name: '차338', floor: '3F', category: '강의실', images: [], notes: [] },
-  { id: 'cha339', name: '차339', floor: '3F', category: '강의실', images: [], notes: [] },
+  { id: 'cha339', name: '차339', floor: '3F', category: '강의실', images: [], notes: [], aliases: ['차339-1', '339-1'] },
   { id: 'cha340', name: '차340', floor: '3F', category: '강의실', images: [], notes: [] },
   { id: 'cha341', name: '차341', floor: '3F', category: '강의실', images: [], notes: [] },
   { id: 'cha342', name: '차342', floor: '3F', category: '강의실', images: [], notes: [] },
@@ -688,7 +689,8 @@ export function searchPlaces(query: string): Place[] {
     (p.name.toLowerCase().includes(q) ||
     (p.floor?.toLowerCase().includes(q) ?? false) ||
     (p.category?.toLowerCase().includes(q) ?? false) ||
-    p.notes.some(n => n.toLowerCase().includes(q)))
+    p.notes.some(n => n.toLowerCase().includes(q)) ||
+    (p.aliases?.some(a => a.toLowerCase().includes(q)) ?? false))
   )
 }
 

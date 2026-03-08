@@ -41,7 +41,12 @@ export default function DetailModal({ place, onClose, showBackdrop }: Props) {
           {/* Title + tags */}
           {place.name && (
             <div className="flex items-center gap-2 flex-wrap mb-4">
-              <h2 className="text-[20px] font-bold text-neutral-500">{place.name}</h2>
+              <h2 className="text-[20px] font-bold text-neutral-500">
+                {place.name}
+                {place.aliases && place.aliases.length > 0 && (
+                  <span> · {place.aliases[0]}</span>
+                )}
+              </h2>
               {place.floor && (
                 <span className="px-2.5 py-0.5 bg-primary-dark text-white text-[12px] font-semibold rounded-full">
                   {place.floor}

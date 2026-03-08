@@ -149,7 +149,9 @@ export default function PlaceSearch({ onClose, onSelectPlace }: Props) {
                     <span className="text-[10px] text-primary-dark font-bold">{getBuildingLabel(place).slice(0, 2)}</span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[15px] font-semibold text-neutral-500 truncate">{place.name}</p>
+                    <p className="text-[15px] font-semibold text-neutral-500 truncate">
+                      {place.name}{place.aliases && place.aliases.length > 0 && ` · ${place.aliases[0]}`}
+                    </p>
                     <p className="text-[12px] text-neutral-100 mt-0.5">
                       {getBuildingLabel(place)}{place.floor ? ` · ${place.floor}` : ''}
                     </p>
