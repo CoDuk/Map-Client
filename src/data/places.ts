@@ -314,6 +314,7 @@ export const PLACES: Place[] = [
   { id: 'cha325', name: '차325', floor: '3F', category: '강의실', images: [], notes: [] },
   { id: 'cha326', name: '차326', floor: '3F', category: '강의실', images: [], notes: [] },
   { id: 'cha327', name: '차327', floor: '3F', category: '강의실', images: [], notes: [] },
+  { id: 'cha353', name: '차353', floor: '3F', category: '강의실', images: [], notes: [] },
   { id: 'cha328', name: '차328', floor: '3F', category: '강의실', images: [], notes: [] },
   { id: 'cha329', name: '차329', floor: '3F', category: '강의실', images: [], notes: [] },
   { id: 'cha330', name: '차330', floor: '3F', category: '강의실', images: [], notes: [] },
