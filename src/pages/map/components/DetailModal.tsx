@@ -6,9 +6,10 @@ import CloseIcon from '@/assets/close.svg'
 type Props = {
   place: Place | null
   onClose: () => void
+  showBackdrop?: boolean
 }
 
-export default function DetailModal({ place, onClose }: Props) {
+export default function DetailModal({ place, onClose, showBackdrop }: Props) {
   const [imgIndex, setImgIndex] = useState(0)
 
   if (!place) return null
@@ -17,6 +18,9 @@ export default function DetailModal({ place, onClose }: Props) {
 
   return (
     <>
+      {showBackdrop && (
+        <div className="fixed inset-0 z-40" onClick={onClose} />
+      )}
       {/* Bottom sheet */}
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-cream-0 rounded-t-[24px] shadow-[0_-4px_20px_rgba(0,0,0,0.15)] pb-(--sab)">
         {/* Handle bar — tap to close */}

@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import CategoryTabs from './components/CategoryTabs'
 import CampusMap from './components/CampusMap'
 import DetailModal from './components/DetailModal'
@@ -9,7 +9,12 @@ import type { Place } from '@/data/places'
 
 export default function MainPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [activeBuilding, setActiveBuilding] = useState('전체')
+
+  useEffect(() => {
+    localStorage.setItem('lastMapPath', location.pathname + location.search)
+  }, [location])
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null)
   const [isSearchMode, setIsSearchMode] = useState(false)
 
@@ -53,6 +58,7 @@ export default function MainPage() {
       <DetailModal
         place={selectedPlace}
         onClose={() => setSelectedPlace(null)}
+        showBackdrop
       />
     </div>
   )

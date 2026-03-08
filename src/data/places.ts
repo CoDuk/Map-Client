@@ -34,6 +34,8 @@ export const PLACES: Place[] = [
   { id: 'dae1Fsofa1', name: '대강의동 1층 소파존', floor: '1F', category: '복합공간', images: [], notes: [] },
   { id: 'dae2Fwater', name: '대강의동 2층 정수기', floor: '2F', category: '편의시설', images: [], notes: [] },
   // 인문사회관 2F
+  { id: 'in2FbwPrint', name: '흑백 프린터', floor: '2F', category: '복합공간', images: [], notes: [] },
+  { id: 'in2FcolorPrint', name: '컬러 프린터', floor: '2F', category: '복합공간', images: [], notes: [] },
   { id: 'in2Fsofa1', name: '인문사회관 2층 소파존', floor: '2F', category: '복합공간', images: [], notes: [] },
   { id: 'in2Fshower1', name: '인문사회관 2층 샤워실', floor: '2F', category: '복합공간', images: [], notes: [] },
   { id: 'in2Fsofa2', name: '인문사회관 2층 소파존', floor: '2F', category: '복합공간', images: [], notes: [] },
@@ -199,6 +201,7 @@ export const PLACES: Place[] = [
   { id: 'in364', name: '인364', floor: '3F', category: '강의실', images: [], notes: [] },
   { id: 'in365', name: '인365', floor: '3F', category: '강의실', images: [], notes: [] },
   // 인문사회관 1F
+  { id: 'in1Fpiano', name: '전자피아노', floor: '1F', category: '복합공간', images: [], notes: [] },
   { id: 'in1Fsofa1', name: '인문사회관 1층 소파존', floor: '1F', category: '복합공간', images: [], notes: [] },
   { id: 'in101', name: '인101', floor: '1F', category: '강의실', images: [], notes: [] },
   { id: 'in102', name: '인102', floor: '1F', category: '강의실', images: [], notes: [] },
@@ -462,6 +465,7 @@ export const PLACES: Place[] = [
   { id: 'natB104', name: 'B104', floor: '1F', category: '강의실', images: [], notes: [] },
   { id: 'natB105', name: 'B105', floor: '1F', category: '강의실', images: [], notes: [] },
   { id: 'natB106', name: 'B106', floor: '1F', category: '강의실', images: [], notes: [] },
+  { id: 'jaB2FbwPrint', name: '흑백 프린터', floor: '2F', category: '복합공간', images: [], notes: [] },
   { id: 'jaB2Fsofa1', name: '자연관 B동 2층 소파존', floor: '2F', category: '복합공간', images: [], notes: [] },
   { id: 'jaB2Fsofa2', name: '자연관 B동 2층 소파존', floor: '2F', category: '복합공간', images: [], notes: [] },
   { id: 'jaB2Fsofa3', name: '자연관 B동 2층 소파존', floor: '2F', category: '복합공간', images: [], notes: [] },
@@ -715,6 +719,7 @@ export const BUILDING_MAP_CONFIG: BuildingMapCfg[] = [
       { key: '2', label: '2F' }, { key: '3', label: '3F' }, { key: '4', label: '4F' },
     ],
     views: ['basic', 'locker', 'amenity'],
+    viewOverrides: { 'b1': ['basic'] },
   },
   {
     id: 'hum', subId: 'in', label: '인문사회관',

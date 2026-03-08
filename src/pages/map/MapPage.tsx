@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useSearchParams, useNavigate } from 'react-router-dom'
+import { useSearchParams, useNavigate, useLocation } from 'react-router-dom'
 import CategoryTabs from './components/CategoryTabs'
 import FloorMapViewer from './components/FloorMapViewer'
 import FloorViewToolbar from './components/FloorViewToolbar'
@@ -15,6 +15,7 @@ import type { Place, ViewKey, BuildingMapCfg } from '@/data/places'
 export default function MapPage() {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
+  const location = useLocation()
 
   const buildingId = searchParams.get('building') || 'cha'
   const subParam = searchParams.get('sub') || ''
@@ -29,6 +30,10 @@ export default function MapPage() {
   const [activeFloor, setActiveFloor] = useState(activeCfg.floors[0]?.key ?? '1')
   const [activeView, setActiveView] = useState<ViewKey>('basic')
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null)
+
+  useEffect(() => {
+    localStorage.setItem('lastMapPath', location.pathname + location.search)
+  }, [location])
 
   // Reset floor/view when building/sub changes
   useEffect(() => {
@@ -112,7 +117,7 @@ export default function MapPage() {
         onViewChange={setActiveView}
       />
 
-      <DetailModal place={selectedPlace} onClose={() => setSelectedPlace(null)} />
+      <DetailModal place={selectedPlace} onClose={() => setSelectedPlace(null)} showBackdrop />
     </div>
   )
 }
