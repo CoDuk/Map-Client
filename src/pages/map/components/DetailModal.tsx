@@ -24,8 +24,8 @@ export default function DetailModal({ place, onClose, showBackdrop }: Props) {
       {/* Bottom sheet */}
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-cream-0 rounded-t-[24px] shadow-[0_-4px_20px_rgba(0,0,0,0.15)] pb-(--sab)">
         {/* Handle bar — tap to close */}
-        <div className="flex justify-center pt-3 pb-1" onClick={onClose}>
-          <div className="w-10 h-1 rounded-full bg-neutral-100" />
+        <div className="flex justify-center pt-3 pb-2" onClick={onClose}>
+          {/* <div className="w-10 h-1 rounded-full bg-neutral-100" /> */}
         </div>
 
         {/* Close button */}
@@ -48,8 +48,13 @@ export default function DetailModal({ place, onClose, showBackdrop }: Props) {
                 )}
               </h2>
               {place.floor && (
-                <span className="px-2.5 py-0.5 bg-primary-dark text-white text-[12px] font-semibold rounded-full">
+                <span className="px-2.5 py-0.5 bg-primary text-white text-[12px] font-semibold rounded-full">
                   {place.floor}
+                </span>
+              )}
+              {place.category && (
+                <span className="px-2.5 py-0.5 border border-primary text-primary text-[12px] font-semibold rounded-full">
+                  {place.category}
                 </span>
               )}
             </div>
@@ -108,13 +113,26 @@ export default function DetailModal({ place, onClose, showBackdrop }: Props) {
 
               {/* Notes */}
               {place.notes.length > 0 && (
-                <ul className="flex flex-col gap-2">
-                  {place.notes.map((note, i) => (
-                    <li key={i} className="text-[14px] text-neutral-300 font-medium">
-                      ※ {note}
-                    </li>
-                  ))}
-                </ul>
+                <div className="flex flex-col gap-3">
+                  {place.notes.filter(n => n.length <= 20).length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {place.notes.filter(n => n.length <= 20).map((note, i) => (
+                        <span key={i} className="px-3 py-0.5 rounded-full border border-neutral-300 text-[12px] text-neutral-300 font-medium">
+                          {note}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  {place.notes.some(n => n.length > 20) && (
+                    <ul className="flex flex-col gap-2">
+                      {place.notes.filter(n => n.length > 20).map((note, i) => (
+                        <li key={i} className="text-[14px] text-neutral-300 font-medium">
+                          ※ {note}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
               )}
             </>
           )}
