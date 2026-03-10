@@ -471,7 +471,7 @@ export const PLACES: Place[] = [
   { id: 'natB104', name: 'B104', floor: '1F', category: '강의실', images: ['/images/B102-104.jpg'], notes: [] },
   { id: 'natB105', name: 'B105', floor: '1F', category: '강의실', images: ['/images/B105.jpg'], notes: [] },
   { id: 'natB106', name: 'B106', floor: '1F', category: '강의실', images: ['/images/B106.jpg'], notes: [] },
-  { id: 'jaB2FbwPrint', name: '흑백 프린터', floor: '2F', category: '복합공간', images: [], notes: [] },
+  { id: 'jaB2FbwPrint', name: '흑백 프린터', floor: '2F', category: '복합공간', images: ['/images/B2Fprinter.jpg'], notes: [] },
   { id: 'jaB2Fsofa1', name: '자연관 B동 2층 복합공간', floor: '2F', category: '복합공간', images: ['/images/B2Fsofa1.jpg'], notes: [] },
   { id: 'jaB2Fsofa2', name: '자연관 B동 2층 복합공간', floor: '2F', category: '복합공간', images: ['/images/B2Fsofa3.jpg'], notes: [] },
   { id: 'jaB2Fsofa3', name: '자연관 B동 2층 소파', floor: '2F', category: '복합공간', images: ['/images/B2Fsofa2.jpg'], notes: [] },
@@ -855,7 +855,7 @@ export const BUILDING_MAP_CONFIG: BuildingMapCfg[] = [
         id: 'natB', subId: 'jaB', label: 'B동',
         floors: [{ key: '1', label: '1F' }, { key: '2', label: '2F' }],
         views: ['basic', 'locker', 'amenity'],
-        viewOverrides: { '1': ['basic', 'locker'] },
+        viewOverrides: { '1': ['basic'] },
       },
       {
         id: 'natC', subId: 'jaC', label: 'C동',
