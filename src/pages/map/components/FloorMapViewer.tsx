@@ -1,6 +1,11 @@
 import { useRef, useEffect, useLayoutEffect, useCallback, useState, memo } from 'react'
 import type React from 'react'
 import HakdukIcon from '@/assets/hakduk.svg'
+import GirlIcon from '@/assets/girl.svg'
+import BoyIcon from '@/assets/boy.svg'
+import StairsIcon from '@/assets/stairs.svg'
+import DrinkIcon from '@/assets/drink.svg'
+import DrinksIcon from '@/assets/drinks.svg'
 import type { BuildingMapCfg, ViewKey } from '@/data/places'
 
 // Vite glob import for all floor plan SVGs (raw)
@@ -50,19 +55,20 @@ type Props = {
   focusPlaceId?: string
 }
 
-const LEGEND_ITEMS: Record<ViewKey, { color?: string; icon?: string; label: string }[]> = {
+const LEGEND_ITEMS: Record<ViewKey, { color?: string; borderColor?: string; icon?: string; svgIcon?: string; iconClass?: string; iconClass2?: string; label: string }[]> = {
   basic: [
     { color: '#E7C9D0', label: '강의실' },
-    { icon: '♀', label: '여자 화장실' },
-    { icon: '♂', label: '남자 화장실' },
-    { icon: '↕', label: '계단' },
+    { svgIcon: GirlIcon, label: '여자 화장실' },
+    { svgIcon: BoyIcon, label: '남자 화장실' },
+    { svgIcon: StairsIcon, iconClass: 'w-3 h-3 ml-[-3.5px]', label: '계단' },
   ],
   locker: [
-    { icon: '☰', label: '사물함' },
+    { color: '#E7C9D0', label: '복합공간' },
+    { color: '#C2D6F1', borderColor: '#08397A', label: '사물함' },
   ],
   amenity: [
-    { icon: '💧', label: '정수기' },
-    { icon: '🥤', label: '음료자판기' },
+    { svgIcon: DrinkIcon, iconClass2: 'w-3 h-3', label: '정수기' },
+    { svgIcon: DrinksIcon, iconClass2: 'w-3 h-3', label: '음료 자판기' },
   ],
 }
 
@@ -277,7 +283,6 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick, focusPlaceId }: P
           onPointerCancel={onPointerUp}
           onWheel={onWheel}
           onDragStart={e => e.preventDefault()}
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: trusted floor plan SVG
           dangerouslySetInnerHTML={{ __html: svgContent }}
         />
       ) : (
@@ -288,15 +293,17 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick, focusPlaceId }: P
       )}
 
       {svgContent && (
-        <div className="absolute top-3 left-3 z-10 bg-white/90 rounded-xl px-3 py-2 flex flex-col gap-1.5 shadow-sm">
+        <div className="absolute top-3 left-3 z-10 rounded-xl px-4 py-3 flex flex-col gap-1.5 border-[1.5px] border-cream-200">
           {legendItems.map(item => (
             <div key={item.label} className="flex items-center gap-1.5">
               {item.color ? (
-                <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
+                <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: item.color, border: `1px solid ${item.borderColor ?? '#50001B'}` }} />
+              ) : item.svgIcon ? (
+                <img src={item.svgIcon} alt={item.label} className={`${item.iconClass2 ?? item.iconClass ?? 'w-2 h-4'} shrink-0`} />
               ) : (
                 <span className="w-2.5 text-center text-[10px] shrink-0 text-neutral-300">{item.icon}</span>
               )}
-              <span className="text-[11px] text-neutral-300 font-medium">{item.label}</span>
+              <span className="text-[9px] text-neutral-300 font-medium">{item.label}</span>
             </div>
           ))}
         </div>

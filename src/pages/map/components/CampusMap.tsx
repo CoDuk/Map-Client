@@ -248,16 +248,10 @@ export default function CampusMap({ onBuildingClick, onEmptyClick, focusBuilding
         onWheel={onWheel}
         onDragStart={e => e.preventDefault()}
       >
-        {/*
-          svgWrapperRef div: SVG map의 transform 대상.
-          innerHTML은 useEffect에서 한 번만 설정하고 React는 이 div의 자식을 관리하지 않는다.
-          Re-render 시에도 transform·SVG 스타일이 유지된다.
-        */}
         <div ref={svgWrapperRef} className="absolute inset-0" />
       </div>
 
-{/* Legend */}
-      <div className="absolute top-3 left-3 z-10 bg-cream-100 border-[1.5px] border-cream-200 rounded-[15px] px-[18px] py-[15px] flex flex-col gap-1.5 shadow-sm">
+      <div className="absolute top-3 left-3 z-10 bg-cream-100 border-[1.5px] border-cream-200 rounded-[15px] px-4 py-3 flex flex-col gap-1.5">
         <LegendItem color="#C2D6F1" stroke="#08397A" label="흡연 구역" />
         <LegendItem color="#EFD097" stroke="#E99015" label="음식물 쓰레기통" />
         <LegendItem color="#C6C6C5" stroke="#424242" label="폐지 처리 장소" />
@@ -269,7 +263,7 @@ export default function CampusMap({ onBuildingClick, onEmptyClick, focusBuilding
 function LegendItem({ color, stroke, label }: { color: string; stroke?: string; label: string }) {
   return (
     <div className="flex items-center gap-1.5">
-      <span className="w-[8px] h-[8px] rounded-full shrink-0" style={{ backgroundColor: color, outline: stroke ? `1px solid ${stroke}` : undefined }} />
+      <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: color, outline: stroke ? `1px solid ${stroke}` : undefined }} />
       <span className="text-[9px] text-neutral-300 font-medium">{label}</span>
     </div>
   )

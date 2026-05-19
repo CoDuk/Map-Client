@@ -551,18 +551,18 @@ export const PLACES: Place[] = [
   { id: 'natC319', name: 'C319', floor: '3F', category: '강의실', images: ['/images/C319.jpg'], notes: ['전공비품보관실'] },
   { id: 'natC320', name: 'C320', floor: '3F', category: '강의실', images: ['/images/C320.jpg'], notes: ['재봉실습실'] },
   // 학생회관 1F
-  { id: 'stu113', name: '학113(강당)', floor: '1F', category: '강당', images: ['/images/hak1Fhall.jpg'], notes: [] },
-  { id: 'stu114', name: '학114', floor: '1F', category: '강의실', images: [], notes: [] },
-  { id: 'stu115', name: '학115', floor: '1F', category: '강의실', images: [], notes: [] },
-  { id: 'stu106', name: '학106', floor: '1F', category: '강의실', images: [], notes: [] },
-  { id: 'stu109', name: '학109', floor: '1F', category: '강의실', images: [], notes: [] },
+  { id: 'stu113', name: '강당', floor: '1F', category: '강당', images: ['/images/hak1Fhall.jpg', '/images/hak2Fhall.jpg'], notes: [] },
+  { id: 'stu114', name: '식당부속실', floor: '1F', category: '강의실', images: [], notes: ['외부인 출입 금지'] },
+  { id: 'stu115', name: '학115', floor: '1F', category: '강의실', images: ['/images/hak115.jpg', '/images/hak115_2.jpg'], notes: ['기도실', '파우더룸', '헤어 드라이기 보유', "기도실 사용 시간: 12:30~13:30, 16:30~17:30, 18:20~19:00"] },
+  { id: 'stu106', name: '학106', floor: '1F', category: '강의실', images: [], notes: ['건강증진센터'] },
+  { id: 'stu109', name: '학109', floor: '1F', category: '강의실', images: [], notes: ['안정실'] },
   { id: 'stuSick', name: '안정실', floor: '1F', category: '편의시설', images: ['/images/hak1Fstability.jpg'], notes: [] },
   { id: 'stuHealth', name: '건강증진센터', floor: '1F', category: '편의시설', images: ['/images/hak1FhealthCare.jpg'], notes: [] },
   { id: 'stuDisCenter', name: '장애학생지원센터', floor: '1F', category: '편의시설', images: ['/images/hak1FdisabledSupport.jpg'], notes: [] },
   { id: 'stuDisLounge', name: '장애학생 휴게실', floor: '1F', category: '편의시설', images: ['/images/hak1FdisabledRoom.jpg'], notes: [] },
   { id: 'stuPost', name: '우편취급국', floor: '1F', category: '편의시설', images: ['/images/hak1FpostOffice.jpg'], notes: ['영업 시간: 09:00~18:00', '오늘출발 우편물 마감 시간: 17:30'] },
   { id: 'stuStationery', name: '문구점', floor: '1F', category: '편의시설', images: ['/images/hak1Fstationery1.jpg', '/images/hak1Fstationery2.jpg'], notes: ['평일 영업 시간: ?', '공휴일 휴무'] },
-  { id: 'stuCopy', name: '복사실', floor: '1F', category: '편의시설', images: ['/images/hak1Fcopy.jpg'], notes: ['평일 영업 시간: ?', '공휴일 휴무'] },
+  { id: 'stuCopy', name: '복사실', floor: '1F', category: '편의시설', images: ['/images/hak1Fcopy.jpg'], notes: ['평일 영업 시간: 09:00~19:00', '공휴일 휴무'] },
   { id: 'stuOptical', name: '안경점', floor: '1F', category: '편의시설', images: ['/images/hak1Fglassess.jpg'], notes: ['평일 영업 시간: 10:00~18:00', '토요일 영업 시간: 10:00~14:00', '공휴일 휴무'] },
   { id: 'stuBook', name: '서점', floor: '1F', category: '편의시설', images: [], notes: [] },
   { id: 'stuPC', name: '컴퓨터매장', floor: '1F', category: '편의시설', images: ['/images/hak1Fcomputer.jpg'], notes: ['평일 영업 시간: ?'] },
@@ -570,13 +570,13 @@ export const PLACES: Place[] = [
   { id: 'hak1Fcert', name: '증명서 발급기', floor: '1F', category: '편의시설', images: ['/images/hak1Fcertificate.jpg'], notes: ['QR코드, 교통카드, 신용카드 결제 가능'] },
   { id: 'hak1Fatm', name: '하나은행 ATM', floor: '1F', category: '편의시설', images: ['/images/hak1Fatm.jpg'], notes: [] },
   { id: 'hak1Fduksae', name: '덕새 자판기', floor: '1F', category: '편의시설', images: ['/images/hak1Fgoods.jpg'], notes: ['신용카드 결제 가능'] },
-  { id: 'hak4Flaundry', name: '세탁기', floor: '4F', category: '편의시설', images: [], notes: [] },
+  { id: 'hak4Flaundry', name: '세탁기', floor: '4F', category: '편의시설', images: ['/images/hak4Fwashing.jpg'], notes: [] },
   // 학생회관 2F
   { id: 'stuCafe', name: '학식당', floor: '2F', category: '편의시설', images: ['/images/hak2Fcafeteria.jpg'], notes: ['영업 시간: 10:30~18:30'] },
-  { id: 'stuCouncil', name: '총학생회실', floor: '2F', category: '편의시설', images: [], notes: [] },
+  { id: 'stuCouncil', name: '총학생회실', floor: '2F', category: '편의시설', images: [], notes: ['총학생회실'] },
   { id: 'stu203', name: '학203', floor: '2F', category: '강의실', images: ['/images/hak203.jpg'], notes: ['학생지원과'] },
   { id: 'stu2031', name: '학203-1', floor: '2F', category: '강의실', images: ['/images/hak203-1.jpg'], notes: ['학생•인재개발처장실'] },
-  { id: 'stu2032', name: '학203-2', floor: '2F', category: '강의실', images: [], notes: [] },
+  { id: 'stu2032', name: '학203-2', floor: '2F', category: '강의실', images: ['/images/hak203-1.jpg'], notes: ['학생•인재개발처장실'] },
   { id: 'stu205', name: '학205', floor: '2F', category: '강의실', images: [], notes: ['덕성사회봉사단 동아리방'] },
   { id: 'stu206', name: '학206', floor: '2F', category: '강의실', images: [], notes: ['과방'] },
   { id: 'stuFaculty', name: '교직원 휴게실', floor: '2F', category: '편의시설', images: ['/images/hak201.jpg'], notes: [] },
@@ -608,8 +608,8 @@ export const PLACES: Place[] = [
   { id: 'stu324', name: '학324', floor: '3F', category: '강의실', images: [], notes: ['동아리방'] },
   { id: 'stu325', name: '학325', floor: '3F', category: '강의실', images: [], notes: ['Art&Design 학생회실'] },
   { id: 'stu326', name: '학326', floor: '3F', category: '강의실', images: [], notes: ['동아리방'] },
-  { id: 'stu327', name: '학327', floor: '3F', category: '강의실', images: [], notes: [] },
-  { id: 'stu3271', name: '학327-1', floor: '3F', category: '강의실', images: [], notes: [] },
+  { id: 'stu327', name: '학327-1', floor: '3F', category: '강의실', images: [], notes: ['동아리연합회'] },
+  { id: 'stu3271', name: '학327', floor: '3F', category: '강의실', images: [], notes: ['동아리연합회'] },
   { id: 'stu328', name: '학328', floor: '3F', category: '강의실', images: [], notes: ['동아리방'] },
   { id: 'stu329', name: '학329', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
   { id: 'stu330', name: '학330', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
@@ -650,12 +650,12 @@ export const PLACES: Place[] = [
   { id: 'stu419', name: '학419', floor: '4F', category: '강의실', images: [], notes: ['동아리방'] },
   // 흡연 구역
   { id: 'hakCigarette1', name: '학생회관 1층 흡연 구역', floor: null, category: null, images: ['/images/hakCigarette1.jpg'], notes: [] },
-  { id: 'hakCigarette2', name: '학생회관 3층 옥상 흡연 구역', floor: null, category: null, images: [], notes: [] },
+  { id: 'hakCigarette2', name: '학생회관 3층 옥상 흡연 구역', floor: null, category: null, images: [], notes: ['최근 금연 구역으로 변경'] },
   { id: 'inCigarette', name: '인문사회관 흡연 구역', floor: null, category: null, images: ['/images/inCigarette.jpg'], notes: [] },
   { id: 'inDaeCigarette', name: '인문사회관-대강의동 흡연 구역', floor: null, category: null, images: ['/images/inDaeCigarette.jpg'], notes: [] },
   { id: 'chaDaeCigarette', name: '차미리사관-대강의동 흡연 구역', floor: null, category: null, images: ['/images/chaDaeCigarette.jpg'], notes: ['자전거 거치대 옆'] },
   { id: 'yeCigarette', name: '예술관 흡연 구역', floor: null, category: null, images: ['/images/yeCigarette.jpg'], notes: ['예술관 N동-L동 사이'] },
-  { id: 'libraryCigarette', name: '도서관 옥상 흡연 구역', floor: null, category: null, images: [], notes: [] },
+  { id: 'libraryCigarette', name: '도서관 옥상 흡연 구역', floor: null, category: null, images: [], notes: ['도서관 옥상 전체 흡연 가능'] },
 ]
 
 export type BuildingConfig = {
@@ -663,6 +663,7 @@ export type BuildingConfig = {
   label: string
   svgId: string
   prefix: string
+  placeId?: string  // 단일 장소 직접 연결용
   noTab?: boolean  // 전체/건물 카테고리 탭에 표시하지 않음
 }
 
@@ -681,13 +682,13 @@ export const BUILDINGS: BuildingConfig[] = [
   { id: 'duk', label: '덕우당', svgId: 'building-duk', prefix: '', noTab: true },
   { id: 'yu', label: '유아교육관', svgId: 'building-yu', prefix: '', noTab: true },
   { id: 'power', label: '파워 플랜트', svgId: 'building-power', prefix: '', noTab: true },
-  { id: 'smoke-1', label: '흡연 구역', svgId: 'building-smoke-1', prefix: '', noTab: true },
-  { id: 'smoke-2', label: '흡연 구역', svgId: 'building-smoke-2', prefix: '', noTab: true },
-  { id: 'smoke-3', label: '흡연 구역', svgId: 'building-smoke-3', prefix: '', noTab: true },
-  { id: 'smoke-4', label: '흡연 구역', svgId: 'building-smoke-4', prefix: '', noTab: true },
-  { id: 'smoke-5', label: '흡연 구역', svgId: 'building-smoke-5', prefix: '', noTab: true },
-  { id: 'smoke-6', label: '흡연 구역', svgId: 'building-smoke-6', prefix: '', noTab: true },
-  { id: 'smoke-7', label: '흡연 구역', svgId: 'building-smoke-7', prefix: '', noTab: true },
+  { id: 'smoke-1', label: '흡연 구역', svgId: 'building-smoke-1', prefix: '', placeId: 'chaDaeCigarette', noTab: true },
+  { id: 'smoke-2', label: '흡연 구역', svgId: 'building-smoke-2', prefix: '', placeId: 'inCigarette', noTab: true },
+  { id: 'smoke-3', label: '흡연 구역', svgId: 'building-smoke-3', prefix: '', placeId: 'inDaeCigarette', noTab: true },
+  { id: 'smoke-4', label: '흡연 구역', svgId: 'building-smoke-4', prefix: '', placeId: 'libraryCigarette', noTab: true },
+  { id: 'smoke-5', label: '흡연 구역', svgId: 'building-smoke-5', prefix: '', placeId: 'yeCigarette', noTab: true },
+  { id: 'smoke-6', label: '흡연 구역', svgId: 'building-smoke-6', prefix: '', placeId: 'hakCigarette1', noTab: true },
+  { id: 'smoke-7', label: '흡연 구역', svgId: 'building-smoke-7', prefix: '', placeId: 'hakCigarette2', noTab: true },
   { id: 'food-waste', label: '음식물 쓰레기 처리 장소', svgId: 'building-food-waste', prefix: '', noTab: true },
   { id: 'paper-waste', label: '폐지 처리 장소', svgId: 'building-paper-waste', prefix: '', noTab: true },
 ]
@@ -695,7 +696,9 @@ export const BUILDINGS: BuildingConfig[] = [
 export function getPlacesByBuilding(buildingId: string): Place[] {
   if (buildingId === '전체') return PLACES
   const building = BUILDINGS.find(b => b.id === buildingId)
-  if (!building || !building.prefix) return []
+  if (!building) return []
+  if (building.placeId) return PLACES.filter(p => p.id === building.placeId)
+  if (!building.prefix) return []
   return PLACES.filter(p => p.id.startsWith(building.prefix))
 }
 

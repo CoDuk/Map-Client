@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState, useMemo } from 'react'
+import { useLocation } from 'react-router-dom'
 import { BUILDINGS } from '@/data/places'
 
 type Props = {
@@ -9,6 +10,9 @@ type Props = {
 }
 
 export default function CategoryTabs({ active, onChange, onSearchClick, hideAll }: Props) {
+  const { pathname } = useLocation()
+  const bgColor = pathname === '/main' ? 'bg-cream-500' : 'bg-cream-100'
+
   const items = useMemo(
     () => hideAll
       ? BUILDINGS.filter(b => b.id !== '전체' && !b.noTab)
@@ -30,11 +34,11 @@ export default function CategoryTabs({ active, onChange, onSearchClick, hideAll 
   }, [active, items])
 
   return (
-    <div className="flex items-center gap-3 px-4 py-3 shrink-0">
-      <div ref={containerRef} className="relative flex items-center gap-1 px-1.5 py-1.5 rounded-full border border-neutral-100 bg-cream-0 flex-1 overflow-hidden">
+    <div className={`flex items-center gap-3 px-4 py-3 shrink-0 ${bgColor}`}>
+      <div ref={containerRef} className="relative flex items-center justify-between px-1.5 py-1.5 rounded-[10px] border-[1.5px] border-cream-200 bg-cream-0 flex-1 overflow-hidden">
         {/* Sliding background */}
         <div
-          className="absolute top-1.5 bottom-1.5 rounded-full bg-cream-200 transition-all duration-300 ease-in-out pointer-events-none"
+          className="absolute top-1.5 bottom-1.5 rounded-[5px] bg-cream-200 transition-all duration-300 ease-in-out pointer-events-none"
           style={{ left: sliderStyle.left, width: sliderStyle.width }}
         />
         {items.map((building, i) => (
@@ -43,7 +47,7 @@ export default function CategoryTabs({ active, onChange, onSearchClick, hideAll 
             ref={el => { buttonRefs.current[i] = el }}
             type="button"
             onClick={() => onChange(building.id)}
-            className={`relative shrink px-3 py-1 rounded-full text-[12px] font-semibold transition-colors z-10 whitespace-nowrap min-w-0 ${
+            className={`relative shrink px-2 py-1 rounded-[10px] text-[9px] font-semibold transition-colors z-10 whitespace-nowrap min-w-0 ${
               active === building.id ? 'text-primary-dark' : 'text-neutral-300'
             }`}
           >
@@ -56,7 +60,7 @@ export default function CategoryTabs({ active, onChange, onSearchClick, hideAll 
         <button
           type="button"
           onClick={onSearchClick}
-          className="shrink-0 w-10 h-10 bg-cream-0 border border-neutral-100 rounded-full flex items-center justify-center"
+          className="shrink-0 w-8 h-8 bg-cream-200 rounded-full flex items-center justify-center"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-label="검색">
             <circle cx="11" cy="11" r="7" stroke="#50001B" strokeWidth="2" />

@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import BuildingNavBar from './components/BuildingNavBar'
 import CampusMap from './components/CampusMap'
 import DetailModal from './components/DetailModal'
-import { PLACES, BUILDINGS, getBuildingMapCfg } from '@/data/places'
+import { PLACES, BUILDINGS, getBuildingMapCfg, getPlacesByBuilding } from '@/data/places'
 import type { Place } from '@/data/places'
 
 export default function MainPage() {
@@ -45,7 +45,8 @@ export default function MainPage() {
     } else {
       // 그 외 건물: 서비스 준비중 모달 표시 (건물명 표시)
       const buildingInfo = BUILDINGS.find(b => b.id === id)
-      setSelectedPlace({ id, name: buildingInfo?.label ?? '', floor: null, category: null, images: [], notes: [] })
+      const places = getPlacesByBuilding(id)
+      setSelectedPlace(places[0] ?? { id, name: buildingInfo?.label ?? '', floor: null, category: null, images: [], notes: [] })
     }
   }
 
