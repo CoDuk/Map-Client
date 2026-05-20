@@ -17,6 +17,8 @@ import {
 } from '@/apis/qna/admin'
 
 
+const SERVER_DOWN = true
+
 export default function QnaPage() {
   const qc = useQueryClient()
   const [content, setContent] = useState('')
@@ -64,6 +66,7 @@ export default function QnaPage() {
     queryFn: getQnaThreads,
     staleTime: 10_000,
     retry: false,
+    enabled: !SERVER_DOWN,
   })
 
   const createMutation = useMutation({
@@ -77,7 +80,7 @@ export default function QnaPage() {
   })
 
   const isSubmitDisabled = useMemo(
-    () => threadsQuery.isError || createMutation.isPending || content.trim().length === 0,
+    () => SERVER_DOWN || threadsQuery.isError || createMutation.isPending || content.trim().length === 0,
     [content, createMutation.isPending, threadsQuery.isError]
   )
 
@@ -454,8 +457,8 @@ export default function QnaPage() {
                   handleSubmit()
                 }
               }}
-              placeholder={threadsQuery.isError ? '서버가 종료된 서비스입니다.' : '질문을 입력해주세요.'}
-              disabled={threadsQuery.isError}
+              placeholder={SERVER_DOWN || threadsQuery.isError ? '서버가 종료된 서비스입니다.' : '질문을 입력해주세요.'}
+              disabled={SERVER_DOWN || threadsQuery.isError}
               rows={1}
               className="w-full bg-transparent outline-none text-neutral-300 placeholder-rose-300 text-[15px] font-normal leading-[20px] resize-none overflow-y-auto max-h-[60px] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden disabled:cursor-not-allowed"
             />
@@ -491,7 +494,7 @@ export default function QnaPage() {
           className="absolute inset-0 pt-[20px] overflow-y-auto overscroll-y-contain no-scrollbar [-webkit-overflow-scrolling:touch]"
         >
         <div className="mb-[40px] flex flex-col gap-3 px-[17px]">
-        {threadsQuery.isLoading ? (
+        {!SERVER_DOWN && threadsQuery.isLoading ? (
           <ThreadsSkeleton />
         ) : threads.length === 0 ? (
           <div className="h-[calc(100vh-266px)] flex flex-col items-center justify-center">

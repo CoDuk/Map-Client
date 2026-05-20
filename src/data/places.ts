@@ -569,7 +569,7 @@ export const PLACES: Place[] = [
   { id: 'stuDisCenter', name: '장애학생지원센터', floor: '1F', category: '편의시설', images: ['/images/hak1FdisabledSupport.jpg'], notes: [] },
   { id: 'stuDisLounge', name: '장애학생 휴게실', floor: '1F', category: '편의시설', images: ['/images/hak1FdisabledRoom.jpg'], notes: [] },
   { id: 'stuPost', name: '우편취급국', floor: '1F', category: '편의시설', images: ['/images/hak1FpostOffice.jpg'], notes: ['영업 시간: 09:00~18:00', '오늘출발 우편물 마감 시간: 17:30'] },
-  { id: 'stuStationery', name: '문구점', floor: '1F', category: '편의시설', images: ['/images/hak1Fstationery1.jpg', '/images/hak1Fstationery2.jpg'], notes: ['평일 영업 시간: ?', '공휴일 휴무'] },
+  { id: 'stuStationery', name: '문구점', floor: '1F', category: '편의시설', images: ['/images/hak1Fstationery1.jpg', '/images/hak1Fstationery2.jpg'], notes: ['평일 영업 시간: 9:00~19:00', '방학 영업 시간: 11:00~16:00', '공휴일 휴무', '금요일의 경우 유동적'] },
   { id: 'stuCopy', name: '복사실', floor: '1F', category: '편의시설', images: ['/images/hak1Fcopy.jpg'], notes: ['평일 영업 시간: 09:00~19:00', '공휴일 휴무'] },
   { id: 'stuOptical', name: '안경점', floor: '1F', category: '편의시설', images: ['/images/hak1Fglassess.jpg'], notes: ['평일 영업 시간: 10:00~18:00', '토요일 영업 시간: 10:00~14:00', '공휴일 휴무'] },
   { id: 'stuBook', name: '서점', floor: '1F', category: '편의시설', images: [], notes: [] },
