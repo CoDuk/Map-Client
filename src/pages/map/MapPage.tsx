@@ -31,6 +31,7 @@ export default function MapPage() {
   const [activeView, setActiveView] = useState<ViewKey>('basic')
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null)
   const [focusPlaceId, setFocusPlaceId] = useState<string | undefined>()
+  const [initialExpandedMenuKey, setInitialExpandedMenuKey] = useState<string | undefined>()
 
   useEffect(() => {
     localStorage.setItem('lastMapPath', location.pathname + location.search)
@@ -45,10 +46,11 @@ export default function MapPage() {
 
   // Consume navigation state from place search (navigate to correct floor + show modal)
   useEffect(() => {
-    const s = location.state as { placeId?: string; initialFloor?: string; initialView?: ViewKey } | null
+    const s = location.state as { placeId?: string; initialFloor?: string; initialView?: ViewKey; initialExpandedMenuKey?: string } | null
     if (!s?.placeId) return
     if (s.initialFloor) setActiveFloor(s.initialFloor)
     if (s.initialView) setActiveView(s.initialView)
+    setInitialExpandedMenuKey(s.initialExpandedMenuKey)
     const place = PLACES.find(p => p.id === s.placeId)
     setSelectedPlace(place ?? { id: s.placeId, name: '', floor: null, category: null, images: [], notes: [] })
     setFocusPlaceId(s.placeId)
@@ -78,9 +80,9 @@ export default function MapPage() {
   }
 
   const handleRoomClick = useCallback((placeId: string) => {
-    setFocusPlaceId(undefined) // 직접 탭한 경우엔 포커스 해제
+    setFocusPlaceId(undefined)
+    setInitialExpandedMenuKey(undefined)
     const place = PLACES.find(p => p.id === placeId)
-    // Show modal even when no data — DetailModal shows "서비스 준비중" for empty content
     setSelectedPlace(place ?? { id: placeId, name: '', floor: null, category: null, images: [], notes: [] })
   }, [])
 
@@ -116,7 +118,7 @@ export default function MapPage() {
         onViewChange={setActiveView}
       />
 
-      <DetailModal place={selectedPlace} onClose={() => { setSelectedPlace(null); setFocusPlaceId(undefined) }} showBackdrop />
+      <DetailModal place={selectedPlace} onClose={() => { setSelectedPlace(null); setFocusPlaceId(undefined); setInitialExpandedMenuKey(undefined) }} showBackdrop initialExpandedMenuKey={initialExpandedMenuKey} />
     </div>
   )
 }

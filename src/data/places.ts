@@ -7,6 +7,9 @@ export type Place = {
   notes: string[]
   aliases?: string[]
   directory?: { floor: string; rooms: string[] }[]
+  menuUrl?: string
+  vendors?: string[]
+  restaurants?: { key: string; label: string; aliases?: string[] }[]
 }
 
 export const PLACES: Place[] = [
@@ -574,11 +577,11 @@ export const PLACES: Place[] = [
   { id: 'stuCU', name: 'CU', floor: '1F', category: '편의시설', images: ['/images/hak1Fcu.jpg'], notes: ['유인 영업 시간: 07:00~21:00', '무인 시간 출입 시 결제 수단 인증 필요'] },
   { id: 'hak1Fcert', name: '증명서 발급기', floor: '1F', category: '편의시설', images: ['/images/hak1Fcertificate.jpg'], notes: ['QR코드, 교통카드, 신용카드 결제 가능'] },
   { id: 'hak1Fatm', name: '하나은행 ATM', floor: '1F', category: '편의시설', images: ['/images/hak1Fatm.jpg'], notes: [] },
-  { id: 'hak1Fduksae', name: '덕새 자판기', floor: '1F', category: '편의시설', images: ['/images/hak1Fgoods.jpg'], notes: ['학생회관 문구점으로 이전'] },
+  { id: 'hak1Fduksae', name: '덕새 자판기', floor: '1F', category: '편의시설', images: ['/images/hak1Fgoods.jpg'], notes: ['최근 학생회관 문구점으로 이전'] },
   { id: 'hak1sFshower1', name: '학생회관 1층 샤워실', floor: '1F', category: '편의시설', images: ['/images/hak1Fshower1.jpg'], notes: [] },
   { id: 'hak4Flaundry', name: '세탁기', floor: '4F', category: '편의시설', images: ['/images/hak4Fwashing.jpg'], notes: [] },
   // 학생회관 2F
-  { id: 'stuCafe', name: '학식당', floor: '2F', category: '편의시설', images: ['/images/hak2Fcafeteria.jpg'], notes: ['영업 시간: 10:30~18:30'] },
+  { id: 'stuCafe', name: '학식당', floor: '2F', category: '편의시설', images: ['/images/hak2Fcafeteria.jpg'], notes: ['식당', '포한끼', '멘쇼쿠도', '비바쿡', '한우사골 마라탕', '※ 영업 시간: 10:30~18:30'], vendors: ['포한끼', '멘쇼쿠도', '비바쿡', '한우사골 마라탕'], menuUrl: 'https://gist.githubusercontent.com/HeejuKo/9494adc0c2fc0c13eacb5f2e6ed17ead/raw/today_menu.json', restaurants: [{ key: 'student', label: '메뉴 A', aliases: ['오메', '오메A', '오늘의 메뉴 A', '오늘 메뉴 A', '학식 메뉴 A'] }, { key: 'staff', label: '메뉴 B', aliases: ['오메', '오메B', '오늘의 메뉴 B', '오늘 메뉴 B', '교직원 메뉴'] }] },
   { id: 'stuCouncil', name: '총학생회실', floor: '2F', category: '편의시설', images: [], notes: ['총학생회실'] },
   { id: 'stu203', name: '학203', floor: '2F', category: '강의실', images: ['/images/hak203.jpg'], notes: ['학생지원과'] },
   { id: 'stu2031', name: '학203-1', floor: '2F', category: '강의실', images: ['/images/hak203-1.jpg'], notes: ['학생•인재개발처장실'] },
@@ -740,6 +743,41 @@ export function searchDirectoryRooms(query: string): DirectoryRoomResult[] {
         if (room.toLowerCase().includes(q)) {
           results.push({ room, floor, place })
         }
+      }
+    }
+  }
+  return results
+}
+
+export type VendorResult = { vendor: string; place: Place }
+
+export function searchVendors(query: string): VendorResult[] {
+  const q = query.trim().toLowerCase()
+  if (!q) return []
+  const results: VendorResult[] = []
+  for (const place of PLACES) {
+    if (!place.vendors) continue
+    for (const vendor of place.vendors) {
+      if (vendor.toLowerCase().includes(q)) {
+        results.push({ vendor, place })
+      }
+    }
+  }
+  return results
+}
+
+export type MenuResult = { label: string; key: string; place: Place }
+
+export function searchMenus(query: string): MenuResult[] {
+  const q = query.trim().toLowerCase()
+  if (!q) return []
+  const results: MenuResult[] = []
+  for (const place of PLACES) {
+    if (!place.restaurants) continue
+    for (const r of place.restaurants) {
+      const terms = [`오늘의 ${r.label}`, r.label, ...(r.aliases ?? [])]
+      if (terms.some(t => t.toLowerCase().includes(q))) {
+        results.push({ label: `오늘의 ${r.label}`, key: r.key, place })
       }
     }
   }

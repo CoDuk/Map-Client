@@ -4,12 +4,14 @@ import {
   searchPlaces,
   searchBuildings,
   searchDirectoryRooms,
+  searchVendors,
+  searchMenus,
   getBuildingLabel,
   getBuildingMapCfg,
   getPlaceNavigation,
   BUILDINGS,
 } from '@/data/places'
-import type { Place, BuildingResult, DirectoryRoomResult } from '@/data/places'
+import type { Place, BuildingResult, DirectoryRoomResult, VendorResult, MenuResult } from '@/data/places'
 import NextIcon from '@/assets/next.svg?react'
 import SearchIcon from '@/assets/search.svg?react'
 import LogoIcon from '@/assets/logo.svg?react'
@@ -44,7 +46,9 @@ export default function PlaceSearch({ onClose, onSelectPlace }: Props) {
   const buildingResults = trimmed ? searchBuildings(query) : []
   const placeResults = trimmed ? searchPlaces(query) : []
   const directoryResults = trimmed ? searchDirectoryRooms(query) : []
-  const hasResults = buildingResults.length > 0 || placeResults.length > 0 || directoryResults.length > 0
+  const vendorResults = trimmed ? searchVendors(query) : []
+  const menuResults = trimmed ? searchMenus(query) : []
+  const hasResults = buildingResults.length > 0 || placeResults.length > 0 || directoryResults.length > 0 || vendorResults.length > 0 || menuResults.length > 0
 
   useEffect(() => {
     inputRef.current?.focus()
@@ -52,6 +56,20 @@ export default function PlaceSearch({ onClose, onSelectPlace }: Props) {
 
   function handleDirectoryRoomClick(dr: DirectoryRoomResult) {
     navigate('/main', { state: { placeId: dr.place.id } })
+    onClose()
+  }
+
+  function handleVendorClick(vr: VendorResult) {
+    handlePlaceClick(vr.place)
+  }
+
+  function handleMenuClick(mr: MenuResult) {
+    const nav = getPlaceNavigation(mr.place)
+    if (nav) {
+      navigate(nav.url, { state: { placeId: mr.place.id, initialFloor: nav.floorKey, initialView: nav.viewKey, initialExpandedMenuKey: mr.key } })
+    } else if (mr.place.floor === null) {
+      navigate('/main', { state: { placeId: mr.place.id, initialExpandedMenuKey: mr.key } })
+    }
     onClose()
   }
 
@@ -203,6 +221,53 @@ export default function PlaceSearch({ onClose, onSelectPlace }: Props) {
                   <span className="shrink-0 px-2 py-0.5 bg-primary-dark text-white text-[11px] font-semibold rounded-full">
                     {dr.floor}
                   </span>
+                </button>
+              </li>
+            ))}
+
+            {/* 식당 입점 업체 결과 */}
+            {vendorResults.map((vr, i) => (
+              <li key={`vr-${i}`}>
+                <button
+                  type="button"
+                  onClick={() => handleVendorClick(vr)}
+                  className="w-full flex items-center gap-3 px-4 py-3 active:bg-cream-200 transition-colors text-left"
+                >
+                  <div className="w-9 h-9 rounded-xl bg-rose-100 shrink-0 flex items-center justify-center">
+                    <span className="text-[10px] text-primary-dark font-bold w-[2em] text-center break-all leading-tight">{getBuildingShort(vr.place)}</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[15px] font-semibold text-neutral-300 truncate">{vr.vendor}</p>
+                    <p className="text-[12px] text-primary-dark mt-0.5">
+                      {vr.place.name}{vr.place.floor ? ` · ${vr.place.floor}` : ''}
+                    </p>
+                  </div>
+                  {vr.place.floor && (
+                    <span className="shrink-0 px-2 py-0.5 bg-primary-dark text-white text-[11px] font-semibold rounded-full">
+                      {vr.place.floor}
+                    </span>
+                  )}
+                </button>
+              </li>
+            ))}
+
+            {/* 오늘의 메뉴 결과 */}
+            {menuResults.map((mr, i) => (
+              <li key={`mr-${i}`}>
+                <button
+                  type="button"
+                  onClick={() => handleMenuClick(mr)}
+                  className="w-full flex items-center gap-3 px-4 py-3 active:bg-cream-200 transition-colors text-left"
+                >
+                  <div className="w-9 h-9 rounded-xl bg-rose-100 shrink-0 flex items-center justify-center">
+                    <span className="text-[10px] text-primary-dark font-bold w-[2em] text-center break-all leading-tight">{getBuildingShort(mr.place)}</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[15px] font-semibold text-neutral-300 truncate">{mr.label}</p>
+                    <p className="text-[12px] text-primary-dark mt-0.5">
+                      {mr.place.name}{mr.place.floor ? ` · ${mr.place.floor}` : ''}
+                    </p>
+                  </div>
                 </button>
               </li>
             ))}

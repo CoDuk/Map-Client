@@ -3,28 +3,73 @@ import type { Place } from '@/data/places'
 import HakdukIcon from '@/assets/hakduk.svg'
 import CloseIcon from '@/assets/close.svg'
 
+type DayMenu = { date: string; menu: string[] }
+type WeekMenu = { mon: DayMenu; tue: DayMenu; wed: DayMenu; thu: DayMenu; fri: DayMenu }
+type MenuData = {
+  week: { dates: string[] }
+  data: Record<string, WeekMenu>
+}
+
+const DAY_KEYS = ['mon', 'tue', 'wed', 'thu', 'fri'] as const
+const DAY_LABELS = ['월', '화', '수', '목', '금']
+
+function cleanMenu(items: string[]): string[] {
+  return items.map(s => s.replace(/^"|"$/g, '').trim()).filter(Boolean)
+}
+
+function formatDate(dateStr: string) {
+  const d = new Date(dateStr)
+  return `${d.getMonth() + 1}/${d.getDate()}`
+}
+
 type Props = {
   place: Place | null
   onClose: () => void
   showBackdrop?: boolean
+  initialExpandedMenuKey?: string
 }
 
-export default function DetailModal({ place, onClose, showBackdrop }: Props) {
+export default function DetailModal({ place, onClose, showBackdrop, initialExpandedMenuKey }: Props) {
   const [imgIndex, setImgIndex] = useState(0)
   const [previewOpen, setPreviewOpen] = useState(false)
+  const [menuData, setMenuData] = useState<MenuData | null>(null)
+  const [expandedMenus, setExpandedMenus] = useState<Set<string>>(new Set())
+
+  function toggleMenu(key: string) {
+    setExpandedMenus(prev => {
+      const next = new Set(prev)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
+    })
+  }
 
   useEffect(() => {
     const id = setTimeout(() => {
       setImgIndex(0)
       setPreviewOpen(false)
+      setExpandedMenus(initialExpandedMenuKey ? new Set([initialExpandedMenuKey]) : new Set())
+      setMenuData(null)
     }, 0)
-
     return () => clearTimeout(id)
-  }, [place])
+  }, [place, initialExpandedMenuKey])
+
+  useEffect(() => {
+    if (!place?.menuUrl) return
+    let cancelled = false
+    fetch(place.menuUrl)
+      .then(r => r.json())
+      .then(data => { if (!cancelled) setMenuData(data) })
+      .catch(() => { if (!cancelled) setMenuData(null) })
+    return () => { cancelled = true }
+  }, [place?.menuUrl])
 
   if (!place) return null
 
-  const hasContent = place.images.length > 0 || place.notes.length > 0 || (place.directory?.length ?? 0) > 0
+  const hasContent = place.images.length > 0 || place.notes.length > 0 || (place.directory?.length ?? 0) > 0 || !!place.menuUrl
+
+  const shortNotes = place.notes.filter(n => !n.startsWith('※') && n.length <= 20)
+  const longNotes = place.notes.filter(n => n.startsWith('※') || n.length > 20)
 
   return (
     <>
@@ -35,7 +80,6 @@ export default function DetailModal({ place, onClose, showBackdrop }: Props) {
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-cream-0 rounded-t-[24px] shadow-[0_-4px_20px_rgba(0,0,0,0.15)] pb-(--sab)">
         {/* Handle bar — tap to close */}
         <div className="flex justify-center pt-3 pb-2" onClick={onClose}>
-          {/* <div className="w-10 h-1 rounded-full bg-neutral-100" /> */}
         </div>
 
         {/* Close button */}
@@ -144,28 +188,120 @@ export default function DetailModal({ place, onClose, showBackdrop }: Props) {
                 </div>
               )}
 
-              {/* Notes */}
-              {place.notes.length > 0 && (
-                <div className="flex flex-col gap-3">
-                  {place.notes.filter(n => n.length <= 20).length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {place.notes.filter(n => n.length <= 20).map((note, i) => (
-                        <span key={i} className="px-3 py-0.5 rounded-full border border-neutral-300 text-[12px] text-neutral-300 font-medium">
-                          {note}
-                        </span>
+              {/* Notes + menu buttons */}
+              {(shortNotes.length > 0 || place.restaurants) && (
+                place.restaurants ? (
+                  <div className="flex flex-col gap-2 mb-3">
+                    {/* Row 1: 식당 태그 + 오늘의 메뉴 버튼들 */}
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="px-2.5 rounded-full bg-primary text-cream-100 text-[12px] font-medium shrink-0">
+                        식당
+                      </span>
+                      {place.restaurants.map(r => (
+                        <button
+                          key={r.key}
+                          type="button"
+                          onClick={() => toggleMenu(r.key)}
+                          className={`px-2.5 rounded-full border text-[12px] font-medium flex items-center gap-1 transition-colors ${
+                            expandedMenus.has(r.key)
+                              ? 'bg-primary border-primary text-cream-100'
+                              : 'border-primary text-primary'
+                          }`}
+                        >
+                          오늘의 {r.label}
+                          <span className={`transition-transform inline-block ${expandedMenus.has(r.key) ? 'rotate-90' : ''}`}>›</span>
+                        </button>
                       ))}
                     </div>
-                  )}
-                  {place.notes.some(n => n.length > 20) && (
-                    <ul className="flex flex-col gap-2">
-                      {place.notes.filter(n => n.length > 20).map((note, i) => (
-                        <li key={i} className="text-[14px] text-neutral-300 font-medium">
-                          ※ {note}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
+                    {/* Row 2: 식당 너비만큼 공백(고정 컬럼) + 벤더 태그들(자체 flex-wrap) */}
+                    {place.vendors && place.vendors.length > 0 && (
+                      <div className="flex items-start gap-2">
+                        <span className="px-2.5 py-0.5 text-[12px] font-medium opacity-0 pointer-events-none shrink-0" aria-hidden="true">
+                          식당
+                        </span>
+                        <div className="flex flex-wrap gap-2">
+                          {place.vendors.map((vendor, i) => (
+                            <span key={i} className="px-2.5 py-0.5 rounded-full border border-primary text-[12px] text-primary font-medium">
+                              {vendor}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {/* 그 외 일반 노트 */}
+                    {shortNotes.filter(n => n !== '식당' && !(place.vendors?.includes(n))).length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {shortNotes.filter(n => n !== '식당' && !(place.vendors?.includes(n))).map((note, i) => (
+                          <span key={i} className="px-2.5 rounded-full border border-neutral-300 text-[10px] text-neutral-300 font-normal">
+                            {note}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {shortNotes.map((note, i) => (
+                      <span key={i} className="px-2.5 rounded-full border border-neutral-300 text-[10px] text-neutral-300 font-normal">
+                        {note}
+                      </span>
+                    ))}
+                  </div>
+                )
+              )}
+
+              {/* Menu table */}
+              {place.restaurants?.map(r => {
+                const todayDayIdx = new Date().getDay() // 0=일, 1=월 ... 5=금, 6=토
+                const todayColIdx = todayDayIdx >= 1 && todayDayIdx <= 5 ? todayDayIdx - 1 : -1
+                return expandedMenus.has(r.key) && menuData && (
+                  <div key={r.key} className="mb-4 overflow-x-auto no-scrollbar">
+                    <table className="w-full table-fixed text-center border-collapse text-[11px]">
+                      <thead>
+                        <tr>
+                          {DAY_KEYS.map((day, i) => (
+                            <th key={day} className={`py-1.5 font-semibold border-b border-primary rounded-t-md ${i === todayColIdx ? 'bg-primary/20 text-primary' : 'text-neutral-500'}`}>
+                              {DAY_LABELS[i]}<br />
+                              <span className={`text-[10px] font-normal ${i === todayColIdx ? 'text-primary/70' : 'text-neutral-100'}`}>
+                                {menuData.week.dates[i] ? formatDate(menuData.week.dates[i]) : ''}
+                              </span>
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {(() => {
+                          const maxRows = Math.max(...DAY_KEYS.map(d => cleanMenu(menuData.data[r.key]?.[d]?.menu ?? []).length))
+                          return Array.from({ length: maxRows }).map((_, row) => (
+                            <tr key={row}>
+                              {DAY_KEYS.map((day, i) => {
+                                const items = cleanMenu(menuData.data[r.key]?.[day]?.menu ?? [])
+                                const isLast = row === maxRows - 1
+                                return (
+                                  <td key={day} className={`py-1 px-0.5 align-top leading-snug ${isLast ? 'pb-2' : ''} ${i === todayColIdx ? `bg-primary/20 text-primary font-medium${isLast ? ' rounded-b-md' : ''}` : 'text-neutral-300'}`}>
+                                    {items[row] ?? ''}
+                                  </td>
+                                )
+                              })}
+                            </tr>
+                          ))
+                        })()}
+                      </tbody>
+                    </table>
+                  </div>
+                )
+              })}
+
+
+              {/* Long notes */}
+              {longNotes.length > 0 && (
+                <ul className="flex flex-col gap-2">
+                  {longNotes.map((note, i) => (
+                    <li key={i} className="text-[14px] text-neutral-300 font-medium">
+                      {note}
+                    </li>
+                  ))}
+                </ul>
               )}
             </>
           )}
