@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { Place } from '@/data/places'
 import HakdukIcon from '@/assets/hakduk.svg'
 import CloseIcon from '@/assets/close.svg'
@@ -11,6 +11,12 @@ type Props = {
 
 export default function DetailModal({ place, onClose, showBackdrop }: Props) {
   const [imgIndex, setImgIndex] = useState(0)
+  const [previewOpen, setPreviewOpen] = useState(false)
+
+  useEffect(() => {
+    setImgIndex(0)
+    setPreviewOpen(false)
+  }, [place])
 
   if (!place) return null
 
@@ -71,7 +77,10 @@ export default function DetailModal({ place, onClose, showBackdrop }: Props) {
               {/* Image carousel */}
               {place.images.length > 0 && (
                 <div className="mb-4">
-                  <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-cream-200">
+                  <div
+                    className="relative w-full aspect-4/3 rounded-xl overflow-hidden bg-cream-200 cursor-pointer"
+                    onClick={() => setPreviewOpen(true)}
+                  >
                     <img
                       src={place.images[imgIndex]}
                       alt={place.name}
@@ -138,6 +147,61 @@ export default function DetailModal({ place, onClose, showBackdrop }: Props) {
           )}
         </div>
       </div>
+      {/* Image lightbox preview */}
+      {previewOpen && place.images.length > 0 && (
+        <div
+          className="fixed inset-0 z-60 bg-black/90 flex items-center justify-center"
+          onClick={() => setPreviewOpen(false)}
+        >
+          {/* Close button */}
+          <button
+            type="button"
+            onClick={() => setPreviewOpen(false)}
+            className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center"
+          >
+            <img src={CloseIcon} alt="닫기" className="w-6 h-6 brightness-0 invert" />
+          </button>
+
+          {/* Image */}
+          <img
+            src={place.images[imgIndex]}
+            alt={place.name}
+            className="max-w-full max-h-[80vh] object-contain rounded-lg"
+            onClick={e => e.stopPropagation()}
+          />
+
+          {/* Prev / Next */}
+          {place.images.length > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={e => { e.stopPropagation(); setImgIndex(i => (i - 1 + place.images.length) % place.images.length) }}
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white/20 text-white text-xl"
+              >
+                ‹
+              </button>
+              <button
+                type="button"
+                onClick={e => { e.stopPropagation(); setImgIndex(i => (i + 1) % place.images.length) }}
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white/20 text-white text-xl"
+              >
+                ›
+              </button>
+              {/* Dots */}
+              <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-1.5">
+                {place.images.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={e => { e.stopPropagation(); setImgIndex(i) }}
+                    className={`w-1.5 h-1.5 rounded-full transition-colors ${i === imgIndex ? 'bg-white' : 'bg-white/40'}`}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </>
   )
 }
