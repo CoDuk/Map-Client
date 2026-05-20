@@ -228,7 +228,6 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
                         </div>
                       </div>
                     )}
-                    {/* 그 외 일반 노트 */}
                     {shortNotes.filter(n => n !== '식당' && !(place.vendors?.some(v => v.name === n))).length > 0 && (
                       <div className="flex flex-wrap gap-2">
                         {shortNotes.filter(n => n !== '식당' && !(place.vendors?.some(v => v.name === n))).map((note, i) => (
