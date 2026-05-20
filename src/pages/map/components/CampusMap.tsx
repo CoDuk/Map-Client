@@ -109,8 +109,7 @@ export default function CampusMap({ onBuildingClick, onEmptyClick, focusBuilding
   }, [focusBuildingId, applyTransform])
 
   const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    if (e.isPrimary) {
-      pointersRef.current.clear()
+    if (pointersRef.current.size === 0) {
       pointerStartRef.current.clear()
       lastPinchDistRef.current = null
       lastPinchAngleRef.current = null
@@ -136,7 +135,7 @@ export default function CampusMap({ onBuildingClick, onEmptyClick, focusBuilding
     if (start) {
       const totalDx = e.clientX - start.x
       const totalDy = e.clientY - start.y
-      if (totalDx * totalDx + totalDy * totalDy > 64) hasDraggedRef.current = true // 8px radius
+      if (totalDx * totalDx + totalDy * totalDy > 400) hasDraggedRef.current = true // 20px radius
     }
 
     pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
@@ -196,8 +195,21 @@ export default function CampusMap({ onBuildingClick, onEmptyClick, focusBuilding
 
   const onClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (hasDraggedRef.current) return
-    const el = document.elementFromPoint(e.clientX, e.clientY)
-    const buildingEl = el?.closest('[data-building]')
+    const { clientX: x, clientY: y } = e
+
+    // Exact hit first, then expand radius for small SVG elements
+    let buildingEl: Element | null = null
+    const exactEl = document.elementFromPoint(x, y)
+    buildingEl = exactEl?.closest('[data-building]') ?? null
+    if (!buildingEl) {
+      const r = 20
+      for (const [dx, dy] of [[0,-r],[0,r],[-r,0],[r,0],[-14,-14],[14,-14],[-14,14],[14,14]] as [number,number][]) {
+        const near = document.elementFromPoint(x + dx, y + dy)
+        buildingEl = near?.closest('[data-building]') ?? null
+        if (buildingEl) break
+      }
+    }
+
     let svgBuildingId = buildingEl?.getAttribute('data-building')
 
     const splitY = buildingEl?.getAttribute('data-split-y')
