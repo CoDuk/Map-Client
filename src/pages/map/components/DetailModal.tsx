@@ -222,16 +222,16 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
                         <div className="flex flex-wrap gap-2">
                           {place.vendors.map((vendor, i) => (
                             <span key={i} className="px-2.5 rounded-full border border-primary text-[12px] text-primary font-medium">
-                              {vendor}
+                              {vendor.name}
                             </span>
                           ))}
                         </div>
                       </div>
                     )}
                     {/* 그 외 일반 노트 */}
-                    {shortNotes.filter(n => n !== '식당' && !(place.vendors?.includes(n))).length > 0 && (
+                    {shortNotes.filter(n => n !== '식당' && !(place.vendors?.some(v => v.name === n))).length > 0 && (
                       <div className="flex flex-wrap gap-2">
-                        {shortNotes.filter(n => n !== '식당' && !(place.vendors?.includes(n))).map((note, i) => (
+                        {shortNotes.filter(n => n !== '식당' && !(place.vendors?.some(v => v.name === n))).map((note, i) => (
                           <span key={i} className="px-2.5 rounded-full border border-neutral-300 text-[10px] text-neutral-300 font-normal">
                             {note}
                           </span>

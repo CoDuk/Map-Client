@@ -8,7 +8,7 @@ export type Place = {
   aliases?: string[]
   directory?: { floor: string; rooms: string[] }[]
   menuUrl?: string
-  vendors?: string[]
+  vendors?: { name: string; aliases?: string[] }[]
   restaurants?: { key: string; label: string; aliases?: string[] }[]
 }
 
@@ -581,7 +581,12 @@ export const PLACES: Place[] = [
   { id: 'hak1sFshower1', name: '학생회관 1층 샤워실', floor: '1F', category: '편의시설', images: ['/images/hak1Fshower1.jpg'], notes: [] },
   { id: 'hak4Flaundry', name: '세탁기', floor: '4F', category: '편의시설', images: ['/images/hak4Fwashing.jpg'], notes: [] },
   // 학생회관 2F
-  { id: 'stuCafe', name: '학식당', floor: '2F', category: '편의시설', images: ['/images/hak2Fcafeteria.jpg'], notes: ['식당', '포한끼', '멘쇼쿠도', '비바쿡', '한우사골 마라탕', '※ 영업 시간: 10:30~18:30'], vendors: ['포한끼', '멘쇼쿠도', '비바쿡', '한우사골 마라탕'], menuUrl: 'https://gist.githubusercontent.com/HeejuKo/9494adc0c2fc0c13eacb5f2e6ed17ead/raw/today_menu.json', restaurants: [{ key: 'student', label: '메뉴 A', aliases: ['오메', '오메A', '오늘의 메뉴 A', '오늘 메뉴 A', '학식 메뉴 A'] }, { key: 'staff', label: '메뉴 B', aliases: ['오메', '오메B', '오늘의 메뉴 B', '오늘 메뉴 B', '교직원 메뉴'] }] },
+  { id: 'stuCafe', name: '학식당', floor: '2F', category: '편의시설', images: ['/images/hak2Fcafeteria.jpg'], notes: ['식당', '포한끼', '멘쇼쿠도', '비바쿡', '한우사골 마라탕', '※ 영업 시간: 10:30~18:30'], vendors: [
+      { name: '포한끼', aliases: ['밥', '쌀국수', '볶음밥', '국수', '팟타이', '태국', '태국 음식', '타이', '타이 음식', '태국 요리', '타이 요리', '태국음식', '타이음식'] },
+      { name: '멘쇼쿠도', aliases: ['밥', '라멘', '소바', '카츠', '동', '일식', '일본', '일본 요리', '일본요리', '일본음식', '돈카츠', '돈까스'] },
+      { name: '비바쿡', aliases: ['밥', '쌈밥', '덮밥', '찌개', '찌게', '컵밥', '한식', '한국', '한국 요리', '한국음식'] },
+      { name: '한우사골 마라탕', aliases: ['밥', '마라', '마라탕', '마라샹궈', '탕', '샹궈', '중식', '중국', '중국 요리', '중국음식', '중국요리'] },
+    ], menuUrl: 'https://gist.githubusercontent.com/HeejuKo/9494adc0c2fc0c13eacb5f2e6ed17ead/raw/today_menu.json', restaurants: [{ key: 'student', label: '메뉴 A', aliases: ['오메', '오메A', '오늘의 메뉴 A', '오늘 메뉴 A', '학식 메뉴 A'] }, { key: 'staff', label: '메뉴 B', aliases: ['오메', '오메B', '오늘의 메뉴 B', '오늘 메뉴 B', '교직원 메뉴'] }] },
   { id: 'stuCouncil', name: '총학생회실', floor: '2F', category: '편의시설', images: [], notes: ['총학생회실'] },
   { id: 'stu203', name: '학203', floor: '2F', category: '강의실', images: ['/images/hak203.jpg'], notes: ['학생지원과'] },
   { id: 'stu2031', name: '학203-1', floor: '2F', category: '강의실', images: ['/images/hak203-1.jpg'], notes: ['학생•인재개발처장실'] },
@@ -758,8 +763,9 @@ export function searchVendors(query: string): VendorResult[] {
   for (const place of PLACES) {
     if (!place.vendors) continue
     for (const vendor of place.vendors) {
-      if (vendor.toLowerCase().includes(q)) {
-        results.push({ vendor, place })
+      const terms = [vendor.name, ...(vendor.aliases ?? [])]
+      if (terms.some(t => t.toLowerCase().includes(q))) {
+        results.push({ vendor: vendor.name, place })
       }
     }
   }
