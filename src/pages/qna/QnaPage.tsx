@@ -76,8 +76,8 @@ export default function QnaPage() {
   })
 
   const isSubmitDisabled = useMemo(
-    () => createMutation.isPending || content.trim().length === 0,
-    [content, createMutation.isPending]
+    () => threadsQuery.isError || createMutation.isPending || content.trim().length === 0,
+    [content, createMutation.isPending, threadsQuery.isError]
   )
 
   const handleSubmit = () => {
@@ -453,9 +453,10 @@ export default function QnaPage() {
                   handleSubmit()
                 }
               }}
-              placeholder="질문을 입력해주세요."
+              placeholder={threadsQuery.isError ? '서버가 종료된 서비스입니다.' : '질문을 입력해주세요.'}
+              disabled={threadsQuery.isError}
               rows={1}
-              className="w-full bg-transparent outline-none text-neutral-300 placeholder-rose-300 text-[15px] font-normal leading-[20px] resize-none overflow-y-auto max-h-[60px] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+              className="w-full bg-transparent outline-none text-neutral-300 placeholder-rose-300 text-[15px] font-normal leading-[20px] resize-none overflow-y-auto max-h-[60px] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden disabled:cursor-not-allowed"
             />
           </div>
 

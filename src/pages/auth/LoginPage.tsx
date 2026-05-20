@@ -284,8 +284,15 @@ export default function LoginPage() {
             </div>
 
             {sendError ? (
-              <div className="mt-2 w-[317px] text-center text-primary text-[12px] font-medium">
-                {sendError}
+              <div className="mt-2 w-[317px] text-center text-primary text-[12px] font-medium flex flex-col items-center gap-1">
+                <span>서버가 종료된 서비스입니다.</span>
+                <button
+                  type="button"
+                  onClick={() => navigate('/main')}
+                  className="flex items-center gap-0.5 text-neutral-300 font-semibold underline"
+                >
+                  로그인 없이 둘러보기
+                </button>
               </div>
             ) : null}
 

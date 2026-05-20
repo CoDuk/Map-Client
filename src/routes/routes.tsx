@@ -11,13 +11,13 @@ import ProtectedLayout from "@/layout/ProtectedLayout"
 
 const publicChildren: RouteObject[] = [
   { index: true, element: <LoginPage /> },
-    { path: "main", element: <MainPage /> },
+  { path: "main", element: <MainPage /> },
   { path: "map", element: <MapPage /> },
+  { path: "qna", element: <QnaPage /> },
 ]
 
 const protectedChildren: RouteObject[] = [
 
-  { path: "qna", element: <QnaPage /> },
   { path: "my", element: <MyPage /> },
 ]
 
