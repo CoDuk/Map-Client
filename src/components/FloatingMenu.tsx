@@ -37,7 +37,18 @@ export default function FloatingMenu() {
       <button type="button" onClick={() => navigate(primary.to)} className="block">
         <img src={primary.icon} alt={primary.alt} className="block" />
       </button>
-      <button type="button" onClick={() => navigate(secondary.to)} className="block">
+      <button
+        type="button"
+        onClick={() => {
+          if (secondary.to === '/my') {
+            alert('서버가 종료된 서비스입니다.')
+            navigate('/')
+          } else {
+            navigate(secondary.to)
+          }
+        }}
+        className="block"
+      >
         <img src={secondary.icon} alt={secondary.alt} className="block" />
       </button>
     </div>
