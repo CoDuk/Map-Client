@@ -63,6 +63,7 @@ export default function QnaPage() {
     queryKey: ['qna', 'threads'],
     queryFn: getQnaThreads,
     staleTime: 10_000,
+    retry: false,
   })
 
   const createMutation = useMutation({
