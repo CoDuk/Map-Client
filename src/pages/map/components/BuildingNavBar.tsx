@@ -35,7 +35,7 @@ export default function BuildingNavBar({ active, onChange, activeSub, onSelectPl
       />
 
       {cfg?.subs && (
-        <div className="flex gap-2 px-4 py-2 overflow-x-auto no-scrollbar shrink-0 border-b border-neutral-50 bg-cream-0">
+        <div className="flex gap-2 px-4 pt-1 pb-2 overflow-x-auto no-scrollbar shrink-0">
           {cfg.subs.map(sub => (
             <button
               key={sub.id}

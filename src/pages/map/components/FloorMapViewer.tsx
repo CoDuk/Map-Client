@@ -293,7 +293,7 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick, focusPlaceId }: P
       )}
 
       {svgContent && (
-        <div className="absolute top-3 left-3 z-10 rounded-xl px-4 py-3 flex flex-col gap-1.5 border-[1.5px] border-cream-200">
+        <div className="absolute top-3 left-3 z-10 rounded-xl px-4 py-3 flex flex-col gap-1.5 border-[1.5px] border-cream-200 bg-cream-100">
           {legendItems.map(item => (
             <div key={item.label} className="flex items-center gap-1.5">
               {item.color ? (

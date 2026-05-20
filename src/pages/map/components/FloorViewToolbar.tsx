@@ -1,3 +1,4 @@
+import { useRef, useEffect, useState, useMemo } from 'react'
 import type { BuildingMapCfg, ViewKey } from '@/data/places'
 import LectureIcon from '@/assets/lecture.svg'
 import LockerIcon from '@/assets/locker.svg'
@@ -28,21 +29,52 @@ export default function FloorViewToolbar({
   onFloorChange,
   onViewChange,
 }: Props) {
-  const visibleViews = VIEW_DEFS.filter(v => availableViews.includes(v.key))
+  const visibleViews = useMemo(
+    () => VIEW_DEFS.filter(v => availableViews.includes(v.key)),
+    [availableViews]
+  )
+
+  const viewContainerRef = useRef<HTMLDivElement>(null)
+  const viewBtnRefs = useRef<(HTMLButtonElement | null)[]>([])
+  const [viewSlider, setViewSlider] = useState({ left: 0, width: 0 })
+
+  const floorContainerRef = useRef<HTMLDivElement>(null)
+  const floorBtnRefs = useRef<(HTMLButtonElement | null)[]>([])
+  const [floorSlider, setFloorSlider] = useState({ left: 0, width: 0 })
+
+  useEffect(() => {
+    const idx = visibleViews.findIndex(v => v.key === activeView)
+    const btn = viewBtnRefs.current[idx]
+    if (!btn) return
+    setViewSlider({ left: btn.offsetLeft, width: btn.offsetWidth })
+  }, [activeView, visibleViews])
+
+  useEffect(() => {
+    const idx = cfg.floors.findIndex(f => f.key === activeFloor)
+    const btn = floorBtnRefs.current[idx]
+    if (!btn) return
+    setFloorSlider({ left: btn.offsetLeft, width: btn.offsetWidth })
+  }, [activeFloor, cfg.floors])
 
   return (
-    <div className="shrink-0 flex flex-col w-fit gap-2.5 absolute bottom-12 left-5 bg-cream-100">
+    <div className="shrink-0 flex flex-col w-fit gap-2.5 absolute bottom-12 left-5">
       {/* 뷰 아이콘 */}
-      <div className="inline-flex w-fit items-center gap-1 px-1.5 py-1.5 rounded-full border-[1.5px] border-cream-200 bg-cream-0">
-        {visibleViews.map(v => (
+      <div
+        ref={viewContainerRef}
+        className="relative inline-flex w-fit items-center gap-1 px-1.5 py-1.5 rounded-full border-[1.5px] border-cream-200 bg-cream-0"
+      >
+        <div
+          className="absolute top-1.5 bottom-1.5 rounded-full bg-cream-200 transition-all duration-300 ease-in-out z-0"
+          style={{ left: viewSlider.left, width: viewSlider.width, pointerEvents: 'none' }}
+        />
+        {visibleViews.map((v, i) => (
           <button
             key={v.key}
+            ref={el => { viewBtnRefs.current[i] = el }}
             type="button"
             aria-label={v.label}
             onClick={() => onViewChange(v.key)}
-            className={`p-1 flex items-center justify-center rounded-full transition-colors ${
-              activeView === v.key ? 'bg-cream-200' : ''
-            }`}
+            className="relative z-10 p-1 flex items-center justify-center rounded-full"
           >
             <img
               src={v.icon}
@@ -54,16 +86,22 @@ export default function FloorViewToolbar({
       </div>
 
       {/* 층 버튼 */}
-      <div className="w-fit flex items-center gap-0.5 px-1.5 py-1.5 rounded-full border-[1.5px] border-cream-200 bg-cream-0">
-        {cfg.floors.map(f => (
+      <div
+        ref={floorContainerRef}
+        className="relative w-fit flex items-center gap-0.5 px-1.5 py-1.5 rounded-full border-[1.5px] border-cream-200 bg-cream-0"
+      >
+        <div
+          className="absolute top-1.5 bottom-1.5 rounded-full bg-cream-200 transition-all duration-300 ease-in-out z-0"
+          style={{ left: floorSlider.left, width: floorSlider.width, pointerEvents: 'none' }}
+        />
+        {cfg.floors.map((f, i) => (
           <button
             key={f.key}
+            ref={el => { floorBtnRefs.current[i] = el }}
             type="button"
             onClick={() => onFloorChange(f.key)}
-            className={`px-2 py-1 rounded-full text-[13px] font-semibold transition-colors ${
-              activeFloor === f.key
-                ? 'bg-cream-200 text-primary-dark'
-                : 'text-neutral-300 opacity-50'
+            className={`relative z-10 px-2 py-1 rounded-full text-[13px] font-semibold transition-colors ${
+              activeFloor === f.key ? 'text-primary-dark' : 'text-neutral-300 opacity-50'
             }`}
           >
             {f.label}

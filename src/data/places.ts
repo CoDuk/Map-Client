@@ -569,7 +569,8 @@ export const PLACES: Place[] = [
   { id: 'stuCU', name: 'CU', floor: '1F', category: '편의시설', images: ['/images/hak1Fcu.jpg'], notes: ['유인 영업 시간: 07:00~21:00', '무인 시간 출입 시 결제 수단 인증 필요'] },
   { id: 'hak1Fcert', name: '증명서 발급기', floor: '1F', category: '편의시설', images: ['/images/hak1Fcertificate.jpg'], notes: ['QR코드, 교통카드, 신용카드 결제 가능'] },
   { id: 'hak1Fatm', name: '하나은행 ATM', floor: '1F', category: '편의시설', images: ['/images/hak1Fatm.jpg'], notes: [] },
-  { id: 'hak1Fduksae', name: '덕새 자판기', floor: '1F', category: '편의시설', images: ['/images/hak1Fgoods.jpg'], notes: ['신용카드 결제 가능'] },
+  { id: 'hak1Fduksae', name: '덕새 자판기', floor: '1F', category: '편의시설', images: ['/images/hak1Fgoods.jpg'], notes: ['학생회관 문구점으로 이전'] },
+  { id: 'hak1sFshower1', name: '샤워실', floor: '1F', category: '편의시설', images: ['/images/hak1Fshower1.jpg'], notes: [] },
   { id: 'hak4Flaundry', name: '세탁기', floor: '4F', category: '편의시설', images: ['/images/hak4Fwashing.jpg'], notes: [] },
   // 학생회관 2F
   { id: 'stuCafe', name: '학식당', floor: '2F', category: '편의시설', images: ['/images/hak2Fcafeteria.jpg'], notes: ['영업 시간: 10:30~18:30'] },
@@ -656,6 +657,8 @@ export const PLACES: Place[] = [
   { id: 'chaDaeCigarette', name: '차미리사관-대강의동 흡연 구역', floor: null, category: null, images: ['/images/chaDaeCigarette.jpg'], notes: ['자전거 거치대 옆'] },
   { id: 'yeCigarette', name: '예술관 흡연 구역', floor: null, category: null, images: ['/images/yeCigarette.jpg'], notes: ['예술관 N동-L동 사이'] },
   { id: 'libraryCigarette', name: '도서관 옥상 흡연 구역', floor: null, category: null, images: [], notes: ['도서관 옥상 전체 흡연 가능'] },
+  { id: 'foodWaste', name: '음식물 쓰레기 처리 장소', floor: null, category: null, images: ['/images/foodTrash.jpg'], notes: [] },
+  { id: 'paperWaste', name: '폐지 처리 장소', floor: null, category: null, images: ['/images/paperTrash.jpg'], notes: [] },
 ]
 
 export type BuildingConfig = {
@@ -689,8 +692,8 @@ export const BUILDINGS: BuildingConfig[] = [
   { id: 'smoke-5', label: '흡연 구역', svgId: 'building-smoke-5', prefix: '', placeId: 'yeCigarette', noTab: true },
   { id: 'smoke-6', label: '흡연 구역', svgId: 'building-smoke-6', prefix: '', placeId: 'hakCigarette1', noTab: true },
   { id: 'smoke-7', label: '흡연 구역', svgId: 'building-smoke-7', prefix: '', placeId: 'hakCigarette2', noTab: true },
-  { id: 'food-waste', label: '음식물 쓰레기 처리 장소', svgId: 'building-food-waste', prefix: '', noTab: true },
-  { id: 'paper-waste', label: '폐지 처리 장소', svgId: 'building-paper-waste', prefix: '', noTab: true },
+  { id: 'food-waste', label: '음식물 쓰레기 처리 장소', svgId: 'building-food-waste', prefix: '', placeId: 'foodWaste', noTab: true },
+  { id: 'paper-waste', label: '폐지 처리 장소', svgId: 'building-paper-waste', prefix: '', placeId: 'paperWaste', noTab: true },
 ]
 
 export function getPlacesByBuilding(buildingId: string): Place[] {
