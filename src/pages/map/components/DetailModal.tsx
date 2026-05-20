@@ -14,13 +14,17 @@ export default function DetailModal({ place, onClose, showBackdrop }: Props) {
   const [previewOpen, setPreviewOpen] = useState(false)
 
   useEffect(() => {
-    setImgIndex(0)
-    setPreviewOpen(false)
+    const id = setTimeout(() => {
+      setImgIndex(0)
+      setPreviewOpen(false)
+    }, 0)
+
+    return () => clearTimeout(id)
   }, [place])
 
   if (!place) return null
 
-  const hasContent = place.images.length > 0 || place.notes.length > 0
+  const hasContent = place.images.length > 0 || place.notes.length > 0 || (place.directory?.length ?? 0) > 0
 
   return (
     <>
@@ -117,6 +121,26 @@ export default function DetailModal({ place, onClose, showBackdrop }: Props) {
                       ))}
                     </div>
                   )}
+                </div>
+              )}
+
+              {/* Directory (층별 안내) */}
+              {place.directory && place.directory.length > 0 && (
+                <div className="flex flex-col gap-3 mb-4">
+                  {place.directory.map(({ floor, rooms }) => (
+                    <div key={floor} className="flex gap-3 items-start">
+                      <span className="shrink-0 px-2 rounded-[20px] bg-primary text-cream-100 text-[12px] font-normal flex items-center justify-center">
+                        {floor}
+                      </span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {rooms.map(room => (
+                          <span key={room} className="px-2.5 rounded-full border border-primary text-[10px] text-primary font-normal">
+                            {room}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               )}
 

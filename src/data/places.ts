@@ -6,10 +6,15 @@ export type Place = {
   images: string[]
   notes: string[]
   aliases?: string[]
+  directory?: { floor: string; rooms: string[] }[]
 }
 
 export const PLACES: Place[] = [
-  { id: 'main_office', name: '대학본부', floor: null, category: null, images: [], notes: ['분실물 보관 가능', '증명서 발급기 이용 가능'] },
+  { id: 'main_office', name: '대학본부', floor: null, category: null, images: [], notes: ['분실물 보관 가능', '증명서 발급기 이용 가능'], directory: [
+    { floor: '1F', rooms: ['ADT', '교무과', '총무과', '교무처장실', '사무처장실', '문서고'] },
+    { floor: '2F', rooms: ['재무과', '교육혁신센터', '교수학습개발센터', '이사장실', '총장실', '비서실', '대외홍보실', 'DS혁신단'] },
+    { floor: '3F', rooms: ['대회의실', '관재과'] },
+  ]},
   { id: 'dae101', name: '대101', floor: '1F', category: '강의실', images: ['/images/dae101.jpg'], notes: [] },
   { id: 'dae102', name: '대102', floor: '1F', category: '강의실', images: ['/images/dae102.jpg'], notes: [] },
   { id: 'dae103', name: '대103', floor: '1F', category: '강의실', images: ['/images/dae103.jpg'], notes: [] },
@@ -570,7 +575,7 @@ export const PLACES: Place[] = [
   { id: 'hak1Fcert', name: '증명서 발급기', floor: '1F', category: '편의시설', images: ['/images/hak1Fcertificate.jpg'], notes: ['QR코드, 교통카드, 신용카드 결제 가능'] },
   { id: 'hak1Fatm', name: '하나은행 ATM', floor: '1F', category: '편의시설', images: ['/images/hak1Fatm.jpg'], notes: [] },
   { id: 'hak1Fduksae', name: '덕새 자판기', floor: '1F', category: '편의시설', images: ['/images/hak1Fgoods.jpg'], notes: ['학생회관 문구점으로 이전'] },
-  { id: 'hak1sFshower1', name: '샤워실', floor: '1F', category: '편의시설', images: ['/images/hak1Fshower1.jpg'], notes: [] },
+  { id: 'hak1sFshower1', name: '학생회관 1층 샤워실', floor: '1F', category: '편의시설', images: ['/images/hak1Fshower1.jpg'], notes: [] },
   { id: 'hak4Flaundry', name: '세탁기', floor: '4F', category: '편의시설', images: ['/images/hak4Fwashing.jpg'], notes: [] },
   // 학생회관 2F
   { id: 'stuCafe', name: '학식당', floor: '2F', category: '편의시설', images: ['/images/hak2Fcafeteria.jpg'], notes: ['영업 시간: 10:30~18:30'] },
@@ -709,7 +714,6 @@ export function searchPlaces(query: string): Place[] {
   const q = query.trim().toLowerCase()
   if (!q) return []
   return PLACES.filter(p =>
-    // 건물 레벨 항목(floor 없음)은 건물 검색(searchBuildings)에서만 처리
     p.floor !== null &&
     (p.name.toLowerCase().includes(q) ||
     (p.floor?.toLowerCase().includes(q) ?? false) ||
@@ -717,6 +721,29 @@ export function searchPlaces(query: string): Place[] {
     p.notes.some(n => n.toLowerCase().includes(q)) ||
     (p.aliases?.some(a => a.toLowerCase().includes(q)) ?? false))
   )
+}
+
+export type DirectoryRoomResult = {
+  room: string
+  floor: string
+  place: Place
+}
+
+export function searchDirectoryRooms(query: string): DirectoryRoomResult[] {
+  const q = query.trim().toLowerCase()
+  if (!q) return []
+  const results: DirectoryRoomResult[] = []
+  for (const place of PLACES) {
+    if (!place.directory) continue
+    for (const { floor, rooms } of place.directory) {
+      for (const room of rooms) {
+        if (room.toLowerCase().includes(q)) {
+          results.push({ room, floor, place })
+        }
+      }
+    }
+  }
+  return results
 }
 
 // ── 건물 별칭 검색 ─────────────────────────────────────────────
@@ -744,13 +771,13 @@ const BUILDING_ALIASES: Array<{ aliases: string[]; result: BuildingResult }> = [
   { aliases: ['덕우당', '덕우'],                                          result: { id: 'duk',        label: '덕우당' } },
   { aliases: ['유아교육관', '유아관', '유아교육'],                        result: { id: 'yu',         label: '유아교육관' } },
   { aliases: ['파워플랜트', '파워 플랜트', '파워'],                       result: { id: 'power',      label: '파워 플랜트' } },
-  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-1', label: '흡연 구역 1' } },
-  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-2', label: '흡연 구역 2' } },
-  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-3', label: '흡연 구역 3' } },
-  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-4', label: '흡연 구역 4' } },
-  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-5', label: '흡연 구역 5' } },
-  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-6', label: '흡연 구역 6' } },
-  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-7', label: '흡연 구역 7' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-1', label: '차미리사관-대강의동 흡연 구역' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-2', label: '인문사회관 흡연 구역' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-3', label: '인문사회관-대강의동 흡연 구역' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-4', label: '도서관 흡연 구역' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-5', label: '예술관 흡연 구역' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-6', label: '학생회관 1층 흡연 구역' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-7', label: '학생회관 3층 흡연 구역' } },
   { aliases: ['음식물쓰레기', '음식물 쓰레기', '음쓰', '음식물'],        result: { id: 'food-waste', label: '음식물 쓰레기 처리 장소' } },
   { aliases: ['폐지처리', '폐지 처리', '폐지'],                          result: { id: 'paper-waste', label: '폐지 처리 장소' } },
 ]

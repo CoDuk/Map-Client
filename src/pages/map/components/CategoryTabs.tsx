@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { BUILDINGS } from '@/data/places'
+import SearchIcon from '@/assets/search.svg?react'
 
 type Props = {
   active: string
@@ -62,10 +63,7 @@ export default function CategoryTabs({ active, onChange, onSearchClick, hideAll 
           onClick={onSearchClick}
           className="shrink-0 w-8 h-8 bg-cream-200 rounded-full flex items-center justify-center"
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-label="검색">
-            <circle cx="11" cy="11" r="7" stroke="#50001B" strokeWidth="2" />
-            <path d="M16.5 16.5L21 21" stroke="#50001B" strokeWidth="2" strokeLinecap="round" />
-          </svg>
+          <SearchIcon />
         </button>
       )}
     </div>
