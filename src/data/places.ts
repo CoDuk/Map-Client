@@ -718,9 +718,50 @@ export function getPlacesByBuilding(buildingId: string): Place[] {
   return PLACES.filter(p => p.id.startsWith(building.prefix))
 }
 
+const QUERY_ALIASES: Array<[string, string]> = [
+  ['쇼파', '소파'],
+]
+
+const BUILDING_SEARCH_FILTERS: Array<{ keywords: string[]; match: (id: string) => boolean }> = [
+  { keywords: ['인대', '인문사회관', '인문관', '인문', '인사관'], match: id => id.startsWith('in') },
+  { keywords: ['차관', '차미관', '차미리사관', '차미리'], match: id => id.startsWith('cha') },
+  { keywords: ['학관', '학생관', '학생회관'], match: id => id.startsWith('stu') || id.startsWith('hak') },
+  { keywords: ['대강의동', '대강의', '대강'], match: id => id.startsWith('dae') },
+  { keywords: ['자연대', '자대', '자연관'], match: id => id.startsWith('ja') || id.startsWith('nat') },
+]
+
+function normalizeSearchQuery(raw: string): string {
+  let s = raw.toLowerCase()
+  for (const [from, to] of QUERY_ALIASES) s = s.replaceAll(from, to)
+  return s
+}
+
+function matchesKeyword(p: Place, kw: string): boolean {
+  return p.name.toLowerCase().includes(kw) ||
+    p.notes.some(n => n.toLowerCase().includes(kw)) ||
+    (p.aliases?.some(a => a.toLowerCase().includes(kw)) ?? false)
+}
+
 export function searchPlaces(query: string): Place[] {
-  const q = query.trim().toLowerCase()
+  const q = normalizeSearchQuery(query.trim())
   if (!q) return []
+
+  // Compound "건물 + 키워드" search (e.g. "인대 소파")
+  const tokens = q.split(/\s+/)
+  if (tokens.length >= 2) {
+    for (const entry of BUILDING_SEARCH_FILTERS) {
+      const bIdx = tokens.findIndex(t => entry.keywords.includes(t))
+      if (bIdx !== -1) {
+        const kw = tokens.filter((_, i) => i !== bIdx).join(' ')
+        if (kw) {
+          return PLACES.filter(p =>
+            p.floor !== null && entry.match(p.id) && matchesKeyword(p, kw)
+          )
+        }
+      }
+    }
+  }
+
   return PLACES.filter(p =>
     p.floor !== null &&
     (p.name.toLowerCase().includes(q) ||
@@ -865,7 +906,7 @@ export type PlaceNav = {
 // Place IDs whose data-place-id lives in the amenity (_2) SVG, not the basic SVG
 const AMENITY_VIEW_IDS = new Set([
   'cha1Fprinter',
-  'hak1Fcert', 'hak1Fatm', 'hak1Fduksae',
+  'hak1Fcert', 'hak1Fatm', 'hak1Fduksae', 'hak1sFshower1',
   'hak4Flaundry',
   'in1Fpiano',
   'in2Fshower1', 'in2FbwPrint', 'in2FcolorPrint',
@@ -882,7 +923,7 @@ function floorLabelToKey(floor: string | null): string {
 export function getPlaceNavigation(place: Place): PlaceNav | null {
   const floorKey = floorLabelToKey(place.floor)
   const id = place.id
-  const viewKey: ViewKey = AMENITY_VIEW_IDS.has(id) ? 'amenity' : 'basic'
+  const viewKey: ViewKey = AMENITY_VIEW_IDS.has(id) ? 'amenity' : place.category === '복합공간' ? 'locker' : 'basic'
   if (id.startsWith('cha'))                                      return { url: '/map?building=cha',            floorKey, viewKey }
   if (id.startsWith('dae'))                                      return { url: '/map?building=dae',            floorKey, viewKey }
   if (id.startsWith('in'))                                       return { url: '/map?building=hum',            floorKey, viewKey }
