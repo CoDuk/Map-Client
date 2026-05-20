@@ -7,6 +7,8 @@ import StairsIcon from '@/assets/stairs.svg'
 import DrinkIcon from '@/assets/drink.svg'
 import DrinksIcon from '@/assets/drinks.svg'
 import type { BuildingMapCfg, ViewKey } from '@/data/places'
+import { useLanguage } from '@/contexts/LanguageContext'
+import { t } from '@/i18n'
 
 // Vite glob import for all floor plan SVGs (raw)
 const svgModules = import.meta.glob<string>('/src/assets/*.svg', {
@@ -55,24 +57,25 @@ type Props = {
   focusPlaceId?: string
 }
 
-const LEGEND_ITEMS: Record<ViewKey, { color?: string; borderColor?: string; icon?: string; svgIcon?: string; iconClass?: string; iconClass2?: string; label: string }[]> = {
+const LEGEND_ITEMS: Record<ViewKey, { color?: string; borderColor?: string; icon?: string; svgIcon?: string; iconClass?: string; iconClass2?: string; labelKey: string }[]> = {
   basic: [
-    { color: '#E7C9D0', label: '강의실' },
-    { svgIcon: GirlIcon, label: '여자 화장실' },
-    { svgIcon: BoyIcon, label: '남자 화장실' },
-    { svgIcon: StairsIcon, iconClass: 'w-3 h-3 ml-[-3.5px]', label: '계단' },
+    { color: '#E7C9D0', labelKey: 'legend.classroom' },
+    { svgIcon: GirlIcon, labelKey: 'legend.women' },
+    { svgIcon: BoyIcon, labelKey: 'legend.men' },
+    { svgIcon: StairsIcon, iconClass: 'w-3 h-3 ml-[-3.5px]', labelKey: 'legend.stairs' },
   ],
   locker: [
-    { color: '#E7C9D0', label: '복합공간' },
-    { color: '#C2D6F1', borderColor: '#08397A', label: '사물함' },
+    { color: '#E7C9D0', labelKey: 'legend.lounge' },
+    { color: '#C2D6F1', borderColor: '#08397A', labelKey: 'legend.locker' },
   ],
   amenity: [
-    { svgIcon: DrinkIcon, iconClass2: 'w-3 h-3', label: '정수기' },
-    { svgIcon: DrinksIcon, iconClass2: 'w-3 h-3', label: '음료 자판기' },
+    { svgIcon: DrinkIcon, iconClass2: 'w-3 h-3', labelKey: 'legend.water' },
+    { svgIcon: DrinksIcon, iconClass2: 'w-3 h-3', labelKey: 'legend.vending' },
   ],
 }
 
 function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick, focusPlaceId }: Props) {
+  const { lang } = useLanguage()
   const [svgContent, setSvgContent] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -288,22 +291,22 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick, focusPlaceId }: P
       ) : (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
           <img src={HakdukIcon} alt="준비중" className="w-25 h-auto opacity-60" />
-          <p className="text-neutral-300 text-[14px] font-medium">서비스 준비중</p>
+          <p className="text-neutral-300 text-[14px] font-medium">{t('map.notReady', lang)}</p>
         </div>
       )}
 
       {svgContent && (
         <div className="absolute top-3 left-3 z-10 rounded-xl px-4 py-3 flex flex-col gap-1.5 border-[1.5px] border-cream-200 bg-cream-100">
           {legendItems.map(item => (
-            <div key={item.label} className="flex items-center gap-1.5">
+            <div key={item.labelKey} className="flex items-center gap-1.5">
               {item.color ? (
                 <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: item.color, border: `1px solid ${item.borderColor ?? '#50001B'}` }} />
               ) : item.svgIcon ? (
-                <img src={item.svgIcon} alt={item.label} className={`${item.iconClass2 ?? item.iconClass ?? 'w-2 h-4'} shrink-0`} />
+                <img src={item.svgIcon} alt={t(item.labelKey, lang)} className={`${item.iconClass2 ?? item.iconClass ?? 'w-2 h-4'} shrink-0`} />
               ) : (
                 <span className="w-2.5 text-center text-[10px] shrink-0 text-neutral-300">{item.icon}</span>
               )}
-              <span className="text-[9px] text-neutral-300 font-medium">{item.label}</span>
+              <span className="text-[9px] text-neutral-300 font-medium">{t(item.labelKey, lang)}</span>
             </div>
           ))}
         </div>

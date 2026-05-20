@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useLanguage } from '@/contexts/LanguageContext'
+import { t } from '@/i18n'
 import SendIcon from '@/assets/send.svg'
 import CloseIcon from '@/assets/close.svg'
 import CodukIcon from '@/assets/coduk.svg'
@@ -20,6 +22,7 @@ import {
 const SERVER_DOWN = true
 
 export default function QnaPage() {
+  const { lang } = useLanguage()
   const qc = useQueryClient()
   const [content, setContent] = useState('')
   const MAX_CHARS = 500
@@ -457,7 +460,7 @@ export default function QnaPage() {
                   handleSubmit()
                 }
               }}
-              placeholder={SERVER_DOWN || threadsQuery.isError ? '서버가 종료된 서비스입니다.' : '질문을 입력해주세요.'}
+              placeholder={SERVER_DOWN || threadsQuery.isError ? t('login.serverDown', lang) : t('qna.placeholder', lang)}
               disabled={SERVER_DOWN || threadsQuery.isError}
               rows={1}
               className="w-full bg-transparent outline-none text-neutral-300 placeholder-rose-300 text-[15px] font-normal leading-[20px] resize-none overflow-y-auto max-h-[60px] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden disabled:cursor-not-allowed"
@@ -500,7 +503,7 @@ export default function QnaPage() {
           <div className="h-[calc(100vh-266px)] flex flex-col items-center justify-center">
             <img src={Duk1} alt="empty" className="w-[180px] h-auto" />
             <div className="mt-4 text-neutral-300 text-[14px] text-center font-medium">
-              문의사항이 없습니다.
+              {t('qna.empty', lang)}
             </div>
           </div>
         ) : (

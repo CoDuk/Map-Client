@@ -4,10 +4,13 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import MapFloating from '@/assets/mapFloating.svg'
 import AdminFloating from '@/assets/adminFloating.svg'
 import QnaFloating from '@/assets/qnaFloating.svg'
+import { useLanguage } from '@/contexts/LanguageContext'
+import { t } from '@/i18n'
 
 export default function FloatingMenu() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
+  const { lang } = useLanguage()
 
   const { primary, secondary } = useMemo(() => {
     const path = pathname.toLowerCase()
@@ -41,7 +44,7 @@ export default function FloatingMenu() {
         type="button"
         onClick={() => {
           if (secondary.to === '/my') {
-            alert('서버가 종료된 서비스입니다.')
+            alert(t('login.serverDown', lang))
             navigate('/')
           } else {
             navigate(secondary.to)

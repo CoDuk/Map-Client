@@ -572,7 +572,7 @@ export const PLACES: Place[] = [
   { id: 'stuStationery', name: '문구점', floor: '1F', category: '편의시설', images: ['/images/hak1Fstationery1.jpg', '/images/hak1Fstationery2.jpg'], notes: ['평일 영업 시간: 9:00~19:00', '방학 영업 시간: 11:00~16:00', '공휴일 휴무', '금요일의 경우 유동적'] },
   { id: 'stuCopy', name: '복사실', floor: '1F', category: '편의시설', images: ['/images/hak1Fcopy.jpg'], notes: ['평일 영업 시간: 09:00~19:00', '공휴일 휴무'] },
   { id: 'stuOptical', name: '안경점', floor: '1F', category: '편의시설', images: ['/images/hak1Fglassess.jpg'], notes: ['평일 영업 시간: 10:00~18:00', '토요일 영업 시간: 10:00~14:00', '공휴일 휴무'] },
-  { id: 'stuBook', name: '서점', floor: '1F', category: '편의시설', images: [], notes: [] },
+  { id: 'stuBook', name: '서점', floor: '1F', category: '편의시설', images: ['/images/bookstore.jpg'], notes: ['평일 영업 시간: 10:00~15:30', '금요일 휴무'] },
   { id: 'stuPC', name: '컴퓨터매장', floor: '1F', category: '편의시설', images: ['/images/hak1Fcomputer.jpg'], notes: ['평일 영업 시간: ?'] },
   { id: 'stuCU', name: 'CU', floor: '1F', category: '편의시설', images: ['/images/hak1Fcu.jpg'], notes: ['유인 영업 시간: 07:00~21:00', '무인 시간 출입 시 결제 수단 인증 필요'] },
   { id: 'hak1Fcert', name: '증명서 발급기', floor: '1F', category: '편의시설', images: ['/images/hak1Fcertificate.jpg'], notes: ['QR코드, 교통카드, 신용카드 결제 가능'] },
@@ -722,17 +722,46 @@ const QUERY_ALIASES: Array<[string, string]> = [
   ['쇼파', '소파'],
 ]
 
+// Multi-language terms → Korean (longer/more specific phrases first within each group)
+const SEARCH_LANG_ALIASES: Array<[string, string]> = [
+  // English — phrases before single words
+  ['water dispenser', '정수기'], ['vending machine', '자판기'],
+  ['food waste', '음식물'], ['paper waste', '폐지'],
+  ['shower room', '샤워실'], ['study space', '공부'],
+  ['laundry room', '세탁기'], ['smoking area', '흡연'],
+  ['b&w printer', '흑백 프린터'], ['color printer', '컬러 프린터'],
+  ['sofa zone', '소파존'], ['electronic piano', '전자피아노'],
+  ['student union', '학생회관'], ['science hall', '자연관'],
+  ['lecture hall', '대강의동'], ['cha hall', '차미리사관'],
+  ['humanities', '인문사회관'],
+  ['cafeteria', '식당'], ['dining', '식당'], ['restaurant', '식당'],
+  ['printer', '프린터'], ['print', '프린터'],
+  ['locker', '사물함'],
+  ['restroom', '화장실'], ['bathroom', '화장실'], ['toilet', '화장실'],
+  ['staircase', '계단'], ['stairs', '계단'],
+  ['laundry', '세탁기'], ['washing', '세탁기'],
+  ['smoking', '흡연'], ['smoke', '흡연'],
+  ['shower', '샤워실'],
+  ['lounge', '복합공간'],
+  ['sofa', '소파'], ['couch', '소파'],
+  ['piano', '피아노'],
+  ['vending', '자판기'], ['water', '정수기'],
+  ['classroom', '강의실'], ['library', '도서관'],
+  ['study', '공부'], ['science', '자연관'],
+]
+
 const BUILDING_SEARCH_FILTERS: Array<{ keywords: string[]; match: (id: string) => boolean }> = [
-  { keywords: ['인대', '인문사회관', '인문관', '인문', '인사관'], match: id => id.startsWith('in') },
-  { keywords: ['차관', '차미관', '차미리사관', '차미리'], match: id => id.startsWith('cha') },
-  { keywords: ['학관', '학생관', '학생회관'], match: id => id.startsWith('stu') || id.startsWith('hak') },
-  { keywords: ['대강의동', '대강의', '대강'], match: id => id.startsWith('dae') },
-  { keywords: ['자연대', '자대', '자연관'], match: id => id.startsWith('ja') || id.startsWith('nat') },
+  { keywords: ['인대', '인문사회관', '인문관', '인문', '인사관', 'hum'], match: id => id.startsWith('in') },
+  { keywords: ['차관', '차미관', '차미리사관', '차미리', 'cha'], match: id => id.startsWith('cha') },
+  { keywords: ['학관', '학생관', '학생회관', 'stu', 'student'], match: id => id.startsWith('stu') || id.startsWith('hak') },
+  { keywords: ['대강의동', '대강의', '대강', 'dae', 'lecture'], match: id => id.startsWith('dae') },
+  { keywords: ['자연대', '자대', '자연관', 'nat', 'science'], match: id => id.startsWith('ja') || id.startsWith('nat') },
 ]
 
 function normalizeSearchQuery(raw: string): string {
   let s = raw.toLowerCase()
   for (const [from, to] of QUERY_ALIASES) s = s.replaceAll(from, to)
+  for (const [from, to] of SEARCH_LANG_ALIASES) s = s.replaceAll(from.toLowerCase(), to)
   return s
 }
 
@@ -755,7 +784,7 @@ export function searchPlaces(query: string): Place[] {
         const kw = tokens.filter((_, i) => i !== bIdx).join(' ')
         if (kw) {
           return PLACES.filter(p =>
-            p.floor !== null && entry.match(p.id) && matchesKeyword(p, kw)
+            entry.match(p.id) && matchesKeyword(p, kw)
           )
         }
       }
@@ -763,12 +792,11 @@ export function searchPlaces(query: string): Place[] {
   }
 
   return PLACES.filter(p =>
-    p.floor !== null &&
-    (p.name.toLowerCase().includes(q) ||
+    p.name.toLowerCase().includes(q) ||
     (p.floor?.toLowerCase().includes(q) ?? false) ||
     (p.category?.toLowerCase().includes(q) ?? false) ||
     p.notes.some(n => n.toLowerCase().includes(q)) ||
-    (p.aliases?.some(a => a.toLowerCase().includes(q)) ?? false))
+    (p.aliases?.some(a => a.toLowerCase().includes(q)) ?? false)
   )
 }
 

@@ -2,6 +2,8 @@ import { useRef, useEffect, useState, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { BUILDINGS } from '@/data/places'
 import SearchIcon from '@/assets/search.svg?react'
+import { useLanguage } from '@/contexts/LanguageContext'
+import { t } from '@/i18n'
 
 type Props = {
   active: string
@@ -12,6 +14,7 @@ type Props = {
 
 export default function CategoryTabs({ active, onChange, onSearchClick, hideAll }: Props) {
   const { pathname } = useLocation()
+  const { lang } = useLanguage()
   const bgColor = pathname === '/main' ? 'bg-cream-500' : 'bg-cream-100'
 
   const items = useMemo(
@@ -52,7 +55,7 @@ export default function CategoryTabs({ active, onChange, onSearchClick, hideAll 
               active === building.id ? 'text-primary-dark' : 'text-neutral-300'
             }`}
           >
-            {building.label}
+            {t(`building.${building.id}`, lang) || building.label}
           </button>
         ))}
       </div>

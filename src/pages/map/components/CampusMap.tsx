@@ -2,6 +2,8 @@ import { useRef, useEffect, useCallback } from 'react'
 import type React from 'react'
 import mapSvg from '@/assets/mapAll.svg?raw'
 import { BUILDINGS } from '@/data/places'
+import { useLanguage } from '@/contexts/LanguageContext'
+import { t } from '@/i18n'
 
 type Props = {
   onBuildingClick: (buildingId: string) => void
@@ -35,6 +37,7 @@ function getPinchAngle(pointers: PointerMap) {
 }
 
 export default function CampusMap({ onBuildingClick, onEmptyClick, focusBuildingId }: Props) {
+  const { lang } = useLanguage()
   const containerRef = useRef<HTMLDivElement>(null)
   
   const svgWrapperRef = useRef<HTMLDivElement>(null)
@@ -252,9 +255,9 @@ export default function CampusMap({ onBuildingClick, onEmptyClick, focusBuilding
       </div>
 
       <div className="absolute top-3 left-3 z-10 bg-cream-100 border-[1.5px] border-cream-200 rounded-[15px] px-4 py-3 flex flex-col gap-1.5">
-        <LegendItem color="#C2D6F1" stroke="#08397A" label="흡연 구역" />
-        <LegendItem color="#EFD097" stroke="#E99015" label="음식물 쓰레기통" />
-        <LegendItem color="#C6C6C5" stroke="#424242" label="폐지 처리 장소" />
+        <LegendItem color="#C2D6F1" stroke="#08397A" label={t('campusMap.smoking', lang)} />
+        <LegendItem color="#EFD097" stroke="#E99015" label={t('campusMap.foodWaste', lang)} />
+        <LegendItem color="#C6C6C5" stroke="#424242" label={t('campusMap.paperWaste', lang)} />
       </div>
     </div>
   )

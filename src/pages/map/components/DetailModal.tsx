@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import type { Place } from '@/data/places'
 import HakdukIcon from '@/assets/hakduk.svg'
 import CloseIcon from '@/assets/close.svg'
+import { useLanguage } from '@/contexts/LanguageContext'
+import { t, translatePlaceName } from '@/i18n'
 
 type DayMenu = { date: string; menu: string[] }
 type WeekMenu = { mon: DayMenu; tue: DayMenu; wed: DayMenu; thu: DayMenu; fri: DayMenu }
@@ -30,6 +32,7 @@ type Props = {
 }
 
 export default function DetailModal({ place, onClose, showBackdrop, initialExpandedMenuKey }: Props) {
+  const { lang } = useLanguage()
   const [imgIndex, setImgIndex] = useState(0)
   const [previewOpen, setPreviewOpen] = useState(false)
   const [menuData, setMenuData] = useState<MenuData | null>(null)
@@ -89,7 +92,7 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
           onClick={onClose}
           className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center"
         >
-          <img src={CloseIcon} alt="닫기" className="w-5 h-5" />
+          <img src={CloseIcon} alt={t('detail.close', lang)} className="w-5 h-5" />
         </button>
 
         <div className="px-5 pb-6 max-h-[70vh] overflow-y-auto no-scrollbar">
@@ -97,7 +100,7 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
           {place.name && (
             <div className="flex items-center gap-2 flex-wrap mb-4">
               <h2 className="text-[20px] font-bold text-neutral-500">
-                {place.name}
+                {translatePlaceName(place.name, lang)}
                 {place.aliases && place.aliases.length > 0 && (
                   <span> · {place.aliases[0]}</span>
                 )}
@@ -109,7 +112,7 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
               )}
               {place.category && (
                 <span className="px-2.5 py-0.5 border border-primary text-primary text-[12px] font-semibold rounded-full">
-                  {place.category}
+                  {translatePlaceName(place.category, lang)}
                 </span>
               )}
             </div>
@@ -119,7 +122,7 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
             /* 서비스 준비중 */
             <div className="flex flex-col items-center justify-center py-10 gap-3">
               <img src={HakdukIcon} alt="준비중" className="w-[120px] h-auto" />
-              <p className="text-neutral-300 text-[14px] font-medium text-center">서비스 제공 예정입니다.</p>
+              <p className="text-neutral-300 text-[14px] font-medium text-center">{t('detail.comingSoon', lang)}</p>
             </div>
           ) : (
             <>
@@ -196,7 +199,7 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
                     {/* Row 1: 식당 태그 + 오늘의 메뉴 버튼들 */}
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="px-2.5 rounded-full bg-primary text-cream-100 text-[12px] font-medium shrink-0">
-                        식당
+                        {t('detail.restaurant', lang)}
                       </span>
                       {place.restaurants.map(r => (
                         <button
@@ -209,7 +212,7 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
                               : 'border-primary text-primary'
                           }`}
                         >
-                          오늘의 {r.label}
+                          {t('detail.todayMenu', lang)} {r.label}
                           <span className={`transition-transform inline-block ${expandedMenus.has(r.key) ? 'rotate-90' : ''}`}>›</span>
                         </button>
                       ))}
@@ -233,7 +236,7 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
                       <div className="flex flex-wrap gap-2">
                         {shortNotes.filter(n => n !== '식당' && !(place.vendors?.some(v => v.name === n))).map((note, i) => (
                           <span key={i} className="px-2.5 rounded-full border border-neutral-300 text-[10px] text-neutral-300 font-normal">
-                            {note}
+                            {translatePlaceName(note, lang)}
                           </span>
                         ))}
                       </div>
@@ -243,7 +246,7 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
                   <div className="flex flex-wrap gap-2 mb-3">
                     {shortNotes.map((note, i) => (
                       <span key={i} className="px-2.5 rounded-full border border-neutral-300 text-[10px] text-neutral-300 font-normal">
-                        {note}
+                        {translatePlaceName(note, lang)}
                       </span>
                     ))}
                   </div>
@@ -298,7 +301,7 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
                 <ul className="flex flex-col gap-2">
                   {longNotes.map((note, i) => (
                     <li key={i} className="text-[14px] text-neutral-300 font-medium">
-                      {note}
+                      {translatePlaceName(note, lang)}
                     </li>
                   ))}
                 </ul>

@@ -9,8 +9,12 @@ import { sendAuthEmailCode } from '@/apis/auth/email'
 import { verifyAuthEmailCode } from '@/apis/auth/verify'
 import { api, getAccessToken } from '@/apis/client'
 import MailVerificationSkeleton from '@/pages/auth/components/MailVerificationSkeleton'
+import { useLanguage } from '@/contexts/LanguageContext'
+import { LANGS, t } from '@/i18n'
 
 export default function LoginPage() {
+  const { lang, setLang } = useLanguage()
+  const [showLangPicker, setShowLangPicker] = useState(false)
   const [animate, setAnimate] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const [email, setEmail] = useState('')
@@ -233,6 +237,31 @@ export default function LoginPage() {
 
   return (
     <div className="relative min-h-screen bg-cream-100 overflow-hidden">
+      {/* Language picker */}
+      <div className="absolute top-4 right-4 z-20">
+        <button
+          type="button"
+          onClick={() => setShowLangPicker(v => !v)}
+          className="px-3 py-1.5 rounded-full bg-rose-100 text-primary text-[12px] font-semibold"
+        >
+          {LANGS.find(l => l.code === lang)?.label}
+        </button>
+        {showLangPicker && (
+          <div className="absolute right-0 top-full mt-1 bg-cream-0 border border-cream-300 rounded-xl shadow-md overflow-hidden">
+            {LANGS.map(l => (
+              <button
+                key={l.code}
+                type="button"
+                onClick={() => { setLang(l.code); setShowLangPicker(false) }}
+                className={`block w-full px-4 py-2 text-left text-[13px] font-medium ${l.code === lang ? 'text-primary bg-rose-100' : 'text-neutral-300'}`}
+              >
+                {l.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
       <div
         className={`absolute left-1/2 -translate-x-1/2 w-[317px] transition-all duration-700 ease-in-out ${
           animate ? 'top-[188px]' : 'top-1/2 -translate-y-1/2'
@@ -303,13 +332,13 @@ export default function LoginPage() {
 
             {(serverDown || sendError) ? (
               <div className="mt-4 w-[317px] text-center text-primary text-[12px] font-medium flex flex-col items-center gap-1">
-                <span>서버가 종료된 서비스입니다.</span>
+                <span>{t('login.serverDown', lang)}</span>
                 <button
                   type="button"
                   onClick={() => navigate('/main')}
                   className="flex items-center gap-0.5 text-neutral-300 font-semibold underline"
                 >
-                  로그인 없이 둘러보기
+                  {t('login.browseWithout', lang)}
                 </button>
               </div>
             ) : null}
@@ -326,7 +355,7 @@ export default function LoginPage() {
                 onClick={() => setShowOtp(true)}
                 className="mt-[18px] text-primary text-[14px] font-bold flex items-center"
               >
-                덕성 메일 바로 가기
+                {t('login.mailLink', lang)}
                 <img src={NextIconB} alt="next" />
               </a>
             ) : null}
@@ -376,7 +405,7 @@ export default function LoginPage() {
                     <a
                       href="https://mail.duksung.ac.kr/account/login.do"
                       target="_blank">
-                    인증 번호 재전송
+                    {t('login.resend', lang)}
                     </a>
                   </button>
                 )}

@@ -15,8 +15,15 @@ import type { Place, BuildingResult, DirectoryRoomResult, VendorResult, MenuResu
 import NextIcon from '@/assets/next.svg?react'
 import SearchIcon from '@/assets/search.svg?react'
 import LogoIcon from '@/assets/logo.svg?react'
+import { useLanguage } from '@/contexts/LanguageContext'
+import { t, translatePlaceName, buildingLabel } from '@/i18n'
 
-const SUGGESTIONS = ['인대', '차미리사관', 'B202', '학식당', '프린터', '샤워실', '세탁기', '흡구', '음쓰']
+const SUGGESTIONS: Record<string, string[]> = {
+  ko: ['인대', '차미리사관', 'B202', '학식당', '프린터', '샤워실', '세탁기', '흡구', '음쓰'],
+  en: ['Humanities', 'Cha Hall', 'B202', 'Cafeteria', 'Printer', 'Shower', 'Laundry', 'Smoking', 'Food waste'],
+  zh: ['인대', '차미리사관', 'B202', '食堂', '打印机', '淋浴', '洗衣机', '吸烟区', '厨余'],
+  ja: ['인대', '차미리사관', 'B202', '食堂', 'プリンター', 'シャワー', 'ランドリー', '喫煙', 'ゴミ'],
+}
 
 const BUILDING_SHORT: Record<string, string> = {
   '인문사회관': '인대',
@@ -39,6 +46,7 @@ type Props = {
 
 export default function PlaceSearch({ onClose, onSelectPlace }: Props) {
   const navigate = useNavigate()
+  const { lang } = useLanguage()
   const [query, setQuery] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -116,7 +124,7 @@ export default function PlaceSearch({ onClose, onSelectPlace }: Props) {
               if (buildingResults.length > 0) handleBuildingClick(buildingResults[0])
               else if (placeResults.length > 0) handlePlaceClick(placeResults[0])
             }}
-            placeholder="장소를 입력해주세요.  ex) 인대, 차124"
+            placeholder={t('search.placeholder', lang)}
             className="flex-1 text-[14px] bg-transparent outline-none text-neutral-500 placeholder:text-neutral-200 min-w-0"
           />
           <SearchIcon />
@@ -126,7 +134,7 @@ export default function PlaceSearch({ onClose, onSelectPlace }: Props) {
           onClick={onClose}
           className="shrink-0 text-[13px] font-medium text-primary-dark"
         >
-          취소
+          {t('search.cancel', lang)}
         </button>
       </div>
 
@@ -135,9 +143,9 @@ export default function PlaceSearch({ onClose, onSelectPlace }: Props) {
         {!trimmed ? (
           /* 추천 검색어 */
           <div className="px-5 py-4">
-            <p className="text-[13px] font-semibold text-primary-dark mb-3">추천검색어</p>
+            <p className="text-[13px] font-semibold text-primary-dark mb-3">{t('search.suggestions', lang)}</p>
             <div className="flex flex-wrap gap-2">
-              {SUGGESTIONS.map(s => (
+              {(SUGGESTIONS[lang] ?? SUGGESTIONS.ko).map(s => (
                 <button
                   key={s}
                   type="button"
@@ -151,7 +159,7 @@ export default function PlaceSearch({ onClose, onSelectPlace }: Props) {
           </div>
         ) : !hasResults ? (
           <div className="py-6 text-center">
-            <p className="text-neutral-100 text-[14px]">검색 결과가 없습니다.</p>
+            <p className="text-neutral-100 text-[14px]">{t('search.noResults', lang)}</p>
           </div>
         ) : (
           <ul className="py-2 max-h-64 overflow-y-auto no-scrollbar">
@@ -165,7 +173,7 @@ export default function PlaceSearch({ onClose, onSelectPlace }: Props) {
                 >
                   <LogoIcon className="w-9 h-9" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-[15px] font-semibold text-neutral-300 truncate">{br.label}</p>
+                    <p className="text-[15px] font-semibold text-neutral-300 truncate">{buildingLabel(br.id, lang) || br.label}</p>
                   </div>
                     <NextIcon className='mr-2'/>
                 </button>
@@ -186,10 +194,10 @@ export default function PlaceSearch({ onClose, onSelectPlace }: Props) {
 
                   <div className="flex-1 min-w-0">
                     <p className="text-[15px] font-semibold text-neutral-300 truncate">
-                      {place.name}{place.aliases && place.aliases.length > 0 && ` · ${place.aliases[0]}`}
+                      {translatePlaceName(place.name, lang)}{place.aliases && place.aliases.length > 0 && ` · ${place.aliases[0]}`}
                     </p>
                     <p className="text-[12px] text-primary-dark mt-0.5">
-                      {getBuildingLabel(place)}{place.floor ? ` · ${place.floor}` : ''}
+                      {buildingLabel(place.id.replace(/\d.*/, '').replace(/[A-Z].*/, ''), lang) || getBuildingLabel(place)}{place.floor ? ` · ${place.floor}` : ''}
                     </p>
                   </div>
                   {place.floor && (
@@ -239,7 +247,7 @@ export default function PlaceSearch({ onClose, onSelectPlace }: Props) {
                   <div className="flex-1 min-w-0">
                     <p className="text-[15px] font-semibold text-neutral-300 truncate">{vr.vendor}</p>
                     <p className="text-[12px] text-primary-dark mt-0.5">
-                      {vr.place.name}{vr.place.floor ? ` · ${vr.place.floor}` : ''}
+                      {translatePlaceName(vr.place.name, lang)}{vr.place.floor ? ` · ${vr.place.floor}` : ''}
                     </p>
                   </div>
                   {vr.place.floor && (
@@ -265,7 +273,7 @@ export default function PlaceSearch({ onClose, onSelectPlace }: Props) {
                   <div className="flex-1 min-w-0">
                     <p className="text-[15px] font-semibold text-neutral-300 truncate">{mr.label}</p>
                     <p className="text-[12px] text-primary-dark mt-0.5">
-                      {mr.place.name}{mr.place.floor ? ` · ${mr.place.floor}` : ''}
+                      {translatePlaceName(mr.place.name, lang)}{mr.place.floor ? ` · ${mr.place.floor}` : ''}
                     </p>
                   </div>
                 </button>
