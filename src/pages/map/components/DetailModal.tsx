@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type { Place } from '@/data/places'
 import HakdukIcon from '@/assets/hakduk.svg'
 import CloseIcon from '@/assets/close.svg'
@@ -34,6 +34,7 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
   const [previewOpen, setPreviewOpen] = useState(false)
   const [menuData, setMenuData] = useState<MenuData | null>(null)
   const [expandedMenus, setExpandedMenus] = useState<Set<string>>(new Set())
+  const swipeTouchX = useRef(0)
 
   function toggleMenu(key: string) {
     setExpandedMenus(prev => {
@@ -311,6 +312,15 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
         <div
           className="fixed inset-0 z-60 bg-black/90 flex items-center justify-center"
           onClick={() => setPreviewOpen(false)}
+          onTouchStart={e => { swipeTouchX.current = e.touches[0].clientX }}
+          onTouchEnd={e => {
+            const dx = e.changedTouches[0].clientX - swipeTouchX.current
+            if (Math.abs(dx) < 40) return
+            setImgIndex(i => dx < 0
+              ? (i + 1) % place.images.length
+              : (i - 1 + place.images.length) % place.images.length
+            )
+          }}
         >
           {/* Close button */}
           <button
