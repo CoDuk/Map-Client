@@ -7,7 +7,7 @@ import NextIcon from '@/assets/nextB.svg'
 import NextIconB from '@/assets/nextburgun.svg'
 import { sendAuthEmailCode } from '@/apis/auth/email'
 import { verifyAuthEmailCode } from '@/apis/auth/verify'
-import { getAccessToken } from '@/apis/client'
+import { api, getAccessToken } from '@/apis/client'
 import MailVerificationSkeleton from '@/pages/auth/components/MailVerificationSkeleton'
 
 export default function LoginPage() {
@@ -26,6 +26,7 @@ export default function LoginPage() {
   const [isVerifying, setIsVerifying] = useState(false)
   const [sendError, setSendError] = useState<string | null>(null)
   const [verifyError, setVerifyError] = useState<string | null>(null)
+  const [serverDown, setServerDown] = useState(false)
 
   const navigate = useNavigate()
 
@@ -36,6 +37,23 @@ export default function LoginPage() {
       navigate(last ?? '/main', { replace: true })
     }
   }, [navigate])
+
+  // 서버 상태 probe: 500ms 내 응답 없으면 서버 종료로 간주
+  useEffect(() => {
+    const ac = new AbortController()
+    const tid = setTimeout(() => ac.abort(), 500)
+    api.get('/api/qna/threads', { signal: ac.signal })
+      .catch(() => setServerDown(true))
+      .finally(() => clearTimeout(tid))
+    return () => { ac.abort(); clearTimeout(tid) }
+  }, [])
+
+  // 서버 종료 감지 시 애니메이션 스킵
+  useEffect(() => {
+    if (!serverDown) return
+    setAnimate(true)
+    setShowForm(true)
+  }, [serverDown])
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -283,8 +301,8 @@ export default function LoginPage() {
               ) : null}
             </div>
 
-            {sendError ? (
-              <div className="mt-2 w-[317px] text-center text-primary text-[12px] font-medium flex flex-col items-center gap-1">
+            {(serverDown || sendError) ? (
+              <div className="mt-4 w-[317px] text-center text-primary text-[12px] font-medium flex flex-col items-center gap-1">
                 <span>서버가 종료된 서비스입니다.</span>
                 <button
                   type="button"
@@ -365,9 +383,9 @@ export default function LoginPage() {
               </div>
             ) : null}
 
-            {!email && !didSend ? (
+            {/* {!email && !didSend ? (
               <img src={AlertIcon} alt="alert" className="w-62.5 mt-[10px]" />
-            ) : null}
+            ) : null} */}
           </div>
         )}
       </div>
