@@ -221,7 +221,7 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
                         </span>
                         <div className="flex flex-wrap gap-2">
                           {place.vendors.map((vendor, i) => (
-                            <span key={i} className="px-2.5 py-0.5 rounded-full border border-primary text-[12px] text-primary font-medium">
+                            <span key={i} className="px-2.5 rounded-full border border-primary text-[12px] text-primary font-medium">
                               {vendor}
                             </span>
                           ))}
