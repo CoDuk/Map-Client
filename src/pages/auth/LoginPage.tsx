@@ -7,6 +7,7 @@ import NextIcon from '@/assets/nextB.svg'
 import NextIconB from '@/assets/nextburgun.svg'
 import { sendAuthEmailCode } from '@/apis/auth/email'
 import { verifyAuthEmailCode } from '@/apis/auth/verify'
+import { getAccessToken } from '@/apis/client'
 import MailVerificationSkeleton from '@/pages/auth/components/MailVerificationSkeleton'
 
 export default function LoginPage() {
@@ -27,6 +28,14 @@ export default function LoginPage() {
   const [verifyError, setVerifyError] = useState<string | null>(null)
 
   const navigate = useNavigate()
+
+  // 이미 로그인된 경우 마지막 페이지 또는 /main으로 이동
+  useEffect(() => {
+    if (getAccessToken()) {
+      const last = localStorage.getItem('lastMapPath')
+      navigate(last ?? '/main', { replace: true })
+    }
+  }, [navigate])
 
   useEffect(() => {
     const timer = setTimeout(() => {

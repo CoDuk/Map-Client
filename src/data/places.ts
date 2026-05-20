@@ -1,0 +1,976 @@
+export type Place = {
+  id: string
+  name: string
+  floor: string | null
+  category: string | null
+  images: string[]
+  notes: string[]
+  aliases?: string[]
+  directory?: { floor: string; rooms: string[] }[]
+  menuUrl?: string
+  vendors?: { name: string; aliases?: string[] }[]
+  restaurants?: { key: string; label: string; aliases?: string[] }[]
+}
+
+export const PLACES: Place[] = [
+  { id: 'main_office', name: '대학본부', floor: null, category: null, images: [], notes: ['분실물 보관 가능', '증명서 발급기 이용 가능'], directory: [
+    { floor: '1F', rooms: ['ADT', '교무과', '총무과', '교무처장실', '사무처장실', '문서고'] },
+    { floor: '2F', rooms: ['재무과', '교육혁신센터', '교수학습개발센터', '이사장실', '총장실', '비서실', '대외홍보실', 'DS혁신단'] },
+    { floor: '3F', rooms: ['대회의실', '관재과'] },
+  ]},
+  { id: 'dae101', name: '대101', floor: '1F', category: '강의실', images: ['/images/dae101.jpg'], notes: [] },
+  { id: 'dae102', name: '대102', floor: '1F', category: '강의실', images: ['/images/dae102.jpg'], notes: [] },
+  { id: 'dae103', name: '대103', floor: '1F', category: '강의실', images: ['/images/dae103.jpg'], notes: [] },
+  { id: 'dae104', name: '대104', floor: '1F', category: '강의실', images: ['/images/dae104.jpg'], notes: [] },
+  { id: 'dae105', name: '대105', floor: '1F', category: '강의실', images: ['/images/dae105.jpg'], notes: [] },
+  { id: 'dae106', name: '대106', floor: '1F', category: '강의실', images: ['/images/dae106.jpg'], notes: [] },
+  { id: 'dae107', name: '대107', floor: '1F', category: '강의실', images: ['/images/dae107.jpg'], notes: [] },
+  { id: 'dae108', name: '대108', floor: '1F', category: '강의실', images: ['/images/dae108.jpg'], notes: [] },
+  { id: 'dae202', name: '대202', floor: '2F', category: '강의실', images: ['/images/dae202.jpg'], notes: [] },
+  { id: 'dae203', name: '대203', floor: '2F', category: '강의실', images: ['/images/dae203.jpg'], notes: [] },
+  { id: 'dae204', name: '대204', floor: '2F', category: '강의실', images: ['/images/dae204.jpg'], notes: [] },
+  { id: 'dae205', name: '대205', floor: '2F', category: '강의실', images: ['/images/dae205.jpg'], notes: [] },
+  { id: 'dae2Fsofa1', name: '대강의동 2층 소파', floor: '2F', category: '복합공간', images: ['/images/dae2Fsofa1.jpg'], notes: [] },
+  { id: 'dae2Fsofa2', name: '대강의동 2층 소파', floor: '2F', category: '복합공간', images: ['/images/dae2Fsofa2.jpg'], notes: [] },
+  { id: 'dae2Fsofa3', name: '대강의동 2층 소파', floor: '2F', category: '복합공간', images: ['/images/dae2Fsofa5.jpg'], notes: [] },
+  { id: 'dae2Fsofa4', name: '대강의동 2층 소파', floor: '2F', category: '복합공간', images: ['/images/dae2Fsofa5.jpg'], notes: [] },
+  { id: 'dae2Fsofa5', name: '대강의동 2층 소파', floor: '2F', category: '복합공간', images: ['/images/dae2Fsofa6.jpg'], notes: [] },
+  { id: 'dae2Fsofa6', name: '대강의동 2층 소파', floor: '2F', category: '복합공간', images: ['/images/dae2Fsofa3.jpg'], notes: [] },
+  { id: 'dae2Fsofa7', name: '대강의동 2층 소파', floor: '2F', category: '복합공간', images: ['/images/dae2Fsofa4.jpg'], notes: [] },
+  { id: 'dae2Fsofa8', name: '대강의동 2층 소파', floor: '2F', category: '복합공간', images: ['/images/dae2Fsofa7.jpg'], notes: [] },
+  { id: 'dae2Fsofa9', name: '대강의동 2층 소파', floor: '2F', category: '복합공간', images: ['/images/dae2Fsofa7.jpg'], notes: [] },
+  { id: 'dae2Fsofa10', name: '대강의동 2층 소파', floor: '2F', category: '복합공간', images: ['/images/dae2Fsofa3.jpg'], notes: [] },
+  { id: 'dae1Fsofa1', name: '대강의동 1층 소파', floor: '1F', category: '복합공간', images: ['/images/dae1Fsofa1.jpg'], notes: [] },
+  { id: 'dae2Fwater', name: '대강의동 2층 정수기', floor: '2F', category: '편의시설', images: [], notes: [] },
+  // 인문사회관 2F
+  { id: 'in2FbwPrint', name: '흑백 프린터', floor: '2F', category: '복합공간', images: ['/images/in2Fprinter.jpg', '/images/in2FprinterATM.jpg'], notes: ['흑백 프린트만 가능'] },
+  { id: 'in2FcolorPrint', name: '컬러 프린터', floor: '2F', category: '복합공간', images: ['/images/in2FcolorPrinter.jpg', '/images/in2FprinterATM.jpg'], notes: ['흑백/컬러 프린터 가능'] },
+  { id: 'in2Fsofa1', name: '인문사회관 2층 소파존', floor: '2F', category: '복합공간', images: ['/images/in2Fsofa1.jpg', '/images/in2Fsofa2.jpg'], notes: [] },
+  { id: 'in2Fshower1', name: '인문사회관 2층 샤워실', floor: '2F', category: '복합공간', images: ['/images/in2Fshower.jpg'], notes: [] },
+  { id: 'in2Fsofa2', name: '인문사회관 2층 소파존', floor: '2F', category: '복합공간', images: ['/images/in2Fsofa3.jpg'], notes: [] },
+  { id: 'in2Fsofa3', name: '인문사회관 2층 소파존', floor: '2F', category: '복합공간', images: ['/images/in2Fsofa4.jpg', '/images/in2Fsofa5.jpg'], notes: [] },
+  { id: 'in201', name: '인201', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in202', name: '인202', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in203', name: '인203', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in204', name: '인204', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in205', name: '인205', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in206', name: '인206', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in207', name: '인207', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in208', name: '인208', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in209', name: '인209', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in210', name: '인210', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in211', name: '인211', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in212', name: '인212', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in213', name: '인213', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in214', name: '인214', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in215', name: '인215', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in221', name: '인221', floor: '2F', category: '강의실', images: [], notes: ['문헌정보학과 실습실'] },
+  { id: 'in222', name: '인222', floor: '2F', category: null, images: [], notes: ['글로벌융합대학 제1 행정실', '일어일문학과 과사무실', '중어중문학과 과사무실', '영어영문학과 과사무실', '불어불문학과 과사무실', '독어독문학과 과사무실', '스페인어학과 과사무실'] },
+  { id: 'in223', name: '인223', floor: '2F', category: null, images: [], notes: ['글로벌융합대학 제2 행정실', '국어국문학과 과사무실', '사학과 과사무실', '철학과 과사무실', '미술사학과 과사무실', '문화인류학과 과사무실', '사회학과 과사무실'] },
+  { id: 'in225', name: '인225', floor: '2F', category: null, images: [], notes: ['글로벌융합대학 제3 행정실', '경영학과 과사무실', '회계학과 과사무실', '국제통상학과 과사무실', '법학과 과사무실'] },
+  { id: 'in226', name: '인226', floor: '2F', category: null, images: [], notes: ['글로벌융합대학 제4 행정실', '심리학과 과사무실', '정치외교학과 과사무실', '문헌정보학과 과사무실', '아동가족학과 과사무실', '사회복지학과 과사무실'] },
+  { id: 'in227', name: '인227', floor: '2F', category: null, images: [], notes: ['서고/휴게실'] },
+  { id: 'in228', name: '인228', floor: '2F', category: null, images: [], notes: ['글로벌교육원 수업지원실'] },
+  { id: 'in241', name: '인241', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in242', name: '인242', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in243', name: '인243', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in244', name: '인244', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in245', name: '인245', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in246', name: '인246', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in247', name: '인247', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in248', name: '인248', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in249', name: '인249', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in250', name: '인250', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in251', name: '인251', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in252', name: '인252', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in253', name: '인253', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in254', name: '인254', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in255', name: '인255', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in2Fforest', name: '덕성 포레스트', floor: '2F', category: '복합공간', images: ['/images/in2Fforest.jpg'], notes: ['대화 가능'] },
+  { id: 'in2FCU', name: 'CU', floor: '2F', category: '편의시설', images: ['/images/in2Fcu.jpg'], notes: ['무인 운영', '출입 시 결제 수단 인증 필요'] },
+  // 인문사회관 4F
+  { id: 'in4Fsofa1', name: '인문사회관 4층 소파존', floor: '4F', category: '복합공간', images: ['/images/in4Fstudy1.jpg'], notes: [] },
+  { id: 'in4Fsofa2', name: '인문사회관 4층 소파존', floor: '4F', category: '복합공간', images: ['/images/in4Fstudy2.jpg'], notes: [] },
+  { id: 'in401', name: '인401', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in402', name: '인402', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in403', name: '인403', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in404', name: '인404', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in405', name: '인405', floor: '4F', category: null, images: [], notes: ['과방'] },
+  { id: 'in406', name: '인406', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in407', name: '인407', floor: '4F', category: null, images: [], notes: ['과방'] },
+  { id: 'in409', name: '인409', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in410A', name: '인411', floor: '4F', category: null, images: ['/images/in411.jpg'], notes: ['디지털교육공학센터 DET'] },
+  { id: 'in410B', name: '인410', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in411A', name: '인413', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in411B', name: '인412', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in412', name: '인414', floor: '4F', category: null, images: [], notes: ['과방'] },
+  { id: 'in421', name: '인421', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in422', name: '인422', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in423', name: '인423', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in424', name: '인424', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in425', name: '인425', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in426', name: '인426', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in427', name: '인427', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in428', name: '인428', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in429', name: '인429', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in430', name: '인430', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in431', name: '인431', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in432', name: '인432', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in433', name: '인433', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in434', name: '인434', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in435', name: '인435', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in441', name: '인441', floor: '4F', category: null, images: ['/images/in441.jpg'], notes: ['겸임교수실'] },
+  { id: 'in442', name: '인442', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in443', name: '인443', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in444', name: '인444', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in445', name: '인445', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in446', name: '인446', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in447', name: '인447', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in448', name: '인448', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in449', name: '인449', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in450', name: '인450', floor: '4F', category: null, images: [], notes: ['교직학부'] },
+  { id: 'in451', name: '인451', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in452', name: '인452', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in453', name: '인453', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in454', name: '인454', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in455', name: '인455', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in456', name: '인456', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in457', name: '인457', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in458', name: '인458', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in459', name: '인459', floor: '4F', category: null, images: [], notes: ['강사 휴게실'] },
+  { id: 'in460', name: '인460', floor: '4F', category: null, images: ['/images/in460.jpg'], notes: ['인문사회융합인재양성사업단', '기후환경위기대응사업단'] },
+  { id: 'in471', name: '인471', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in472', name: '인472', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in473', name: '인473', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in474', name: '인474', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in475', name: '인475', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in476', name: '인476', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in477', name: '인477', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in478', name: '인478', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in479', name: '인479', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in480', name: '인480', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in481', name: '인481', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in482', name: '인482', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in483', name: '인483', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in484', name: '인484', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in485', name: '인485', floor: '4F', category: null, images: [], notes: ['연구실 구역'] },
+  // 인문사회관 3F
+  { id: 'in3Fsofa1', name: '인문사회관 3층 소파존', floor: '3F', category: '복합공간', images: ['/images/in3Fsofa1.jpg'], notes: [] },
+  { id: 'in3Fshower1', name: '인문사회관 3층 샤워실', floor: '3F', category: '복합공간', images: ['/images/in3Fshower.jpg'], notes: [] },
+  { id: 'in3Fsofa2', name: '인문사회관 3층 소파존', floor: '3F', category: '복합공간', images: ['/images/in3Fsofa2.jpg'], notes: [] },
+  { id: 'in3Fsofa3', name: '인문사회관 3층 소파존', floor: '3F', category: '복합공간', images: [], notes: [] },
+  { id: 'in3Fsofa4', name: '인문사회관 3층 소파존', floor: '3F', category: '복합공간', images: [], notes: [] },
+  { id: 'in3Fsofa5', name: '인문사회관 3층 소파존', floor: '3F', category: '복합공간', images: [], notes: [] },
+  { id: 'in3Fstudy1', name: '인문사회관 3층 공부 공간', floor: '3F', category: '복합공간', images: ['/images/in3Fstudy1.jpg'], notes: [] },
+  { id: 'in3Fstudy2', name: '인문사회관 3층 공부 공간', floor: '3F', category: '복합공간', images: ['/images/in3Fstudy2.jpg'], notes: [] },
+  { id: 'in3Fstudy3', name: '인문사회관 3층 공부 공간', floor: '3F', category: '복합공간', images: ['/images/in3Fstudy3.jpg'], notes: [] },
+  { id: 'in301', name: '인301', floor: '3F', category: '강의실', images: ['/images/in301.jpg'], notes: [] },
+  { id: 'in302', name: '인302', floor: '3F', category: '강의실', images: ['/images/in302.jpg'], notes: [] },
+  { id: 'in303', name: '인303', floor: '3F', category: '강의실', images: ['/images/in303.jpg'], notes: [] },
+  { id: 'in304', name: '인304', floor: '3F', category: '강의실', images: ['/images/in304.jpg'], notes: [] },
+  { id: 'in311', name: '인311', floor: '3F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in312', name: '인312', floor: '3F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in313', name: '인313', floor: '3F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in314', name: '인314', floor: '3F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in315', name: '인315', floor: '3F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in316', name: '인316', floor: '3F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in317', name: '인317', floor: '3F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in318', name: '인318', floor: '3F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in319', name: '인319', floor: '3F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in320', name: '인320', floor: '3F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in321', name: '인321', floor: '3F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in322', name: '인322', floor: '3F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in323', name: '인323', floor: '3F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in324', name: '인324', floor: '3F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in325', name: '인325', floor: '3F', category: null, images: [], notes: ['연구실 구역'] },
+  { id: 'in326', name: '인326', floor: '3F', category: '강의실', images: ['/images/in326.jpg'], notes: [] },
+  { id: 'in327', name: '인327', floor: '3F', category: '강의실', images: ['/images/in327.jpg'], notes: [] },
+  { id: 'in328', name: '인328', floor: '3F', category: '강의실', images: ['/images/in328.jpg'], notes: [] },
+  { id: 'in330', name: '인330', floor: '3F', category: '강의실', images: ['/images/in330.jpg'], notes: [] },
+  { id: 'in331', name: '인331', floor: '3F', category: '강의실', images: ['/images/in331.jpg'], notes: [] },
+  { id: 'in332', name: '인332', floor: '3F', category: '강의실', images: ['/images/in332.jpg'], notes: [] },
+  { id: 'in333', name: '인333', floor: '3F', category: null, images: ['/images/in333.jpg'], notes: ['CRA LAB/가상현실예술융합연구실'] },
+  { id: 'in342', name: '인342', floor: '3F', category: '강의실', images: ['/images/in342.jpg'], notes: [] },
+  { id: 'in343', name: '인343', floor: '3F', category: '강의실', images: ['/images/in343.jpg'], notes: [] },
+  { id: 'in344', name: '인344', floor: '3F', category: '강의실', images: ['/images/in344.jpg'], notes: [] },
+  { id: 'in345', name: '인345', floor: '3F', category: '강의실', images: ['/images/in345.jpg'], notes: [] },
+  { id: 'in346', name: '인346', floor: '3F', category: '강의실', images: ['/images/in346.jpg'], notes: [] },
+  { id: 'in347', name: '인347', floor: '3F', category: null, images: ['/images/in347.jpg'], notes: ['교수세미나실'] },
+  { id: 'in348', name: '인348', floor: '3F', category: null, images: ['/images/in348.jpg'], notes: ['글로벌융합대학 교학부', '사회과학연구소'] },
+  { id: 'in351', name: '인351', floor: '3F', category: '강의실', images: [], notes: [] },
+  { id: 'in352', name: '인352', floor: '3F', category: '강의실', images: [], notes: [] },
+  { id: 'in353', name: '인353', floor: '3F', category: '강의실', images: [], notes: [] },
+  { id: 'in354', name: '인354', floor: '3F', category: '강의실', images: [], notes: [] },
+  { id: 'in355', name: '인355', floor: '3F', category: '강의실', images: [], notes: [] },
+  { id: 'in356', name: '인356', floor: '3F', category: '강의실', images: [], notes: [] },
+  { id: 'in357', name: '인357', floor: '3F', category: '강의실', images: [], notes: [] },
+  { id: 'in358', name: '인358', floor: '3F', category: '강의실', images: [], notes: [] },
+  { id: 'in359', name: '인359', floor: '3F', category: '강의실', images: [], notes: [] },
+  { id: 'in360', name: '인360', floor: '3F', category: '강의실', images: [], notes: [] },
+  { id: 'in361', name: '인361', floor: '3F', category: '강의실', images: [], notes: [] },
+  { id: 'in362', name: '인362', floor: '3F', category: '강의실', images: [], notes: [] },
+  { id: 'in363', name: '인363', floor: '3F', category: '강의실', images: [], notes: [] },
+  { id: 'in364', name: '인364', floor: '3F', category: '강의실', images: [], notes: [] },
+  { id: 'in365', name: '인365', floor: '3F', category: '강의실', images: [], notes: [] },
+  // 인문사회관 1F
+  { id: 'in1Fpiano', name: '전자피아노', floor: '1F', category: '복합공간', images: [], notes: [] },
+  { id: 'in1Fsofa1', name: '인문사회관 1층 소파존', floor: '1F', category: '복합공간', images: ['/images/in1Fsofa.jpg'], notes: [] },
+  { id: 'in101', name: '인101', floor: '1F', category: '강의실', images: ['/images/in101.jpg'], notes: [] },
+  { id: 'in102', name: '인102', floor: '1F', category: '강의실', images: ['/images/in102.jpg'], notes: [] },
+  { id: 'in103', name: '인103', floor: '1F', category: '강의실', images: ['/images/in103.jpg'], notes: [] },
+  { id: 'in104', name: '인104', floor: '1F', category: '강의실', images: ['/images/in104.jpg'], notes: [] },
+  { id: 'in111', name: '인111', floor: '1F', category: '강의실', images: ['/images/in111.jpg', '/images/in111-1.jpg'], notes: ['인111: 문화인류학과 실습실', '인111-1: 미술사학과 과방'] },
+  { id: 'in112', name: '인112', floor: '1F', category: '강의실', images: ['/images/in112.jpg'], notes: [] },
+  { id: 'in113', name: '인113', floor: '1F', category: '강의실', images: ['/images/in113.jpg'], notes: [] },
+  { id: 'in115', name: '인115', floor: '1F', category: '강의실', images: ['/images/in115.jpg'], notes: [] },
+  { id: 'in116', name: '인116', floor: '1F', category: '강의실', images: ['/images/in116.jpg'], notes: [] },
+  { id: 'in117', name: '인117', floor: '1F', category: '강의실', images: ['/images/in117.jpg'], notes: [] },
+  { id: 'in118', name: '인118', floor: '1F', category: '강의실', images: ['/images/in118.jpg'], notes: [] },
+  { id: 'in119', name: '인119', floor: '1F', category: '강의실', images: ['/images/in119.jpg'], notes: [] },
+  { id: 'in120', name: '인120', floor: '1F', category: '강의실', images: ['/images/in120.jpg'], notes: [] },
+  { id: 'in121', name: '인121', floor: '1F', category: '강의실', images: ['/images/in121.jpg'], notes: [] },
+  { id: 'in131', name: '인131', floor: '1F', category: '강의실', images: ['/images/in131.jpg'], notes: ['문헌정보학과 실습실'] },
+  { id: 'in132', name: '인132', floor: '1F', category: null, images: ['/images/in132.jpg'], notes: ['과방'] },
+  { id: 'in133', name: '인133', floor: '1F', category: null, images: ['/images/in133.jpg'], notes: ['아동 가족 상담실'] },
+  { id: 'in134', name: '인134', floor: '1F', category: '강의실', images: ['/images/in134.jpg'], notes: [] },
+  { id: 'in135', name: '인135', floor: '1F', category: '강의실', images: ['/images/in135.jpg'], notes: [] },
+  { id: 'in136', name: '인136', floor: '1F', category: '강의실', images: ['/images/in136.jpg'], notes: [] },
+  { id: 'in137', name: '인137', floor: '1F', category: '강의실', images: ['/images/in137.jpg'], notes: [] },
+  { id: 'in138', name: '인138', floor: '1F', category: null, images: ['/images/in138.jpg'], notes: ['인지신경과학연구실'] },
+  { id: 'in139', name: '인139', floor: '1F', category: null, images: ['/images/in139.jpg'], notes: ['경영실습실'] },
+  { id: 'in140', name: '인140', floor: '1F', category: null, images: ['/images/in140.jpg'], notes: ['아동 가족 상담센터'] },
+  // 차관
+  { id: 'chaB1', name: '박물관', floor: 'B1', category: '전시실', images: [], notes: ['박물관/전시실'] },
+  { id: 'chaB114', name: '차B114', floor: 'B1', category: null, images: [], notes: ['소회의실', '참고자료실'] },
+  { id: 'chaB115', name: '차B115', floor: 'B1', category: null, images: [], notes: ['박물관사무실'] },
+  { id: 'chaB116', name: '차B116', floor: 'B1', category: null, images: [], notes: ['관장실'] },
+  { id: 'cha119', name: '차119', floor: '1F', category: '강의실', images: ['/images/cha119.jpg'], notes: ['멀티미디어강의실'] },
+  { id: 'cha120', name: '차120', floor: '1F', category: '강의실', images: ['/images/cha120.jpg'], notes: ['디지털소프트웨어공학부 실습실'] },
+  { id: 'cha121', name: '차121', floor: '1F', category: '강의실', images: ['/images/cha121.jpg'], notes: [] },
+  { id: 'cha122', name: '차122', floor: '1F', category: '강의실', images: ['/images/cha122.jpg'], notes: [] },
+  { id: 'cha123', name: '차123', floor: '1F', category: '강의실', images: ['/images/cha123.jpg'], notes: [] },
+  { id: 'cha124', name: '차124', floor: '1F', category: '강의실', images: ['/images/cha124.jpg'], notes: [] },
+  { id: 'cha125', name: '차125', floor: '1F', category: '강의실', images: ['/images/cha125.jpg'], notes: ['기후데이터 분석 및 실습실'] },
+  { id: 'cha126', name: '차126', floor: '1F', category: '강의실', images: ['/images/cha126.jpg', '/images/cha126-1.jpg'], notes: ['글로벌커뮤니케이션센터', '차미리사교양교육연구소'], aliases: ['차126-1', '126-1'] },
+  { id: 'cha127', name: '차127', floor: '1F', category: '강의실', images: ['/images/cha127.jpg', '/images/cha127-1.jpg'], notes: ['차미리사교양대학 교학과', '차미리사교양대학 학장실'], aliases: ['차127-1', '127-1'] },
+  { id: 'cha128', name: '차128', floor: '1F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha129', name: '차129', floor: '1F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha130', name: '차130', floor: '1F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha131', name: '차131', floor: '1F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha132', name: '차132', floor: '1F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha133', name: '차133', floor: '1F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha134', name: '차134', floor: '1F', category: '강의실', images: ['/images/cha134.jpg'], notes: ['입학상담실'] },
+  { id: 'cha135', name: '차135', floor: '1F', category: '강의실', images: ['/images/cha135.jpg'], notes: ['연구실 구역'] },
+  { id: 'cha136', name: '차136', floor: '1F', category: '강의실', images: ['/images/cha136.jpg'], notes: [] },
+  { id: 'cha137', name: '차137', floor: '1F', category: '강의실', images: ['/images/cha137.jpg'], notes: [] },
+  { id: 'cha138', name: '차138', floor: '1F', category: '강의실', images: ['/images/cha138.jpg'], notes: [] },
+  { id: 'cha139', name: '차139', floor: '1F', category: '강의실', images: ['/images/cha139.jpg'], notes: [] },
+  { id: 'cha140', name: '차140', floor: '1F', category: '강의실', images: ['/images/cha140.jpg'], notes: ['연구실 구역'] },
+  { id: 'cha141', name: '차141', floor: '1F', category: '강의실', images: ['/images/cha141.jpg'], notes: ['연구실 구역'] },
+  { id: 'cha142', name: '차142', floor: '1F', category: '강의실', images: ['/images/cha142.jpg'], notes: ['연구실 구역'] },
+  { id: 'cha143', name: '차143', floor: '1F', category: '강의실', images: ['/images/cha143-147.jpg'], notes: [] },
+  { id: 'cha144', name: '차144', floor: '1F', category: '강의실', images: ['/images/cha143-147.jpg'], notes: [] },
+  { id: 'cha145', name: '차145', floor: '1F', category: '강의실', images: ['/images/cha143-147.jpg'], notes: [] },
+  { id: 'cha146', name: '차146', floor: '1F', category: '강의실', images: ['/images/cha143-147.jpg'], notes: [] },
+  { id: 'cha147', name: '차147', floor: '1F', category: '강의실', images: ['/images/cha143-147.jpg'], notes: [] },
+  { id: 'cha1Fsofa', name: '차미리사관 1층 소파', floor: '1F', category: '복합공간', images: ['/images/cha1Fsofa.jpg'], notes: [] },
+  { id: 'cha1Fprinter', name: '흑백 프린터', floor: '1F', category: '편의시설', images: ['/images/cha1Fprinter.jpg'], notes: ['흑백 프린트만 가능'] },
+  { id: 'cha1Fwater', name: '차미리사관 1층 정수기', floor: '1F', category: '편의시설', images: [], notes: [] },
+  { id: 'cha1Fdrink', name: '차미리사관 1층 자판기', floor: '1F', category: '편의시설', images: [], notes: [] },
+  // 2F
+  { id: 'cha219', name: '차219', floor: '2F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha220', name: '차220', floor: '2F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha221', name: '차221', floor: '2F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha222', name: '차222', floor: '2F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha223', name: '차223', floor: '2F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha224', name: '차224', floor: '2F', category: '강의실', images: ['/images/cha224.jpg'], notes: ['스마트강의실'] },
+  { id: 'cha225', name: '차225', floor: '2F', category: '강의실', images: ['/images/cha225.jpg'], notes: ['수업행동분석실'] },
+  { id: 'cha226', name: '차226', floor: '2F', category: '강의실', images: ['/images/cha226.jpg'], notes: [] },
+  { id: 'cha227', name: '차227', floor: '2F', category: '강의실', images: ['/images/cha227.jpg'], notes: [] },
+  { id: 'cha228', name: '차228', floor: '2F', category: '강의실', images: ['/images/cha228.jpg'], notes: [] },
+  { id: 'cha229', name: '차229', floor: '2F', category: '강의실', images: ['/images/cha229.jpg'], notes: ['과학기술대학 제1 행정실', 'IT 전공 과사무실', '디지털소프트웨어공학부 과사무실'] },
+  { id: 'cha230', name: '차230', floor: '2F', category: '강의실', images: ['/images/cha230.jpg'], notes: [] },
+  { id: 'cha231', name: '차231', floor: '2F', category: '강의실', images: ['/images/cha231.jpg'], notes: [] },
+  { id: 'cha232', name: '차232', floor: '2F', category: '강의실', images: ['/images/cha232.jpg'], notes: [] },
+  { id: 'cha233', name: '차233', floor: '2F', category: '강의실', images: ['/images/cha233.jpg'], notes: [] },
+  { id: 'cha234', name: '차234', floor: '2F', category: '강의실', images: ['/images/cha234.jpg'], notes: ['학습컨설팅실'] },
+  { id: 'cha235', name: '차235', floor: '2F', category: '강의실', images: ['/images/cha235.jpg'], notes: ['사물함에 가려져서 잘 안 보임'] },
+  { id: 'cha236', name: '차236', floor: '2F', category: '강의실', images: ['/images/cha236.jpg'], notes: ['디지털정보기술원'] },
+  { id: 'cha237', name: '차237', floor: '2F', category: '강의실', images: [], notes: ['외부인 출입 금지'] },
+  { id: 'cha238', name: '차238', floor: '2F', category: '강의실', images: [], notes: ['외부인 출입 금지'] },
+  { id: 'cha239', name: '차239', floor: '2F', category: '강의실', images: [], notes: ['외부인 출입 금지'] },
+  { id: 'cha242', name: '차242', floor: '2F', category: '강의실', images: ['/images/cha235.jpg'], notes: ['STUDIO 242'] },
+  { id: 'cha243', name: '차243', floor: '2F', category: '강의실', images: ['/images/cha243-245.jpg'], notes: [] },
+  { id: 'cha244', name: '차244', floor: '2F', category: '강의실', images: ['/images/cha243-245.jpg'], notes: [] },
+  { id: 'cha245', name: '차245', floor: '2F', category: '강의실', images: ['/images/cha243-245.jpg'], notes: [] },
+  { id: 'cha246', name: '차246', floor: '2F', category: '강의실', images: ['/images/cha246.jpg'], notes: [] },
+  { id: 'cha247', name: '차247', floor: '2F', category: '강의실', images: ['/images/cha247.jpg'], notes: [] },
+  { id: 'cha248', name: '차248', floor: '2F', category: '강의실', images: ['/images/cha248.jpg'], notes: [] },
+  { id: 'cha249', name: '차249', floor: '2F', category: '강의실', images: ['/images/cha249.jpg'], notes: ['studio 249'] },
+  { id: 'cha250', name: '차250', floor: '2F', category: '강의실', images: ['/images/cha250-255.jpg'], notes: [] },
+  { id: 'cha251', name: '차251', floor: '2F', category: '강의실', images: ['/images/cha250-255.jpg'], notes: [] },
+  { id: 'cha252', name: '차252', floor: '2F', category: '강의실', images: ['/images/cha250-255.jpg'], notes: [] },
+  { id: 'cha253', name: '차253', floor: '2F', category: '강의실', images: ['/images/cha250-255.jpg'], notes: [] },
+  { id: 'cha254', name: '차254', floor: '2F', category: '강의실', images: ['/images/cha250-255.jpg'], notes: [] },
+  { id: 'cha255', name: '차255', floor: '2F', category: '강의실', images: ['/images/cha250-255.jpg'], notes: [] },
+  { id: 'cha256', name: '차256', floor: '2F', category: '강의실', images: ['/images/cha256.jpg'], notes: [] },
+  { id: 'cha2Fsofa1', name: '차미리사관 2층 복합공간', floor: '2F', category: '복합공간', images: ['/images/cha2Fsofa2.jpg'], notes: [] },
+  { id: 'cha2Fsofa2', name: '차미리사관 2층 소파', floor: '2F', category: '복합공간', images: ['/images/cha2Fsofa1.jpg'], notes: [] },
+  { id: 'cha3Fsofa1', name: '차미리사관 3층 소파', floor: '3F', category: '복합공간', images: ['/images/cha3Fsofa5.jpg'], notes: [] },
+  { id: 'cha3Fsofa2', name: '차미리사관 3층 소파', floor: '3F', category: '복합공간', images: ['/images/cha3Fsofa3.jpg'], notes: [] },
+  { id: 'cha3Fsofa3', name: '차미리사관 3층 소파', floor: '3F', category: '복합공간', images: ['/images/cha3Fsofa1.jpg'], notes: [] },
+  { id: 'cha3Fsofa4', name: '차미리사관 3층 복합공간', floor: '3F', category: '복합공간', images: ['/images/cha3Fsofa4.jpg'], notes: [] },
+  { id: 'cha3Fsofa5', name: '차미리사관 3층 소파', floor: '3F', category: '복합공간', images: ['/images/cha3Fsofa2.jpg'], notes: [] },
+  // 3F
+  { id: 'cha319', name: '차319', floor: '3F', category: '강의실', images: ['/images/cha319.jpg'], notes: [] },
+  { id: 'cha320', name: '차320', floor: '3F', category: '강의실', images: ['/images/cha320.jpg', '/images/cha320-1.jpg'], notes: ['320-1: 지도상 차320 오른편 위치, 소프트웨어/사이버보안전공 졸업프로젝트실'], aliases: ['차320-1', '320-1'] },
+  { id: 'cha321', name: '차321', floor: '3F', category: '강의실', images: ['/images/cha321.jpg'], notes: [] },
+  { id: 'cha323', name: '차323', floor: '3F', category: '강의실', images: ['/images/cha323.jpg'], notes: [] },
+  { id: 'cha324', name: '차324', floor: '3F', category: '강의실', images: ['/images/cha324.jpg'], notes: [] },
+  { id: 'cha325', name: '차325', floor: '3F', category: '강의실', images: ['/images/cha325.jpg'], notes: [] },
+  { id: 'cha326', name: '차326', floor: '3F', category: '강의실', images: ['/images/cha326.jpg'], notes: [] },
+  { id: 'cha327', name: '차327', floor: '3F', category: '강의실', images: ['/images/cha327.jpg'], notes: ['컴퓨터공학전공 졸업프로젝트실'] },
+  { id: 'cha353', name: '차353', floor: '3F', category: '강의실', images: ['/images/cha353.jpg'], notes: ['오픈 갤러리'] },
+  { id: 'cha328', name: '차328', floor: '3F', category: '강의실', images: ['/images/cha328.jpg'], notes: ['컴퓨터공학전공 졸업프로젝트실'] },
+  { id: 'cha329', name: '차329', floor: '3F', category: '강의실', images: ['/images/cha329.jpg'], notes: ['IT미디어전공 작품제작실1'] },
+  { id: 'cha330', name: '차330', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha331', name: '차331', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha332', name: '차332', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha333', name: '차333', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha334', name: '차334', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha335', name: '차335', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha336', name: '차336', floor: '3F', category: '강의실', images: ['/images/cha336.jpg'], notes: [] },
+  { id: 'cha337', name: '차337', floor: '3F', category: '강의실', images: ['/images/cha337.jpg'], notes: [] },
+  { id: 'cha338', name: '차338', floor: '3F', category: '강의실', images: ['/images/cha338.jpg'], notes: [] },
+  { id: 'cha339', name: '차339', floor: '3F', category: '강의실', images: ['/images/cha339.jpg', '/images/cha339-1.jpg'], notes: ['차339-1: 가상현실 사운드 실습실, 지도상 차339 왼편에 위치'], aliases: ['차339-1', '339-1'] },
+  { id: 'cha340', name: '차340', floor: '3F', category: '강의실', images: ['/images/cha340.jpg'], notes: [] },
+  { id: 'cha341', name: '차341', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha342', name: '차342', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha343', name: '차343', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha344', name: '차344', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha345', name: '차345', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha346', name: '차346', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha347', name: '차347', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha348', name: '차348', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha349', name: '차349', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha350', name: '차350', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha351', name: '차351', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha352', name: '차352', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha4Fsofa1', name: '차미리사관 4층 복합공간', floor: '4F', category: '복합공간', images: ['/images/cha4Fsofa6.jpg'], notes: [] },
+  { id: 'cha4Fsofa2', name: '차미리사관 4층 복합공간', floor: '4F', category: '복합공간', images: ['/images/cha4Fsofa2.jpg'], notes: [] },
+  { id: 'cha4Fsofa3', name: '차미리사관 4층 소파', floor: '4F', category: '복합공간', images: ['/images/cha4Fsofa1.jpg'], notes: [] },
+  { id: 'cha4Fsofa4', name: '차미리사관 4층 복합공간', floor: '4F', category: '복합공간', images: ['/images/cha4Fsofa4.jpg'], notes: [] },
+  { id: 'cha4Fsofa5', name: '차미리사관 4층 복합공간', floor: '4F', category: '복합공간', images: ['/images/cha4Fsofa3.jpg'], notes: [] },
+  { id: 'cha4Fsofa6', name: '차미리사관 4층 복합공간', floor: '4F', category: '복합공간', images: ['/images/cha4Fsofa5.jpg'], notes: [] },
+  // 4F
+  { id: 'cha419', name: '차419', floor: '4F', category: '강의실', images: ['/images/cha419.jpg'], notes: ['지식문화연구소'] },
+  { id: 'cha420', name: '차420', floor: '4F', category: '강의실', images: ['/images/cha420.jpg'], notes: ['전산물품보관실'] },
+  { id: 'cha421', name: '차421', floor: '4F', category: '강의실', images: ['/images/cha421.jpg'], notes: ['전산시스템실'] },
+  { id: 'cha422', name: '차422', floor: '4F', category: '강의실', images: ['/images/cha422.jpg'], notes: ['디지털정보기술원'] },
+  { id: 'cha423', name: '차423', floor: '4F', category: '강의실', images: [], notes: [] },
+  { id: 'cha424', name: '차424', floor: '4F', category: '강의실', images: ['/images/cha424.jpg'], notes: ['정보지원센터 차세대개발실'] },
+  { id: 'cha425', name: '차425', floor: '4F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha426', name: '차426', floor: '4F', category: '강의실', images: ['/images/cha426.jpg'], notes: ['프레젠테이션실'] },
+  { id: 'cha427', name: '차427', floor: '4F', category: '강의실', images: ['/images/cha427.jpg'], notes: ['입학관리과(서류제출처)'] },
+  { id: 'cha428', name: '차428', floor: '4F', category: '강의실', images: ['/images/cha428.jpg'], notes: [] },
+  { id: 'cha429', name: '차429', floor: '4F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha430', name: '차430', floor: '4F', category: '강의실', images: ['/images/cha430.jpg'], notes: ['입학처장실'] },
+  { id: 'cha431', name: '차431', floor: '4F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha432', name: '차432', floor: '4F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha433', name: '차433', floor: '4F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha434', name: '차434', floor: '4F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha435', name: '차435', floor: '4F', category: '강의실', images: ['/images/cha435.jpg'], notes: ['수학전공 과사무실'] },
+  { id: 'cha436', name: '차436', floor: '4F', category: '강의실', images: ['/images/cha436.jpg'], notes: ['수학과개인지도실'] },
+  { id: 'cha437', name: '차437', floor: '4F', category: '강의실', images: ['/images/cha437.jpg'], notes: ['미래인재대학 통합행정실'] },
+  { id: 'cha438', name: '차438', floor: '4F', category: '강의실', images: ['/images/cha438.jpg'], notes: ['미래인재대학 교학과'] },
+  { id: 'cha439', name: '차439', floor: '4F', category: '강의실', images: ['/images/cha439.jpg'], notes: [] },
+  { id: 'cha440', name: '차440', floor: '4F', category: '강의실', images: ['/images/cha440.jpg'], notes: [] },
+  { id: 'cha441', name: '차441', floor: '4F', category: '강의실', images: ['/images/cha441.jpg'], notes: [] },
+  { id: 'cha442', name: '차442', floor: '4F', category: '강의실', images: ['/images/cha442-443.jpg'], notes: ['알파그리드 ICT 응용연구실', '차443 안쪽에 위치'] },
+  { id: 'cha443', name: '차443', floor: '4F', category: '강의실', images: ['/images/cha442-443.jpg'], notes: ['통계문헌실'] },
+  { id: 'cha444', name: '차444', floor: '4F', category: '강의실', images: ['/images/cha444.jpg'], notes: [] },
+  { id: 'cha445', name: '차445', floor: '4F', category: '강의실', images: ['/images/cha445.jpg'], notes: [] },
+  { id: 'cha446', name: '차446', floor: '4F', category: '강의실', images: ['/images/cha446.jpg'], notes: [] },
+  { id: 'cha447', name: '차447', floor: '4F', category: '강의실', images: ['/images/cha447.jpg'], notes: ['정보통계학전공 과사무실'] },
+  { id: 'cha448', name: '차448', floor: '4F', category: '강의실', images: ['/images/cha448.jpg'], notes: ['정보통계학전공 스터디룸'] },
+  { id: 'cha449', name: '차449', floor: '4F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha450', name: '차450', floor: '4F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha451', name: '차451', floor: '4F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha452', name: '차452', floor: '4F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha453', name: '차453', floor: '4F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha454', name: '차454', floor: '4F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha455', name: '차455', floor: '4F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha456', name: '차456', floor: '4F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'cha457', name: '차457', floor: '4F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  // 자연관 A동 1F
+  { id: 'natA101', name: 'A101', floor: '1F', category: '강의실', images: ['/images/A101.jpg'], notes: ['목적공간'] },
+  { id: 'natA102', name: 'A102', floor: '1F', category: '강의실', images: ['/images/A102.jpg'], notes: ['평가실', '식품영양학과 실험실'] },
+  { id: 'natA103', name: 'A103', floor: '1F', category: '강의실', images: [], notes: ['조리실습실'] },
+  { id: 'natA104', name: 'A104', floor: '1F', category: '강의실', images: [], notes: ['준비실'] },
+  { id: 'natA105', name: 'A105', floor: '1F', category: '강의실', images: [], notes: ['바이오공학전공 실험실5'] },
+  { id: 'natA106', name: 'A106', floor: '1F', category: '강의실', images: ['/images/A106.jpg'], notes: ['시설과'] },
+  { id: 'natA107', name: 'A107', floor: '1F', category: '강의실', images: [], notes: ['시약저장소'] },
+  { id: 'natA108', name: 'A108', floor: '1F', category: '강의실', images: [], notes: ['영재교육원'] },
+  { id: 'natA109', name: 'A109', floor: '1F', category: '강의실', images: [], notes: ['응용바이오분자공학 연구실1'] },
+  { id: 'natA110', name: 'A110', floor: '1F', category: '강의실', images: [], notes: ['응용바이오분자공학 연구실2'] },
+  { id: 'natA111', name: 'A111', floor: '1F', category: '강의실', images: [], notes: ['덕성글로벌교육 DA개발협력센터'] },
+  { id: 'natA112', name: 'A112', floor: '1F', category: '강의실', images: [], notes: ['덕성글로벌교육 DA개발협력센터'] },
+  { id: 'natA113', name: 'A113', floor: '1F', category: '강의실', images: ['/images/A113.jpg'], notes: ['교학연구지원실', '산학협력단장실'] },
+  { id: 'natA114', name: 'A114', floor: '1F', category: '강의실', images: [], notes: ['산학협력단 사무실'] },
+  { id: 'natA115', name: 'A115', floor: '1F', category: '강의실', images: [], notes: ['산학협력단 사무실'] },
+  { id: 'natA116', name: 'A116', floor: '1F', category: '강의실', images: ['/images/A116.jpg'], notes: ['산학협력단 사무실', '제한구역'] },
+  { id: 'natA117', name: 'A117', floor: '1F', category: '강의실', images: ['/images/A117.jpg'], notes: ['운영관리소장실'] },
+  { id: 'jaA2Fsofa1', name: '자연관 A동 2층 소파', floor: '2F', category: '복합공간', images: ['/images/A2Fsofa.jpg'], notes: [] },
+  // 자연관 A동 2F
+  { id: 'natA201', name: 'A201', floor: '2F', category: '강의실', images: ['/images/A201.jpg'], notes: ['목적공간'] },
+  { id: 'natA202', name: 'A202', floor: '2F', category: '강의실', images: [], notes: ['푸드테크 연구실1', '식품영양학과 실험실'] },
+  { id: 'natA203', name: 'A203', floor: '2F', category: '강의실', images: [], notes: ['식품실험실', '식품영양학과 실험실'] },
+  { id: 'natA204', name: 'A204', floor: '2F', category: '강의실', images: [], notes: ['푸드테크 연구실2', '식품영양학과 실험실'] },
+  { id: 'natA205', name: 'A205', floor: '2F', category: '강의실', images: [], notes: ['무균실험실', '식품영양학과 실험실'] },
+  { id: 'natA206', name: 'A206', floor: '2F', category: '강의실', images: [], notes: ['특수실험실', '식품영양학과 실험실'] },
+  { id: 'natA207', name: 'A207', floor: '2F', category: '강의실', images: [], notes: ['특수실험실', '식품영양학과 실험실'] },
+  { id: 'natA208', name: 'A208', floor: '2F', category: '강의실', images: [], notes: ['푸드테크 연구실3', '식품영양학과 실험실'] },
+  { id: 'natA209', name: 'A209', floor: '2F', category: '강의실', images: [], notes: ['Human Nutrition Lab 2', '식품영양학과 실험실'] },
+  { id: 'natA210', name: 'A210', floor: '2F', category: '강의실', images: [], notes: ['특수 실험실', '식품영양학과 실험실'] },
+  { id: 'natA211', name: 'A211', floor: '2F', category: '강의실', images: [], notes: ['Human Nutrition Lab 1', '식품영양학과 실험실'] },
+  { id: 'natA212', name: 'A212', floor: '2F', category: '강의실', images: [], notes: ['공용기기실', '식품영양학과 실험실'] },
+  { id: 'natA213', name: 'A213', floor: '2F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'natA214', name: 'A214', floor: '2F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'natA215', name: 'A215', floor: '2F', category: '강의실', images: [], notes: ['공용장비지원센터'] },
+  { id: 'natA216', name: 'A216', floor: '2F', category: '강의실', images: ['/images/A216.jpg'], notes: ['식품영양학과 조교실'] },
+  { id: 'natA217', name: 'A217', floor: '2F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'natA218', name: 'A218', floor: '2F', category: '강의실', images: [], notes: ['도봉구 어린이•사회복지 급식관리지원센터'] },
+  { id: 'natA219', name: 'A219', floor: '2F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'natA220', name: 'A220', floor: '2F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'natA221', name: 'A221', floor: '2F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'jaA3Fsofa1', name: '자연관 A동 3층 소파', floor: '3F', category: '복합공간', images: ['/images/A3Fsofa.jpg'], notes: [] },
+  // 자연관 A동 3F
+  { id: 'natA301', name: 'A301', floor: '3F', category: '강의실', images: ['/images/A301.jpg'], notes: ['목적공간'] },
+  { id: 'natA302', name: 'A302', floor: '3F', category: '강의실', images: ['/images/A302.jpg'], notes: ['푸드테크 연구실 4'] },
+  { id: 'natA303', name: 'A303', floor: '3F', category: '강의실', images: ['/images/A303.jpg', '/images/A303_2.jpg'], notes: ['영양실험실', '식품영양학과 실험실'] },
+  { id: 'natA304', name: 'A304', floor: '3F', category: '강의실', images: ['/images/A304.jpg'], notes: ['준비실', '식품영양학과 실험실'] },
+  { id: 'natA305', name: 'A305', floor: '3F', category: '강의실', images: ['/images/A305-308.jpg'], notes: ['실험동물센터'] },
+  { id: 'natA306', name: 'A306', floor: '3F', category: '강의실', images: ['/images/A305-308.jpg'], notes: ['실험동물센터'] },
+  { id: 'natA307', name: 'A307', floor: '3F', category: '강의실', images: ['/images/A305-308.jpg'], notes: ['실험동물센터'] },
+  { id: 'natA308', name: 'A308', floor: '3F', category: '강의실', images: ['/images/A305-308.jpg'], notes: ['실험동물센터'] },
+  { id: 'natA309', name: 'A309', floor: '3F', category: '강의실', images: ['/images/A309.jpg'], notes: ['동물실험실', '교육실'] },
+  { id: 'natA310', name: 'A310', floor: '3F', category: '강의실', images: ['/images/A310.jpg'], notes: ['도봉구 어린이•사회복지 급식관리지원센터'] },
+  { id: 'natA311', name: 'A311', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'natA312', name: 'A312', floor: '3F', category: '강의실', images: ['/images/A312.jpg'], notes: ['도봉구 어린이•사회복지 급식관리지원센터'] },
+  { id: 'natA313', name: 'A313', floor: '3F', category: '강의실', images: ['/images/A313.jpg'], notes: ['도봉구 어린이•사회복지 급식관리지원센터'] },
+  { id: 'natA314', name: 'A314', floor: '3F', category: '강의실', images: ['/images/A314.jpg'], notes: ['영양평가 및 상담실', '식품영양학과 실험실'] },
+  // 자연관 A동 4F
+  { id: 'natA401', name: 'A401', floor: '4F', category: '강의실', images: ['/images/A401.jpg'], notes: ['피아노실'] },
+  { id: 'natA402', name: 'A402', floor: '4F', category: '강의실', images: ['/images/A402.jpg'], notes: ['피아노실'] },
+  { id: 'natA403', name: 'A403', floor: '4F', category: '강의실', images: ['/images/A403.jpg'], notes: ['피아노실'] },
+  { id: 'natA404', name: 'A404', floor: '4F', category: '강의실', images: ['/images/A404.jpg'], notes: ['피아노실'] },
+  { id: 'natA405', name: 'A405', floor: '4F', category: '강의실', images: ['/images/A405.jpg'], notes: ['피아노실'] },
+  { id: 'natA406', name: 'A406', floor: '4F', category: '강의실', images: ['/images/A406.jpg'], notes: ['피아노실'] },
+  { id: 'natA407', name: 'A407', floor: '4F', category: '강의실', images: ['/images/A407.jpg'], notes: ['피아노실'] },
+  { id: 'natA408', name: 'A408', floor: '4F', category: '강의실', images: ['/images/A408.jpg'], notes: ['피아노실'] },
+  { id: 'natA409', name: 'A409', floor: '4F', category: '강의실', images: ['/images/A409.jpg'], notes: ['피아노실'] },
+  { id: 'natA410', name: 'A410', floor: '4F', category: '강의실', images: ['/images/A410.jpg'], notes: ['피아노실'] },
+  { id: 'natA411', name: 'A411', floor: '4F', category: '강의실', images: ['/images/A411.jpg'], notes: ['피아노실'] },
+  { id: 'natA412', name: 'A412', floor: '4F', category: '강의실', images: ['/images/A412.jpg'], notes: ['피아노실'] },
+  { id: 'natA413', name: 'A413', floor: '4F', category: '강의실', images: ['/images/A413.jpg'], notes: ['피아노실'] },
+  { id: 'natA414', name: 'A414', floor: '4F', category: '강의실', images: ['/images/A414.jpg'], notes: ['피아노실'] },
+  { id: 'natA415', name: 'A415', floor: '4F', category: '강의실', images: [], notes: ['외부인 출입 금지'] },
+  // 자연관 B동 1F
+  { id: 'natB101', name: 'B101', floor: '1F', category: '캡스', images: ['/images/B101.jpg', '/images/B101_1.jpg'], notes: [] },
+  { id: 'natB102', name: 'B102', floor: '1F', category: '강의실', images: ['/images/B102-104.jpg'], notes: [] },
+  { id: 'natB103', name: 'B103', floor: '1F', category: '강의실', images: ['/images/B102-104.jpg'], notes: [] },
+  { id: 'natB104', name: 'B104', floor: '1F', category: '강의실', images: ['/images/B102-104.jpg'], notes: [] },
+  { id: 'natB105', name: 'B105', floor: '1F', category: '강의실', images: ['/images/B105.jpg'], notes: [] },
+  { id: 'natB106', name: 'B106', floor: '1F', category: '강의실', images: ['/images/B106.jpg'], notes: [] },
+  { id: 'jaB2FbwPrint', name: '흑백 프린터', floor: '2F', category: '복합공간', images: ['/images/B2Fprinter.jpg'], notes: [] },
+  { id: 'jaB2Fsofa1', name: '자연관 B동 2층 복합공간', floor: '2F', category: '복합공간', images: ['/images/B2Fsofa1.jpg'], notes: [] },
+  { id: 'jaB2Fsofa2', name: '자연관 B동 2층 복합공간', floor: '2F', category: '복합공간', images: ['/images/B2Fsofa3.jpg'], notes: [] },
+  { id: 'jaB2Fsofa3', name: '자연관 B동 2층 소파', floor: '2F', category: '복합공간', images: ['/images/B2Fsofa2.jpg'], notes: [] },
+  // 자연관 B동 2F
+  { id: 'natB201', name: 'B201', floor: '2F', category: '강의실', images: ['/images/B201.jpg'], notes: [] },
+  { id: 'natB202', name: 'B202', floor: '2F', category: '강의실', images: ['/images/B202.jpg'], notes: [] },
+  { id: 'natB203', name: 'B203', floor: '2F', category: '강의실', images: ['/images/B203.jpg'], notes: [] },
+  { id: 'natB204', name: 'B204', floor: '2F', category: '강의실', images: ['/images/B204.jpg'], notes: [] },
+  { id: 'natB205', name: 'B205', floor: '2F', category: '강의실', images: ['/images/B205.jpg'], notes: [] },
+  { id: 'natB206', name: 'B206', floor: '2F', category: '강의실', images: ['/images/B206.jpg'], notes: [] },
+  // 자연관 C동 1F
+  { id: 'natC101', name: 'C101', floor: '1F', category: '강의실', images: ['/images/C101.jpg'], notes: ['바이오공학과 실험실3'] },
+  { id: 'natC102', name: 'C102', floor: '1F', category: '강의실', images: ['/images/C102.jpg'], notes: ['바이오공학과 실험실4'] },
+  { id: 'natC103', name: 'C103', floor: '1F', category: '강의실', images: ['/images/C103.jpg'], notes: ['바이오공학과 기계실', 'C104 안쪽에 존재'] },
+  { id: 'natC104', name: 'C104', floor: '1F', category: '강의실', images: ['/images/C104.jpg'], notes: ['바이오공학과 실험실1'] },
+  { id: 'natC105', name: 'C105', floor: '1F', category: '강의실', images: ['/images/C105.jpg'], notes: ['바이오공학과 준비실1'] },
+  { id: 'natC106', name: 'C106', floor: '1F', category: '강의실', images: ['/images/C106.jpg'], notes: ['바이오공학과 준비실2', '프리팜메드학과 실험실'] },
+  { id: 'natC107', name: 'C107', floor: '1F', category: '강의실', images: ['/images/C107.jpg'], notes: ['바이오공학과 실험실2', '프리팜메드학과 실험실'] },
+  { id: 'natC108', name: 'C108', floor: '1F', category: '강의실', images: ['/images/C108.jpg'], notes: ['과학기술대학 학장실'] },
+  { id: 'natC109', name: 'C109', floor: '1F', category: '강의실', images: [], notes: ['C110 안쪽에 위치'] },
+  { id: 'natC110', name: 'C110', floor: '1F', category: '강의실', images: ['/images/C110.jpg'], notes: ['화학실험실1'] },
+  { id: 'natC111', name: 'C111', floor: '1F', category: '강의실', images: ['/images/C111.jpg'], notes: ['생화학실험실', '화학과 실험실'] },
+  { id: 'natC112', name: 'C112', floor: '1F', category: '강의실', images: ['/images/C112.jpg'], notes: ['기사대기실'] },
+  { id: 'natC113', name: 'C113', floor: '1F', category: '강의실', images: ['/images/C113-114.jpg'], notes: ['폐기물보관실'] },
+  { id: 'natC114', name: 'C114', floor: '1F', category: '강의실', images: ['/images/C113-114.jpg'], notes: ['의료폐기물'] },
+  { id: 'natC115', name: 'C115', floor: '1F', category: '강의실', images: ['/images/C115.jpg'], notes: ['바이오공학과', '근무시간 오전 9시 ~ 오후 5시', '점심시간 오후 12시 ~ 오후 1시'] },
+  { id: 'natC116', name: 'C116', floor: '1F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'natC117', name: 'C117', floor: '1F', category: '강의실', images: ['/images/C117.jpg'], notes: ['연구실 구역', 'Biotechnology Creative Lab'], aliases: ['C117-1', '117-1'] },
+  { id: 'natC118', name: 'C118', floor: '1F', category: '강의실', images: ['/images/C118.jpg','/images/C118-1.jpg'], notes: ['C118: 중앙실험관리실', 'C118-1: FT-NMR실'], aliases: ['C118-1', '118-1'] },
+  { id: 'natC119', name: 'C119', floor: '1F', category: '강의실', images: ['/images/C119.jpg'], notes: ['중앙실험관리실', 'GC-MSD실'] },
+  { id: 'natC120', name: 'C120', floor: '1F', category: '강의실', images: ['/images/C120.jpg'], notes: ['중앙실험관리실','FT-IR실'] },
+  { id: 'natC121', name: 'C121', floor: '1F', category: '강의실', images: ['/images/C121.jpg'], notes: ['중앙실험관리실', 'BIO 기기실'] },
+  { id: 'natC122', name: 'C122', floor: '1F', category: '강의실', images: ['/images/C122.jpg'], notes: ['시약저장소'] },
+  { id: 'jaC2Fsofa1', name: '자연관 C동 2층 복합공간', floor: '2F', category: '복합공간', images: ['/images/C2Fsofa1.jpg'], notes: [] },
+  { id: 'jaC2Fsofa2', name: '자연관 C동 2층 복합공간', floor: '2F', category: '복합공간', images: ['/images/C2Fsofa1.jpg'], notes: [] },
+  // 자연관 C동 2F
+  { id: 'natC201', name: 'C201', floor: '2F', category: '강의실', images: ['/images/C201-202.jpg'], notes: ['중앙실험관리실', '중앙실험관리실1'] },
+  { id: 'natC202', name: 'C202', floor: '2F', category: '강의실', images: ['/images/C201-202.jpg'], notes: ['중앙실험관리실', '중앙실험관리실2'] },
+  { id: 'natC203', name: 'C203', floor: '2F', category: '강의실', images: ['/images/C203.jpg'], notes: ['화학실험실3'] },
+  { id: 'natC204', name: 'C204', floor: '2F', category: '강의실', images: ['/images/C204.jpg'], notes: ['화학과 실험실', '준비실'] },
+  { id: 'natC205', name: 'C205', floor: '2F', category: '강의실', images: ['/images/C205.jpg'], notes: ['특수실험실2', '화학과 실험실'] },
+  { id: 'natC206', name: 'C206', floor: '2F', category: '강의실', images: ['/images/C206.jpg'], notes: ['바이오이미징/나노분광학 실험실'] },
+  { id: 'natC207', name: 'C207', floor: '2F', category: '강의실', images: ['/images/C207.jpg'], notes: ['학부 세미나실', '화학과 실험실'] },
+  { id: 'natC208', name: 'C208', floor: '2F', category: '강의실', images: ['/images/C208.jpg'], notes: ['대학원 세미나실', '화학과 실험실'] },
+  { id: 'natC210', name: 'C210', floor: '2F', category: '강의실', images: ['/images/C210.jpg'], notes: ['화학실험실'] },
+  { id: 'natC211', name: 'C211', floor: '2F', category: '강의실', images: ['/images/C211.jpg'], notes: ['특수실험실1', '화학과 실험실'] },
+  { id: 'natC212', name: 'C212', floor: '2F', category: '강의실', images: ['/images/C212.jpg'], notes: ['화학과 실험실', '물품보관실'] },
+  { id: 'natC213', name: 'C213', floor: '2F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'natC214', name: 'C214', floor: '2F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'natC215', name: 'C215', floor: '2F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'natC216', name: 'C216', floor: '2F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'natC217', name: 'C217', floor: '2F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'natC218', name: 'C218', floor: '2F', category: '강의실', images: ['/images/C218.jpg'], notes: ['기자재보관소', '화학과 실험실'] },
+  { id: 'natC219', name: 'C219', floor: '2F', category: '강의실', images: ['/images/C219.jpg'], notes: ['화학과 조교실', '근무시간 오전 9시 ~ 오후 5시', '점심시간 오후 12시 ~ 오후 1시'] },
+  { id: 'natC220', name: 'C220', floor: '2F', category: '강의실', images: ['/images/C220.jpg'], notes: ['특수실험실3'] },
+  { id: 'natC301', name: 'C301', floor: '3F', category: '강의실', images: ['/images/C301.jpg'], notes: ['패션스튜디오'] },
+  { id: 'natC302', name: 'C302', floor: '3F', category: '강의실', images: ['/images/C302.jpg', '/images/C302_2.jpg'], notes: ['의상디자인학과 실습실', '패션디자인스튜디오B'] },
+  { id: 'natC303', name: 'C303', floor: '3F', category: '강의실', images: ['/images/C303.jpg'], notes: ['패션갤러리 라운지'] },
+  { id: 'natC304', name: 'C304', floor: '3F', category: '강의실', images: ['/images/C304.jpg'], notes: ['패션캐드실'] },
+  { id: 'natC305', name: 'C305', floor: '3F', category: '강의실', images: ['/images/C305.jpg'], notes: ['의상디자인학과 실습실'] },
+  { id: 'natC306', name: 'C306', floor: '3F', category: '강의실', images: ['/images/C306.jpg'], notes: ['패션드로잉스튜디오'] },
+  { id: 'natC307', name: 'C307', floor: '3F', category: '강의실', images: ['/images/C307.jpg'], notes: ['드로잉실습실', '수업 시간 사용 외 조교실 방문하여 사용 문의'] },
+  { id: 'natC308', name: 'C308', floor: '3F', category: '강의실', images: ['/images/C308.jpg'], notes: ['디자인실습실', '의상디자인학과 실습실', '수업 시간 사용 외 조교실 방문하여 사용 문의'] },
+  { id: 'natC309', name: 'C309', floor: '3F', category: '강의실', images: ['/images/C309.jpg'], notes: ['프로젝트스튜디오'] },
+  { id: 'natC310', name: 'C310', floor: '3F', category: '강의실', images: ['/images/C310.jpg'], notes: ['니트디자인실'] },
+  { id: 'natC311', name: 'C311', floor: '3F', category: '강의실', images: ['/images/C311.jpg'], notes: ['드레이핑준비실'] },
+  { id: 'natC312', name: 'C312', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'natC313', name: 'C313', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'natC314', name: 'C314', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'natC315', name: 'C315', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'natC316', name: 'C316', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'natC317', name: 'C317', floor: '3F', category: '강의실', images: ['/images/C317.jpg'], notes: ['의상디자인학과 실습실', '패션머천다이징세미나실', '수업 시간 사용 외 조교실 방문하여 사용 문의'] },
+  { id: 'natC318', name: 'C318', floor: '3F', category: '강의실', images: ['/images/C318.jpg'], notes: ['의상디자인학과 조교실', '주말, 공휴일 개방 안 됨'] },
+  { id: 'natC319', name: 'C319', floor: '3F', category: '강의실', images: ['/images/C319.jpg'], notes: ['전공비품보관실'] },
+  { id: 'natC320', name: 'C320', floor: '3F', category: '강의실', images: ['/images/C320.jpg'], notes: ['재봉실습실'] },
+  // 학생회관 1F
+  { id: 'stu113', name: '강당', floor: '1F', category: '강당', images: ['/images/hak1Fhall.jpg', '/images/hak2Fhall.jpg'], notes: [] },
+  { id: 'stu114', name: '식당부속실', floor: '1F', category: '강의실', images: [], notes: ['외부인 출입 금지'] },
+  { id: 'stu115', name: '학115', floor: '1F', category: '강의실', images: ['/images/hak115.jpg', '/images/hak115_2.jpg'], notes: ['기도실', '파우더룸', '헤어 드라이기 보유', "기도실 사용 시간: 12:30~13:30, 16:30~17:30, 18:20~19:00"] },
+  { id: 'stu106', name: '학106', floor: '1F', category: '강의실', images: [], notes: ['건강증진센터'] },
+  { id: 'stu109', name: '학109', floor: '1F', category: '강의실', images: [], notes: ['안정실'] },
+  { id: 'stuSick', name: '안정실', floor: '1F', category: '편의시설', images: ['/images/hak1Fstability.jpg'], notes: [] },
+  { id: 'stuHealth', name: '건강증진센터', floor: '1F', category: '편의시설', images: ['/images/hak1FhealthCare.jpg'], notes: [] },
+  { id: 'stuDisCenter', name: '장애학생지원센터', floor: '1F', category: '편의시설', images: ['/images/hak1FdisabledSupport.jpg'], notes: [] },
+  { id: 'stuDisLounge', name: '장애학생 휴게실', floor: '1F', category: '편의시설', images: ['/images/hak1FdisabledRoom.jpg'], notes: [] },
+  { id: 'stuPost', name: '우편취급국', floor: '1F', category: '편의시설', images: ['/images/hak1FpostOffice.jpg'], notes: ['영업 시간: 09:00~18:00', '오늘출발 우편물 마감 시간: 17:30'] },
+  { id: 'stuStationery', name: '문구점', floor: '1F', category: '편의시설', images: ['/images/hak1Fstationery1.jpg', '/images/hak1Fstationery2.jpg'], notes: ['평일 영업 시간: ?', '공휴일 휴무'] },
+  { id: 'stuCopy', name: '복사실', floor: '1F', category: '편의시설', images: ['/images/hak1Fcopy.jpg'], notes: ['평일 영업 시간: 09:00~19:00', '공휴일 휴무'] },
+  { id: 'stuOptical', name: '안경점', floor: '1F', category: '편의시설', images: ['/images/hak1Fglassess.jpg'], notes: ['평일 영업 시간: 10:00~18:00', '토요일 영업 시간: 10:00~14:00', '공휴일 휴무'] },
+  { id: 'stuBook', name: '서점', floor: '1F', category: '편의시설', images: [], notes: [] },
+  { id: 'stuPC', name: '컴퓨터매장', floor: '1F', category: '편의시설', images: ['/images/hak1Fcomputer.jpg'], notes: ['평일 영업 시간: ?'] },
+  { id: 'stuCU', name: 'CU', floor: '1F', category: '편의시설', images: ['/images/hak1Fcu.jpg'], notes: ['유인 영업 시간: 07:00~21:00', '무인 시간 출입 시 결제 수단 인증 필요'] },
+  { id: 'hak1Fcert', name: '증명서 발급기', floor: '1F', category: '편의시설', images: ['/images/hak1Fcertificate.jpg'], notes: ['QR코드, 교통카드, 신용카드 결제 가능'] },
+  { id: 'hak1Fatm', name: '하나은행 ATM', floor: '1F', category: '편의시설', images: ['/images/hak1Fatm.jpg'], notes: [] },
+  { id: 'hak1Fduksae', name: '덕새 자판기', floor: '1F', category: '편의시설', images: ['/images/hak1Fgoods.jpg'], notes: ['최근 학생회관 문구점으로 이전'] },
+  { id: 'hak1sFshower1', name: '학생회관 1층 샤워실', floor: '1F', category: '편의시설', images: ['/images/hak1Fshower1.jpg'], notes: [] },
+  { id: 'hak4Flaundry', name: '세탁기', floor: '4F', category: '편의시설', images: ['/images/hak4Fwashing.jpg'], notes: [] },
+  // 학생회관 2F
+  { id: 'stuCafe', name: '학식당', floor: '2F', category: '편의시설', images: ['/images/hak2Fcafeteria.jpg'], notes: ['식당', '포한끼', '멘쇼쿠도', '비바쿡', '한우사골 마라탕', '※ 영업 시간: 10:30~18:30'], vendors: [
+      { name: '포한끼', aliases: ['밥', '쌀국수', '볶음밥', '국수', '팟타이', '태국', '태국 음식', '타이', '타이 음식', '태국 요리', '타이 요리', '태국음식', '타이음식'] },
+      { name: '멘쇼쿠도', aliases: ['밥', '라멘', '소바', '카츠', '동', '일식', '일본', '일본 요리', '일본요리', '일본음식', '돈카츠', '돈까스'] },
+      { name: '비바쿡', aliases: ['밥', '쌈밥', '덮밥', '찌개', '찌게', '컵밥', '한식', '한국', '한국 요리', '한국음식'] },
+      { name: '한우사골 마라탕', aliases: ['밥', '마라', '마라탕', '마라샹궈', '탕', '샹궈', '중식', '중국', '중국 요리', '중국음식', '중국요리'] },
+    ], menuUrl: 'https://gist.githubusercontent.com/HeejuKo/9494adc0c2fc0c13eacb5f2e6ed17ead/raw/today_menu.json', restaurants: [{ key: 'student', label: '메뉴 A', aliases: ['오메', '오메A', '오늘의 메뉴 A', '오늘 메뉴 A', '학식 메뉴 A'] }, { key: 'staff', label: '메뉴 B', aliases: ['오메', '오메B', '오늘의 메뉴 B', '오늘 메뉴 B', '교직원 메뉴'] }] },
+  { id: 'stuCouncil', name: '총학생회실', floor: '2F', category: '편의시설', images: [], notes: ['총학생회실'] },
+  { id: 'stu203', name: '학203', floor: '2F', category: '강의실', images: ['/images/hak203.jpg'], notes: ['학생지원과'] },
+  { id: 'stu2031', name: '학203-1', floor: '2F', category: '강의실', images: ['/images/hak203-1.jpg'], notes: ['학생•인재개발처장실'] },
+  { id: 'stu2032', name: '학203-2', floor: '2F', category: '강의실', images: ['/images/hak203-1.jpg'], notes: ['학생•인재개발처장실'] },
+  { id: 'stu205', name: '학205', floor: '2F', category: '강의실', images: [], notes: ['덕성사회봉사단 동아리방'] },
+  { id: 'stu206', name: '학206', floor: '2F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stuFaculty', name: '교직원 휴게실', floor: '2F', category: '편의시설', images: ['/images/hak201.jpg'], notes: [] },
+  { id: 'stuSweetbean', name: '스위트빈', floor: '2F', category: '편의시설', images: ['/images/hak2FsweetBean.jpg'], notes: ['영업 시간: 08:00~18:00'] },
+  // 학생회관 3F
+  { id: 'stu301', name: '학301', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu302', name: '학302', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu303', name: '학303', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu304', name: '학304', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu305', name: '학305', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu306', name: '학306', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu307', name: '학307', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu308', name: '학308', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu309', name: '학309', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu310', name: '학310', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu311', name: '학311', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu312', name: '학312', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu313', name: '학313', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu314', name: '학314', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu315', name: '학315', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu316', name: '학316', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu317', name: '학317', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu318', name: '학318', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu319', name: '학319', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu320', name: '학320', floor: '3F', category: '강의실', images: [], notes: ['과학기술대학 학생회실'] },
+  { id: 'stu321', name: '학321', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu322', name: '학322', floor: '3F', category: '강의실', images: [], notes: ['약학대학 학생회실'] },
+  { id: 'stu323', name: '학323', floor: '3F', category: '강의실', images: [], notes: ['교지편집위원회'] },
+  { id: 'stu324', name: '학324', floor: '3F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu325', name: '학325', floor: '3F', category: '강의실', images: [], notes: ['Art&Design 학생회실'] },
+  { id: 'stu326', name: '학326', floor: '3F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu327', name: '학327-1', floor: '3F', category: '강의실', images: [], notes: ['동아리연합회'] },
+  { id: 'stu3271', name: '학327', floor: '3F', category: '강의실', images: [], notes: ['동아리연합회'] },
+  { id: 'stu328', name: '학328', floor: '3F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu329', name: '학329', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu330', name: '학330', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu331', name: '학331', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu332', name: '학332', floor: '3F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu333', name: '학333', floor: '3F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu334', name: '학334', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu335', name: '학335', floor: '3F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu336', name: '학336', floor: '3F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu337', name: '학337', floor: '3F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu338', name: '학338', floor: '3F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu339', name: '학339', floor: '3F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu340', name: '학340', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu342', name: '학342', floor: '3F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu343', name: '학343', floor: '3F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu344', name: '학344', floor: '3F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu345', name: '학345', floor: '3F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu346', name: '학346', floor: '3F', category: '강의실', images: [], notes: ['동아리방'] },
+  // 학생회관 4F
+  { id: 'stu401', name: '학401', floor: '4F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu402', name: '학402', floor: '4F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu403', name: '학403', floor: '4F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu404', name: '학404', floor: '4F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu405', name: '학405', floor: '4F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu406', name: '학406', floor: '4F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu407', name: '학407', floor: '4F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu408', name: '학408', floor: '4F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu409', name: '학409', floor: '4F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu410', name: '학410', floor: '4F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu411', name: '학411', floor: '4F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu412', name: '학412', floor: '4F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu413', name: '학413', floor: '4F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu414', name: '학414', floor: '4F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu415', name: '학415', floor: '4F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu416', name: '학416', floor: '4F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu417', name: '학417', floor: '4F', category: '강의실', images: [], notes: ['동아리방'] },
+  { id: 'stu418', name: '학418', floor: '4F', category: '강의실', images: [], notes: ['미래인재대학 학생회실'] },
+  { id: 'stu419', name: '학419', floor: '4F', category: '강의실', images: [], notes: ['동아리방'] },
+  // 흡연 구역
+  { id: 'hakCigarette1', name: '학생회관 1층 흡연 구역', floor: null, category: null, images: ['/images/hakCigarette1.jpg'], notes: [] },
+  { id: 'hakCigarette2', name: '학생회관 3층 옥상 흡연 구역', floor: null, category: null, images: [], notes: ['최근 금연 구역으로 변경'] },
+  { id: 'inCigarette', name: '인문사회관 흡연 구역', floor: null, category: null, images: ['/images/inCigarette.jpg'], notes: [] },
+  { id: 'inDaeCigarette', name: '인문사회관-대강의동 흡연 구역', floor: null, category: null, images: ['/images/inDaeCigarette.jpg'], notes: [] },
+  { id: 'chaDaeCigarette', name: '차미리사관-대강의동 흡연 구역', floor: null, category: null, images: ['/images/chaDaeCigarette.jpg'], notes: ['자전거 거치대 옆'] },
+  { id: 'yeCigarette', name: '예술관 흡연 구역', floor: null, category: null, images: ['/images/yeCigarette.jpg'], notes: ['예술관 N동-L동 사이'] },
+  { id: 'libraryCigarette', name: '도서관 옥상 흡연 구역', floor: null, category: null, images: [], notes: ['도서관 옥상 전체 흡연 가능'] },
+  { id: 'foodWaste', name: '음식물 쓰레기 처리 장소', floor: null, category: null, images: ['/images/foodTrash.jpg'], notes: [] },
+  { id: 'paperWaste', name: '폐지 처리 장소', floor: null, category: null, images: ['/images/paperTrash.jpg'], notes: [] },
+]
+
+export type BuildingConfig = {
+  id: string
+  label: string
+  svgId: string
+  prefix: string
+  placeId?: string  // 단일 장소 직접 연결용
+  noTab?: boolean  // 전체/건물 카테고리 탭에 표시하지 않음
+}
+
+export const BUILDINGS: BuildingConfig[] = [
+  { id: '전체', label: '전체', svgId: '', prefix: '' },
+  { id: 'cha', label: '차미리사관', svgId: 'building-cha', prefix: 'cha' },
+  { id: 'hum', label: '인문사회관', svgId: 'building-hum', prefix: 'in' },
+  { id: 'dae', label: '대강의동', svgId: 'building-dae', prefix: 'dae' },
+  { id: 'nat', label: '자연관', svgId: 'building-nat', prefix: 'nat' },
+  { id: 'stu', label: '학생회관', svgId: 'building-stu', prefix: 'stu' },
+  { id: 'main', label: '대학본부', svgId: 'building-main', prefix: 'main', noTab: true },
+  { id: 'lib', label: '도서관', svgId: 'building-lib', prefix: '', noTab: true },
+  { id: 'art', label: '예술관', svgId: 'building-art', prefix: '', noTab: true },
+  { id: 'yak', label: '약학관', svgId: 'building-yak', prefix: '', noTab: true },
+  { id: 'la', label: '라온센터', svgId: 'building-la', prefix: '', noTab: true },
+  { id: 'duk', label: '덕우당', svgId: 'building-duk', prefix: '', noTab: true },
+  { id: 'yu', label: '유아교육관', svgId: 'building-yu', prefix: '', noTab: true },
+  { id: 'power', label: '파워 플랜트', svgId: 'building-power', prefix: '', noTab: true },
+  { id: 'smoke-1', label: '흡연 구역', svgId: 'building-smoke-1', prefix: '', placeId: 'chaDaeCigarette', noTab: true },
+  { id: 'smoke-2', label: '흡연 구역', svgId: 'building-smoke-2', prefix: '', placeId: 'inCigarette', noTab: true },
+  { id: 'smoke-3', label: '흡연 구역', svgId: 'building-smoke-3', prefix: '', placeId: 'inDaeCigarette', noTab: true },
+  { id: 'smoke-4', label: '흡연 구역', svgId: 'building-smoke-4', prefix: '', placeId: 'libraryCigarette', noTab: true },
+  { id: 'smoke-5', label: '흡연 구역', svgId: 'building-smoke-5', prefix: '', placeId: 'yeCigarette', noTab: true },
+  { id: 'smoke-6', label: '흡연 구역', svgId: 'building-smoke-6', prefix: '', placeId: 'hakCigarette1', noTab: true },
+  { id: 'smoke-7', label: '흡연 구역', svgId: 'building-smoke-7', prefix: '', placeId: 'hakCigarette2', noTab: true },
+  { id: 'food-waste', label: '음식물 쓰레기 처리 장소', svgId: 'building-food-waste', prefix: '', placeId: 'foodWaste', noTab: true },
+  { id: 'paper-waste', label: '폐지 처리 장소', svgId: 'building-paper-waste', prefix: '', placeId: 'paperWaste', noTab: true },
+]
+
+export function getPlacesByBuilding(buildingId: string): Place[] {
+  if (buildingId === '전체') return PLACES
+  const building = BUILDINGS.find(b => b.id === buildingId)
+  if (!building) return []
+  if (building.placeId) return PLACES.filter(p => p.id === building.placeId)
+  if (!building.prefix) return []
+  return PLACES.filter(p => p.id.startsWith(building.prefix))
+}
+
+export function searchPlaces(query: string): Place[] {
+  const q = query.trim().toLowerCase()
+  if (!q) return []
+  return PLACES.filter(p =>
+    p.floor !== null &&
+    (p.name.toLowerCase().includes(q) ||
+    (p.floor?.toLowerCase().includes(q) ?? false) ||
+    (p.category?.toLowerCase().includes(q) ?? false) ||
+    p.notes.some(n => n.toLowerCase().includes(q)) ||
+    (p.aliases?.some(a => a.toLowerCase().includes(q)) ?? false))
+  )
+}
+
+export type DirectoryRoomResult = {
+  room: string
+  floor: string
+  place: Place
+}
+
+export function searchDirectoryRooms(query: string): DirectoryRoomResult[] {
+  const q = query.trim().toLowerCase()
+  if (!q) return []
+  const results: DirectoryRoomResult[] = []
+  for (const place of PLACES) {
+    if (!place.directory) continue
+    for (const { floor, rooms } of place.directory) {
+      for (const room of rooms) {
+        if (room.toLowerCase().includes(q)) {
+          results.push({ room, floor, place })
+        }
+      }
+    }
+  }
+  return results
+}
+
+export type VendorResult = { vendor: string; place: Place }
+
+export function searchVendors(query: string): VendorResult[] {
+  const q = query.trim().toLowerCase()
+  if (!q) return []
+  const results: VendorResult[] = []
+  for (const place of PLACES) {
+    if (!place.vendors) continue
+    for (const vendor of place.vendors) {
+      const terms = [vendor.name, ...(vendor.aliases ?? [])]
+      if (terms.some(t => t.toLowerCase().includes(q))) {
+        results.push({ vendor: vendor.name, place })
+      }
+    }
+  }
+  return results
+}
+
+export type MenuResult = { label: string; key: string; place: Place }
+
+export function searchMenus(query: string): MenuResult[] {
+  const q = query.trim().toLowerCase()
+  if (!q) return []
+  const results: MenuResult[] = []
+  for (const place of PLACES) {
+    if (!place.restaurants) continue
+    for (const r of place.restaurants) {
+      const terms = [`오늘의 ${r.label}`, r.label, ...(r.aliases ?? [])]
+      if (terms.some(t => t.toLowerCase().includes(q))) {
+        results.push({ label: `오늘의 ${r.label}`, key: r.key, place })
+      }
+    }
+  }
+  return results
+}
+
+// ── 건물 별칭 검색 ─────────────────────────────────────────────
+
+export type BuildingResult = {
+  id: string
+  label: string
+  sub?: string  // 자연관 A/B/C용 sub-id
+}
+
+const BUILDING_ALIASES: Array<{ aliases: string[]; result: BuildingResult }> = [
+  { aliases: ['인대', '인문사회관', '인문관', '인문', '인사관'],          result: { id: 'hum',        label: '인문사회관' } },
+  { aliases: ['차관', '차미관', '차미리사관', '차미리'],                  result: { id: 'cha',        label: '차미리사관' } },
+  { aliases: ['학관', '학생관', '학생회관'],                              result: { id: 'stu',        label: '학생회관' } },
+  { aliases: ['대강의동', '대강의', '대강'],                              result: { id: 'dae',        label: '대강의동' } },
+  { aliases: ['자연대', '자대', '자연관'],                                result: { id: 'nat',        label: '자연관' } },
+  { aliases: ['자A', '자대A', '자연관A', '자연대A'],                      result: { id: 'nat',        label: '자연관 A동', sub: 'natA' } },
+  { aliases: ['자B', '자대B', '자연관B', '자연대B'],                      result: { id: 'nat',        label: '자연관 B동', sub: 'natB' } },
+  { aliases: ['자C', '자대C', '자연관C', '자연대C'],                      result: { id: 'nat',        label: '자연관 C동', sub: 'natC' } },
+  { aliases: ['예술관', '예대', '예관'],                                  result: { id: 'art',        label: '예술관' } },
+  { aliases: ['도서관'],                                                  result: { id: 'lib',        label: '도서관' } },
+  { aliases: ['대학본부', '본부'],                                        result: { id: 'main',       label: '대학본부' } },
+  { aliases: ['약학관', '약관'],                                          result: { id: 'yak',        label: '약학관' } },
+  { aliases: ['라온센터', '라온'],                                        result: { id: 'la',         label: '라온센터' } },
+  { aliases: ['덕우당', '덕우'],                                          result: { id: 'duk',        label: '덕우당' } },
+  { aliases: ['유아교육관', '유아관', '유아교육'],                        result: { id: 'yu',         label: '유아교육관' } },
+  { aliases: ['파워플랜트', '파워 플랜트', '파워'],                       result: { id: 'power',      label: '파워 플랜트' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-1', label: '차미리사관-대강의동 흡연 구역' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-2', label: '인문사회관 흡연 구역' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-3', label: '인문사회관-대강의동 흡연 구역' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-4', label: '도서관 흡연 구역' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-5', label: '예술관 흡연 구역' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-6', label: '학생회관 1층 흡연 구역' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-7', label: '학생회관 3층 흡연 구역' } },
+  { aliases: ['음식물쓰레기', '음식물 쓰레기', '음쓰', '음식물'],        result: { id: 'food-waste', label: '음식물 쓰레기 처리 장소' } },
+  { aliases: ['폐지처리', '폐지 처리', '폐지'],                          result: { id: 'paper-waste', label: '폐지 처리 장소' } },
+]
+
+export function searchBuildings(query: string): BuildingResult[] {
+  const q = query.trim().toLowerCase()
+  if (!q) return []
+  const seen = new Set<string>()
+  const results: BuildingResult[] = []
+  for (const { aliases, result } of BUILDING_ALIASES) {
+    const key = result.id + (result.sub ?? '')
+    if (seen.has(key)) continue
+    if (aliases.some(a => a.toLowerCase().startsWith(q) || q.startsWith(a.toLowerCase()))) {
+      results.push(result)
+      seen.add(key)
+    }
+  }
+  return results
+}
+
+export function getBuildingLabel(place: Place): string {
+  if (place.id.startsWith('cha')) return '차미리사관'
+  if (place.id.startsWith('dae')) return '대강의동'
+  if (place.id.startsWith('in')) return '인문사회관'
+  if (place.id.startsWith('natA') || place.id.startsWith('jaA')) return '자연관 A동'
+  if (place.id.startsWith('natB') || place.id.startsWith('jaB')) return '자연관 B동'
+  if (place.id.startsWith('natC') || place.id.startsWith('jaC')) return '자연관 C동'
+  if (place.id.startsWith('stu') || place.id.startsWith('hak')) return '학생회관'
+  if (place.id === 'main_office') return '대학본부'
+  return '기타'
+}
+
+// ── 장소 → 건물 지도 URL 변환 ────────────────────────────────
+
+export type PlaceNav = {
+  url: string
+  floorKey: string
+  viewKey: ViewKey
+}
+
+// Place IDs whose data-place-id lives in the amenity (_2) SVG, not the basic SVG
+const AMENITY_VIEW_IDS = new Set([
+  'cha1Fprinter',
+  'hak1Fcert', 'hak1Fatm', 'hak1Fduksae',
+  'hak4Flaundry',
+  'in1Fpiano',
+  'in2Fshower1', 'in2FbwPrint', 'in2FcolorPrint',
+  'in3Fshower1',
+  'jaB2FbwPrint',
+])
+
+function floorLabelToKey(floor: string | null): string {
+  if (!floor) return '1'
+  // '1F' → '1', '2F' → '2', 'B1' → 'b1', 'B1F' → 'b1'
+  return floor.toLowerCase().replace('f', '')
+}
+
+export function getPlaceNavigation(place: Place): PlaceNav | null {
+  const floorKey = floorLabelToKey(place.floor)
+  const id = place.id
+  const viewKey: ViewKey = AMENITY_VIEW_IDS.has(id) ? 'amenity' : 'basic'
+  if (id.startsWith('cha'))                                      return { url: '/map?building=cha',            floorKey, viewKey }
+  if (id.startsWith('dae'))                                      return { url: '/map?building=dae',            floorKey, viewKey }
+  if (id.startsWith('in'))                                       return { url: '/map?building=hum',            floorKey, viewKey }
+  if (id.startsWith('natA') || id.startsWith('jaA'))            return { url: '/map?building=nat&sub=natA',   floorKey, viewKey }
+  if (id.startsWith('natB') || id.startsWith('jaB'))            return { url: '/map?building=nat&sub=natB',   floorKey, viewKey }
+  if (id.startsWith('natC') || id.startsWith('jaC'))            return { url: '/map?building=nat&sub=natC',   floorKey, viewKey }
+  if (id.startsWith('stu') || id.startsWith('hak'))             return { url: '/map?building=stu',            floorKey, viewKey }
+  return null
+}
+
+// ── MapPage 전용 설정 ────────────────────────────────────────
+
+export type FloorCfg = { key: string; label: string }
+export type ViewKey = 'basic' | 'locker' | 'amenity'
+
+export type BuildingMapCfg = {
+  id: string
+  subId: string
+  label: string
+  floors: FloorCfg[]
+  views: ViewKey[]
+  viewOverrides?: Partial<Record<string, ViewKey[]>>
+  subs?: BuildingMapCfg[]
+}
+
+export const BUILDING_MAP_CONFIG: BuildingMapCfg[] = [
+  {
+    id: 'cha', subId: 'cha', label: '차미리사관',
+    floors: [
+      { key: 'b1', label: 'B1F' }, { key: '1', label: '1F' },
+      { key: '2', label: '2F' }, { key: '3', label: '3F' }, { key: '4', label: '4F' },
+    ],
+    views: ['basic', 'locker', 'amenity'],
+    viewOverrides: { 'b1': ['basic'] },
+  },
+  {
+    id: 'hum', subId: 'in', label: '인문사회관',
+    floors: [
+      { key: '1', label: '1F' }, { key: '2', label: '2F' },
+      { key: '3', label: '3F' }, { key: '4', label: '4F' },
+    ],
+    views: ['basic', 'locker', 'amenity'],
+  },
+  {
+    id: 'dae', subId: 'dae', label: '대강의동',
+    floors: [{ key: '1', label: '1F' }, { key: '2', label: '2F' }],
+    views: ['basic', 'locker', 'amenity'],
+  },
+  {
+    id: 'nat', subId: '', label: '자연관', floors: [], views: [],
+    subs: [
+      {
+        id: 'natA', subId: 'jaA', label: 'A동',
+        floors: [
+          { key: '1', label: '1F' }, { key: '2', label: '2F' },
+          { key: '3', label: '3F' }, { key: '4', label: '4F' },
+        ],
+        views: ['basic', 'locker'],
+      },
+      {
+        id: 'natB', subId: 'jaB', label: 'B동',
+        floors: [{ key: '1', label: '1F' }, { key: '2', label: '2F' }],
+        views: ['basic', 'locker', 'amenity'],
+        viewOverrides: { '1': ['basic'] },
+      },
+      {
+        id: 'natC', subId: 'jaC', label: 'C동',
+        floors: [
+          { key: '1', label: '1F' }, { key: '2', label: '2F' }, { key: '3', label: '3F' },
+        ],
+        views: ['basic', 'locker'],
+      },
+    ],
+  },
+  {
+    id: 'stu', subId: 'hak', label: '학생회관',
+    floors: [
+      { key: '1', label: '1F' }, { key: '2', label: '2F' },
+      { key: '3', label: '3F' }, { key: '4', label: '4F' },
+    ],
+    views: ['basic', 'amenity'],
+  },
+]
+
+export function getBuildingMapCfg(buildingId: string): BuildingMapCfg | undefined {
+  return BUILDING_MAP_CONFIG.find(b => b.id === buildingId)
+}
+
+export function getFloorViews(cfg: BuildingMapCfg, floorKey: string): ViewKey[] {
+  return cfg.viewOverrides?.[floorKey] ?? cfg.views
+}
