@@ -71,7 +71,7 @@ export function t(key: string, lang: Lang): string {
 
 // Building label by id
 export function buildingLabel(id: string, lang: Lang): string {
-  return t(`building.${id}`, lang)
+  return UI[`building.${id}`]?.[lang] ?? ''
 }
 
 // Pattern-based place name translation

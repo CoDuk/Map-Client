@@ -73,7 +73,7 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
   const hasContent = place.images.length > 0 || place.notes.length > 0 || (place.directory?.length ?? 0) > 0 || !!place.menuUrl
 
   const shortNotes = place.notes.filter(n => !n.startsWith('※') && n.length <= 50)
-  const longNotes = place.notes.filter(n => n.startsWith('※') || n.length > 25)
+  const longNotes = place.notes.filter(n => n.startsWith('※') || n.length > 50)
 
   return (
     <>

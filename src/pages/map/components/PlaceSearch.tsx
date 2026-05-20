@@ -173,7 +173,7 @@ export default function PlaceSearch({ onClose, onSelectPlace }: Props) {
                 >
                   <LogoIcon className="w-9 h-9" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-[15px] font-semibold text-neutral-300 truncate">{buildingLabel(br.id, lang) || br.label}</p>
+                    <p className="text-[15px] font-semibold text-neutral-300 truncate">{br.sub ? translatePlaceName(br.label, lang) : (buildingLabel(br.id, lang) || br.label)}</p>
                   </div>
                     <NextIcon className='mr-2'/>
                 </button>
@@ -181,33 +181,43 @@ export default function PlaceSearch({ onClose, onSelectPlace }: Props) {
             ))}
 
             {/* 장소 결과 */}
-            {placeResults.map(place => (
-              <li key={place.id}>
-                <button
-                  type="button"
-                  onClick={() => handlePlaceClick(place)}
-                  className="w-full flex items-center gap-3 px-4 py-3 active:bg-cream-200 transition-colors text-left"
-                >
-                  <div className="w-9 h-9 rounded-xl bg-rose-100 shrink-0 flex items-center justify-center">
-                    <span className="text-[10px] text-primary-dark font-bold w-[2em] text-center break-all leading-tight">{getBuildingShort(place)}</span>
-                  </div>
+            {placeResults.map(place => {
+              const q = trimmed.toLowerCase()
+              const directMatch =
+                place.name.toLowerCase().includes(q) ||
+                (place.floor?.toLowerCase().includes(q) ?? false) ||
+                (place.category?.toLowerCase().includes(q) ?? false)
+              const matchAlias = !directMatch ? place.aliases?.find(a => a.toLowerCase().includes(q)) : undefined
+              const matchNote = !directMatch && !matchAlias ? place.notes.find(n => n.toLowerCase().includes(q)) : undefined
+              const matchHint = matchAlias ? (place.notes[0] ?? undefined) : matchNote
+              return (
+                <li key={place.id}>
+                  <button
+                    type="button"
+                    onClick={() => handlePlaceClick(place)}
+                    className="w-full flex items-center gap-3 px-4 py-3 active:bg-cream-200 transition-colors text-left"
+                  >
+                    <div className="w-9 h-9 rounded-xl bg-rose-100 shrink-0 flex items-center justify-center">
+                      <span className="text-[10px] text-primary-dark font-bold w-[2em] text-center break-all leading-tight">{getBuildingShort(place)}</span>
+                    </div>
 
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[15px] font-semibold text-neutral-300 truncate">
-                      {translatePlaceName(place.name, lang)}{place.aliases && place.aliases.length > 0 && ` · ${place.aliases[0]}`}
-                    </p>
-                    <p className="text-[12px] text-primary-dark mt-0.5">
-                      {buildingLabel(place.id.replace(/\d.*/, '').replace(/[A-Z].*/, ''), lang) || getBuildingLabel(place)}{place.floor ? ` · ${place.floor}` : ''}
-                    </p>
-                  </div>
-                  {place.floor && (
-                    <span className="shrink-0 px-2 py-0.5 bg-primary-dark text-white text-[11px] font-semibold rounded-full">
-                      {place.floor}
-                    </span>
-                  )}
-                </button>
-              </li>
-            ))}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[15px] font-semibold text-neutral-300 truncate">
+                        {translatePlaceName(place.name, lang)}
+                      </p>
+                      <p className="text-[12px] text-primary-dark mt-0.5 truncate">
+                        {buildingLabel(place.id.replace(/\d.*/, '').replace(/[A-Z].*/, ''), lang) || getBuildingLabel(place)}{place.floor ? ` · ${place.floor}` : ''}{matchHint ? <> · <span className="text-neutral-300">{translatePlaceName(matchHint, lang)}</span></> : null}
+                      </p>
+                    </div>
+                    {place.floor && (
+                      <span className="shrink-0 px-2 py-0.5 bg-primary-dark text-white text-[11px] font-semibold rounded-full">
+                        {place.floor}
+                      </span>
+                    )}
+                  </button>
+                </li>
+              )
+            })}
 
             {/* 디렉토리 룸 결과 */}
             {directoryResults.map((dr, i) => (

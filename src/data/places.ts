@@ -66,9 +66,9 @@ export const PLACES: Place[] = [
   { id: 'in215', name: '인215', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
   { id: 'in221', name: '인221', floor: '2F', category: '강의실', images: [], notes: ['문헌정보학과 실습실'] },
   { id: 'in222', name: '인222', floor: '2F', category: null, images: [], notes: ['글로벌융합대학 제1 행정실', '일어일문학과 과사무실', '중어중문학과 과사무실', '영어영문학과 과사무실', '불어불문학과 과사무실', '독어독문학과 과사무실', '스페인어학과 과사무실'] },
-  { id: 'in223', name: '인223', floor: '2F', category: null, images: [], notes: ['글로벌융합대학 제2 행정실', '국어국문학과 과사무실', '사학과 과사무실', '철학과 과사무실', '미술사학과 과사무실', '문화인류학과 과사무실', '사회학과 과사무실'] },
+  { id: 'in223', name: '인223', floor: '2F', category: null, images: [], notes: ['글로벌융합대학 제2 행정실', '국어국문학과 과사무실', '사학과 과사무실', '철학과 과사무실', '미술사학과 과사무실', '문화인류학과 과사무실', '사회학과 과사무실'], aliases: ['문인', '문화인류', '문화인류학', '문화인류학과'] },
   { id: 'in225', name: '인225', floor: '2F', category: null, images: [], notes: ['글로벌융합대학 제3 행정실', '경영학과 과사무실', '회계학과 과사무실', '국제통상학과 과사무실', '법학과 과사무실'] },
-  { id: 'in226', name: '인226', floor: '2F', category: null, images: [], notes: ['글로벌융합대학 제4 행정실', '심리학과 과사무실', '정치외교학과 과사무실', '문헌정보학과 과사무실', '아동가족학과 과사무실', '사회복지학과 과사무실'] },
+  { id: 'in226', name: '인226', floor: '2F', category: null, images: [], notes: ['글로벌융합대학 제4 행정실', '심리학과 과사무실', '정치외교학과 과사무실', '문헌정보학과 과사무실', '아동가족학과 과사무실', '사회복지학과 과사무실'], aliases: ['사복', '사회복지', '사회복지학', '사회복지학과'] },
   { id: 'in227', name: '인227', floor: '2F', category: null, images: [], notes: ['서고/휴게실'] },
   { id: 'in228', name: '인228', floor: '2F', category: null, images: [], notes: ['글로벌교육원 수업지원실'] },
   { id: 'in241', name: '인241', floor: '2F', category: null, images: [], notes: ['연구실 구역'] },
@@ -288,7 +288,7 @@ export const PLACES: Place[] = [
   { id: 'cha226', name: '차226', floor: '2F', category: '강의실', images: ['/images/cha226.jpg'], notes: [] },
   { id: 'cha227', name: '차227', floor: '2F', category: '강의실', images: ['/images/cha227.jpg'], notes: [] },
   { id: 'cha228', name: '차228', floor: '2F', category: '강의실', images: ['/images/cha228.jpg'], notes: [] },
-  { id: 'cha229', name: '차229', floor: '2F', category: '강의실', images: ['/images/cha229.jpg'], notes: ['과학기술대학 제1 행정실', 'IT 전공 과사무실', '디지털소프트웨어공학부 과사무실'] },
+  { id: 'cha229', name: '차229', floor: '2F', category: '강의실', images: ['/images/cha229.jpg'], notes: ['과학기술대학 제1 행정실', 'IT 전공 과사무실', '디지털소프트웨어공학부 과사무실'], aliases: ['디소공', '디지털소프트웨어', '디지털소프트웨어공학', 'IT과사무실', 'IT 과사무실'] },
   { id: 'cha230', name: '차230', floor: '2F', category: '강의실', images: ['/images/cha230.jpg'], notes: [] },
   { id: 'cha231', name: '차231', floor: '2F', category: '강의실', images: ['/images/cha231.jpg'], notes: [] },
   { id: 'cha232', name: '차232', floor: '2F', category: '강의실', images: ['/images/cha232.jpg'], notes: [] },
@@ -391,7 +391,7 @@ export const PLACES: Place[] = [
   { id: 'cha444', name: '차444', floor: '4F', category: '강의실', images: ['/images/cha444.jpg'], notes: [] },
   { id: 'cha445', name: '차445', floor: '4F', category: '강의실', images: ['/images/cha445.jpg'], notes: [] },
   { id: 'cha446', name: '차446', floor: '4F', category: '강의실', images: ['/images/cha446.jpg'], notes: [] },
-  { id: 'cha447', name: '차447', floor: '4F', category: '강의실', images: ['/images/cha447.jpg'], notes: ['정보통계학전공 과사무실'] },
+  { id: 'cha447', name: '차447', floor: '4F', category: '강의실', images: ['/images/cha447.jpg'], notes: ['정보통계학전공 과사무실'], aliases: ['정통', '정보통계', '정보통계학', '정보통계학과'] },
   { id: 'cha448', name: '차448', floor: '4F', category: '강의실', images: ['/images/cha448.jpg'], notes: ['정보통계학전공 스터디룸'] },
   { id: 'cha449', name: '차449', floor: '4F', category: '강의실', images: [], notes: ['연구실 구역'] },
   { id: 'cha450', name: '차450', floor: '4F', category: '강의실', images: [], notes: ['연구실 구역'] },
@@ -508,7 +508,7 @@ export const PLACES: Place[] = [
   { id: 'natC112', name: 'C112', floor: '1F', category: '강의실', images: ['/images/C112.jpg'], notes: ['기사대기실'] },
   { id: 'natC113', name: 'C113', floor: '1F', category: '강의실', images: ['/images/C113-114.jpg'], notes: ['폐기물보관실'] },
   { id: 'natC114', name: 'C114', floor: '1F', category: '강의실', images: ['/images/C113-114.jpg'], notes: ['의료폐기물'] },
-  { id: 'natC115', name: 'C115', floor: '1F', category: '강의실', images: ['/images/C115.jpg'], notes: ['바이오공학과', '근무시간 오전 9시 ~ 오후 5시', '점심시간 오후 12시 ~ 오후 1시'] },
+  { id: 'natC115', name: 'C115', floor: '1F', category: '강의실', images: ['/images/C115.jpg'], notes: ['바이오공학과', '근무시간 오전 9시 ~ 오후 5시', '점심시간 오후 12시 ~ 오후 1시'], aliases: ['바공', '바이오', '바이오공학', '바이오공학과', '바이오공학부'] },
   { id: 'natC116', name: 'C116', floor: '1F', category: '강의실', images: [], notes: ['연구실 구역'] },
   { id: 'natC117', name: 'C117', floor: '1F', category: '강의실', images: ['/images/C117.jpg'], notes: ['연구실 구역', 'Biotechnology Creative Lab'], aliases: ['C117-1', '117-1'] },
   { id: 'natC118', name: 'C118', floor: '1F', category: '강의실', images: ['/images/C118.jpg','/images/C118-1.jpg'], notes: ['C118: 중앙실험관리실', 'C118-1: FT-NMR실'], aliases: ['C118-1', '118-1'] },
@@ -587,10 +587,10 @@ export const PLACES: Place[] = [
       { name: '비바쿡', aliases: ['밥', '쌈밥', '덮밥', '찌개', '찌게', '컵밥', '한식', '한국', '한국 요리', '한국음식'] },
       { name: '한우사골 마라탕', aliases: ['밥', '마라', '마라탕', '마라샹궈', '탕', '샹궈', '중식', '중국', '중국 요리', '중국음식', '중국요리'] },
     ], menuUrl: 'https://gist.githubusercontent.com/HeejuKo/9494adc0c2fc0c13eacb5f2e6ed17ead/raw/today_menu.json', restaurants: [{ key: 'student', label: '메뉴 A', aliases: ['오메', '오메A', '오늘의 메뉴 A', '오늘 메뉴 A', '학식 메뉴 A'] }, { key: 'staff', label: '메뉴 B', aliases: ['오메', '오메B', '오늘의 메뉴 B', '오늘 메뉴 B', '교직원 메뉴'] }] },
-  { id: 'stuCouncil', name: '총학생회실', floor: '2F', category: '편의시설', images: [], notes: ['총학생회실'] },
-  { id: 'stu203', name: '학203', floor: '2F', category: '강의실', images: ['/images/hak203.jpg'], notes: ['학생지원과'] },
-  { id: 'stu2031', name: '학203-1', floor: '2F', category: '강의실', images: ['/images/hak203-1.jpg'], notes: ['학생•인재개발처장실'] },
-  { id: 'stu2032', name: '학203-2', floor: '2F', category: '강의실', images: ['/images/hak203-1.jpg'], notes: ['학생•인재개발처장실'] },
+  { id: 'stuCouncil', name: '총학생회실', floor: '2F', category: '편의시설', images: [], notes: ['총학생회실'], aliases: ['총학', '총학실', '총학생회'] },
+  { id: 'stu203', name: '학203', floor: '2F', category: '강의실', images: ['/images/hak203.jpg'], notes: ['학생지원과'], aliases: ['학생지원', '학생 지원', '학생', '지원'] },
+  { id: 'stu2031', name: '학203-1', floor: '2F', category: '강의실', images: ['/images/hak203-1.jpg'], notes: ['학생•인재개발처장실'], aliases: ['처장실', '학생인재개발', '학생 인재개발', '인재개발처', '인재개발', '인재', '개발'] },
+  { id: 'stu2032', name: '학203-2', floor: '2F', category: '강의실', images: ['/images/hak203-1.jpg'], notes: ['학생•인재개발처장실'], aliases: ['처장실', '학생인재개발', '학생 인재개발', '인재개발처', '인재개발', '인재', '개발'] },
   { id: 'stu205', name: '학205', floor: '2F', category: '강의실', images: [], notes: ['덕성사회봉사단 동아리방'] },
   { id: 'stu206', name: '학206', floor: '2F', category: '강의실', images: [], notes: ['과방'] },
   { id: 'stuFaculty', name: '교직원 휴게실', floor: '2F', category: '편의시설', images: ['/images/hak201.jpg'], notes: [] },
@@ -609,18 +609,18 @@ export const PLACES: Place[] = [
   { id: 'stu311', name: '학311', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
   { id: 'stu312', name: '학312', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
   { id: 'stu313', name: '학313', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
-  { id: 'stu314', name: '학314', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
+  { id: 'stu314', name: '학314', floor: '3F', category: '강의실', images: [], notes: ['글로벌융합대학 학생회실'], aliases: ['글융', '글융대', '글로벌융합', '글로벌융합대학', '글로벌 융합대학', '글융 학생회실', '글융 학실', '글로벌융합대학 학실'] },
   { id: 'stu315', name: '학315', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
   { id: 'stu316', name: '학316', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
   { id: 'stu317', name: '학317', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
   { id: 'stu318', name: '학318', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
   { id: 'stu319', name: '학319', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
-  { id: 'stu320', name: '학320', floor: '3F', category: '강의실', images: [], notes: ['과학기술대학 학생회실'] },
+  { id: 'stu320', name: '학320', floor: '3F', category: '강의실', images: [], notes: ['과학기술대학 학생회실'], aliases: ['과기대', '과기대학', '과학기술대학', '과기대 학생회실', '과기대 학실', '과학기술대학 학실'] },
   { id: 'stu321', name: '학321', floor: '3F', category: '강의실', images: [], notes: ['과방'] },
-  { id: 'stu322', name: '학322', floor: '3F', category: '강의실', images: [], notes: ['약학대학 학생회실'] },
+  { id: 'stu322', name: '학322', floor: '3F', category: '강의실', images: [], notes: ['약학대학 학생회실'], aliases: ['약대', '약학', '약학대', '약학대학', '약학대학 학실', '약대 학생회실'] },
   { id: 'stu323', name: '학323', floor: '3F', category: '강의실', images: [], notes: ['교지편집위원회'] },
   { id: 'stu324', name: '학324', floor: '3F', category: '강의실', images: [], notes: ['동아리방'] },
-  { id: 'stu325', name: '학325', floor: '3F', category: '강의실', images: [], notes: ['Art&Design 학생회실'] },
+  { id: 'stu325', name: '학325', floor: '3F', category: '강의실', images: [], notes: ['Art&Design 학생회실'], aliases: ['아앤디', '아트앤디자인', '아트앤디', '아앤디 학생회실', '아앤디 학실', 'art design', 'art&design'] },
   { id: 'stu326', name: '학326', floor: '3F', category: '강의실', images: [], notes: ['동아리방'] },
   { id: 'stu327', name: '학327-1', floor: '3F', category: '강의실', images: [], notes: ['동아리연합회'] },
   { id: 'stu3271', name: '학327', floor: '3F', category: '강의실', images: [], notes: ['동아리연합회'] },
@@ -903,7 +903,11 @@ export function searchBuildings(query: string): BuildingResult[] {
   for (const { aliases, result } of BUILDING_ALIASES) {
     const key = result.id + (result.sub ?? '')
     if (seen.has(key)) continue
-    if (aliases.some(a => a.toLowerCase().startsWith(q) || q.startsWith(a.toLowerCase()))) {
+    // Sub-buildings (e.g. 자연관A동) only match when query includes the sub designator
+    const matchFn = result.sub
+      ? (a: string) => q.startsWith(a.toLowerCase())
+      : (a: string) => a.toLowerCase().startsWith(q) || q.startsWith(a.toLowerCase())
+    if (aliases.some(matchFn)) {
       results.push(result)
       seen.add(key)
     }
@@ -920,7 +924,9 @@ export function getBuildingLabel(place: Place): string {
   if (place.id.startsWith('natC') || place.id.startsWith('jaC')) return '자연관 C동'
   if (place.id.startsWith('stu') || place.id.startsWith('hak')) return '학생회관'
   if (place.id === 'main_office') return '대학본부'
-  return '기타'
+  if (place.id.startsWith('ye')) return '예술관'
+  if (place.id.startsWith('library')) return '도서관'
+  return ''
 }
 
 // ── 장소 → 건물 지도 URL 변환 ────────────────────────────────
