@@ -45,9 +45,11 @@ export default function CampusMap({ onBuildingClick, onEmptyClick, focusBuilding
   const transformRef = useRef<Transform>({ scale: 1, x: 0, y: 0, rotation: 0 })
 
   const pointersRef = useRef<PointerMap>(new Map())
+  const pointerStartRef = useRef<PointerMap>(new Map())
   const lastPinchDistRef = useRef<number | null>(null)
   const lastPinchAngleRef = useRef<number | null>(null)
   const hasDraggedRef = useRef(false)
+  const lastBuildingClickTimeRef = useRef(0)
 
   
   const applyTransform = useCallback((t: Transform) => {
@@ -107,19 +109,19 @@ export default function CampusMap({ onBuildingClick, onEmptyClick, focusBuilding
   }, [focusBuildingId, applyTransform])
 
   const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    
     if (e.isPrimary) {
       pointersRef.current.clear()
+      pointerStartRef.current.clear()
       lastPinchDistRef.current = null
       lastPinchAngleRef.current = null
       hasDraggedRef.current = false
     }
     e.currentTarget.setPointerCapture(e.pointerId)
     pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
+    pointerStartRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
     if (pointersRef.current.size === 2) {
       lastPinchDistRef.current = getPinchDist(pointersRef.current)
       lastPinchAngleRef.current = getPinchAngle(pointersRef.current)
-      
       hasDraggedRef.current = true
     }
   }, [])
@@ -130,7 +132,12 @@ export default function CampusMap({ onBuildingClick, onEmptyClick, focusBuilding
     const dx = e.clientX - prev.x
     const dy = e.clientY - prev.y
 
-    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) hasDraggedRef.current = true
+    const start = pointerStartRef.current.get(e.pointerId)
+    if (start) {
+      const totalDx = e.clientX - start.x
+      const totalDy = e.clientY - start.y
+      if (totalDx * totalDx + totalDy * totalDy > 64) hasDraggedRef.current = true // 8px radius
+    }
 
     pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
 
@@ -181,41 +188,39 @@ export default function CampusMap({ onBuildingClick, onEmptyClick, focusBuilding
   }, [applyTransform])
 
   const onPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    const wasTap = !hasDraggedRef.current && pointersRef.current.size === 1
-
-    
     pointersRef.current.delete(e.pointerId)
+    pointerStartRef.current.delete(e.pointerId)
     lastPinchDistRef.current = null
     lastPinchAngleRef.current = null
+  }, [])
 
-    if (wasTap) {
-      const el = document.elementFromPoint(e.clientX, e.clientY)
-      const buildingEl = el?.closest('[data-building]')
-      let svgBuildingId = buildingEl?.getAttribute('data-building')
+  const onClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (hasDraggedRef.current) return
+    const el = document.elementFromPoint(e.clientX, e.clientY)
+    const buildingEl = el?.closest('[data-building]')
+    let svgBuildingId = buildingEl?.getAttribute('data-building')
 
-      
-      
-      const splitY = buildingEl?.getAttribute('data-split-y')
-      if (splitY && svgRef.current) {
-        const svg = svgRef.current
-        const svgRect = svg.getBoundingClientRect()
-        const vb = svg.viewBox.baseVal
-        if (vb.width > 0 && vb.height > 0) {
-          const scale = Math.min(svgRect.width / vb.width, svgRect.height / vb.height)
-          const offsetY = (svgRect.height - vb.height * scale) / 2
-          const svgY = vb.y + (e.clientY - svgRect.top - offsetY) / scale
-          if (svgY > parseFloat(splitY)) {
-            svgBuildingId = buildingEl?.getAttribute('data-building-secondary') ?? svgBuildingId
-          }
+    const splitY = buildingEl?.getAttribute('data-split-y')
+    if (splitY && svgRef.current) {
+      const svg = svgRef.current
+      const svgRect = svg.getBoundingClientRect()
+      const vb = svg.viewBox.baseVal
+      if (vb.width > 0 && vb.height > 0) {
+        const scale = Math.min(svgRect.width / vb.width, svgRect.height / vb.height)
+        const offsetY = (svgRect.height - vb.height * scale) / 2
+        const svgY = vb.y + (e.clientY - svgRect.top - offsetY) / scale
+        if (svgY > parseFloat(splitY)) {
+          svgBuildingId = buildingEl?.getAttribute('data-building-secondary') ?? svgBuildingId
         }
       }
+    }
 
-      const building = svgBuildingId ? BUILDINGS.find(b => b.svgId === svgBuildingId) : undefined
-      if (building) {
-        onBuildingClick(building.id)
-      } else {
-        onEmptyClick?.()
-      }
+    const building = svgBuildingId ? BUILDINGS.find(b => b.svgId === svgBuildingId) : undefined
+    if (building) {
+      lastBuildingClickTimeRef.current = Date.now()
+      onBuildingClick(building.id)
+    } else if (Date.now() - lastBuildingClickTimeRef.current > 400) {
+      onEmptyClick?.()
     }
   }, [onBuildingClick, onEmptyClick])
 
@@ -248,6 +253,7 @@ export default function CampusMap({ onBuildingClick, onEmptyClick, focusBuilding
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
+        onClick={onClick}
         onWheel={onWheel}
         onDragStart={e => e.preventDefault()}
       >
