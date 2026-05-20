@@ -83,6 +83,7 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick, focusPlaceId }: P
   const svgRef = useRef<SVGSVGElement | null>(null)
   const transformRef = useRef<Transform>({ scale: 1, x: 0, y: 0, rotation: 0 })
   const pointersRef = useRef<PointerMap>(new Map())
+  const pointerStartRef = useRef<PointerMap>(new Map())
   const lastPinchDistRef = useRef<number | null>(null)
   const lastPinchAngleRef = useRef<number | null>(null)
   const hasDraggedRef = useRef(false)
@@ -171,6 +172,7 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick, focusPlaceId }: P
   const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     e.currentTarget.setPointerCapture(e.pointerId)
     pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
+    pointerStartRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
     hasDraggedRef.current = false
     if (pointersRef.current.size === 2) {
       lastPinchDistRef.current = getPinchDist(pointersRef.current)
@@ -184,7 +186,12 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick, focusPlaceId }: P
     const dx = e.clientX - prev.x
     const dy = e.clientY - prev.y
 
-    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) hasDraggedRef.current = true
+    const start = pointerStartRef.current.get(e.pointerId)
+    if (start) {
+      const totalDx = e.clientX - start.x
+      const totalDy = e.clientY - start.y
+      if (totalDx * totalDx + totalDy * totalDy > 64) hasDraggedRef.current = true // 8px radius
+    }
 
     pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
 
@@ -232,20 +239,18 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick, focusPlaceId }: P
   }, [applyTransform])
 
   const onPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    const wasTap = !hasDraggedRef.current && pointersRef.current.size === 1
-
-    if (wasTap) {
-      // elementsFromPoint returns all elements at the point regardless of pointer-events,
-      // so decorative SVG paths on top don't block clicks on room rects below
-      const els = document.elementsFromPoint(e.clientX, e.clientY)
-      const placeEl = els.find(el => el.hasAttribute('data-place-id'))
-      const placeId = placeEl?.getAttribute('data-place-id')
-      if (placeId) onRoomClick(placeId)
-    }
-
     pointersRef.current.delete(e.pointerId)
+    pointerStartRef.current.delete(e.pointerId)
     lastPinchDistRef.current = null
     lastPinchAngleRef.current = null
+  }, [])
+
+  const onClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (hasDraggedRef.current) return
+    const els = document.elementsFromPoint(e.clientX, e.clientY)
+    const placeEl = els.find(el => el.hasAttribute('data-place-id'))
+    const placeId = placeEl?.getAttribute('data-place-id')
+    if (placeId) onRoomClick(placeId)
   }, [onRoomClick])
 
   const onWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
@@ -284,6 +289,7 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick, focusPlaceId }: P
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
+          onClick={onClick}
           onWheel={onWheel}
           onDragStart={e => e.preventDefault()}
           dangerouslySetInnerHTML={{ __html: svgContent }}
