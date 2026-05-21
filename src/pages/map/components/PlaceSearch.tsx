@@ -125,8 +125,7 @@ export default function PlaceSearch({ onClose, onSelectPlace }: Props) {
               else if (placeResults.length > 0) handlePlaceClick(placeResults[0])
             }}
             placeholder={t('search.placeholder', lang)}
-            className="flex-1 bg-transparent outline-none text-neutral-500 placeholder:text-neutral-200 min-w-0"
-            style={{ fontSize: '16px', zoom: 0.875 }}
+            className="flex-1 text-[14px] bg-transparent outline-none text-neutral-500 placeholder:text-neutral-200 min-w-0"
           />
           <SearchIcon />
         </div>
