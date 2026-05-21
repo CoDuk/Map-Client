@@ -173,7 +173,7 @@ export default function PlaceSearch({ onClose, onSelectPlace }: Props) {
                 >
                   <LogoIcon className="w-9 h-9" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-[15px] font-semibold text-neutral-300 truncate">{br.sub ? translatePlaceName(br.label, lang) : (buildingLabel(br.id, lang) || br.label)}</p>
+                    <p className="text-[15px] font-semibold text-neutral-300 truncate">{br.sub ? translatePlaceName(br.label, lang) : (buildingLabel(br.id, lang) || translatePlaceName(br.label, lang))}</p>
                   </div>
                     <NextIcon className='mr-2'/>
                 </button>
@@ -206,7 +206,7 @@ export default function PlaceSearch({ onClose, onSelectPlace }: Props) {
                         {translatePlaceName(place.name, lang)}
                       </p>
                       <p className="text-[12px] text-primary-dark mt-0.5 truncate">
-                        {buildingLabel(place.id.replace(/\d.*/, '').replace(/[A-Z].*/, ''), lang) || getBuildingLabel(place)}{place.floor ? ` · ${place.floor}` : ''}{matchHint ? <> · <span className="text-neutral-300">{translatePlaceName(matchHint, lang)}</span></> : null}
+                        {buildingLabel(place.id.replace(/\d.*/, '').replace(/[A-Z].*/, ''), lang) || translatePlaceName(getBuildingLabel(place), lang)}{place.floor ? ` · ${place.floor}` : ''}{matchHint ? <> · <span className="text-neutral-300">{translatePlaceName(matchHint, lang)}</span></> : null}
                       </p>
                     </div>
                     {place.floor && (

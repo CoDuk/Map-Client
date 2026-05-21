@@ -180,7 +180,7 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
                       <div className="flex flex-wrap gap-1.5">
                         {rooms.map(room => (
                           <span key={room} className="px-2.5 rounded-full border border-primary text-[10px] text-primary font-normal">
-                            {room}
+                            {translatePlaceName(room, lang)}
                           </span>
                         ))}
                       </div>
@@ -209,7 +209,7 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
                               : 'border-primary text-primary'
                           }`}
                         >
-                          {t('detail.todayMenu', lang)} {r.label}
+                          {t('detail.todayMenu', lang)} {translatePlaceName(r.label, lang)}
                           <span className={`transition-transform inline-block ${expandedMenus.has(r.key) ? 'rotate-90' : ''}`}>›</span>
                         </button>
                       ))}

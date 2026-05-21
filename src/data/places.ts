@@ -1,3 +1,5 @@
+import { translatePlaceName } from '@/i18n'
+
 export type Place = {
   id: string
   name: string
@@ -197,23 +199,23 @@ export const PLACES: Place[] = [
   { id: 'in346', name: '인346', floor: '3F', category: '강의실', images: ['/images/in346.jpg'], notes: [] },
   { id: 'in347', name: '인347', floor: '3F', category: null, images: ['/images/in347.jpg'], notes: ['교수세미나실'] },
   { id: 'in348', name: '인348', floor: '3F', category: null, images: ['/images/in348.jpg'], notes: ['글로벌융합대학 교학부', '사회과학연구소'] },
-  { id: 'in351', name: '인351', floor: '3F', category: '강의실', images: [], notes: [] },
-  { id: 'in352', name: '인352', floor: '3F', category: '강의실', images: [], notes: [] },
-  { id: 'in353', name: '인353', floor: '3F', category: '강의실', images: [], notes: [] },
-  { id: 'in354', name: '인354', floor: '3F', category: '강의실', images: [], notes: [] },
-  { id: 'in355', name: '인355', floor: '3F', category: '강의실', images: [], notes: [] },
-  { id: 'in356', name: '인356', floor: '3F', category: '강의실', images: [], notes: [] },
-  { id: 'in357', name: '인357', floor: '3F', category: '강의실', images: [], notes: [] },
-  { id: 'in358', name: '인358', floor: '3F', category: '강의실', images: [], notes: [] },
-  { id: 'in359', name: '인359', floor: '3F', category: '강의실', images: [], notes: [] },
-  { id: 'in360', name: '인360', floor: '3F', category: '강의실', images: [], notes: [] },
-  { id: 'in361', name: '인361', floor: '3F', category: '강의실', images: [], notes: [] },
-  { id: 'in362', name: '인362', floor: '3F', category: '강의실', images: [], notes: [] },
-  { id: 'in363', name: '인363', floor: '3F', category: '강의실', images: [], notes: [] },
-  { id: 'in364', name: '인364', floor: '3F', category: '강의실', images: [], notes: [] },
-  { id: 'in365', name: '인365', floor: '3F', category: '강의실', images: [], notes: [] },
+  { id: 'in351', name: '인351', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'in352', name: '인352', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'in353', name: '인353', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'in354', name: '인354', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'in355', name: '인355', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'in356', name: '인356', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'in357', name: '인357', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'in358', name: '인358', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'in359', name: '인359', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'in360', name: '인360', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'in361', name: '인361', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'in362', name: '인362', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'in363', name: '인363', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'in364', name: '인364', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
+  { id: 'in365', name: '인365', floor: '3F', category: '강의실', images: [], notes: ['연구실 구역'] },
   // 인문사회관 1F
-  { id: 'in1Fpiano', name: '전자피아노', floor: '1F', category: '복합공간', images: [], notes: [] },
+  { id: 'in1Fpiano', name: '전자피아노', floor: '1F', category: '복합공간', images: ['images/in1Fpiano.jpg'], notes: [] },
   { id: 'in1Fsofa1', name: '인문사회관 1층 소파존', floor: '1F', category: '복합공간', images: ['/images/in1Fsofa.jpg'], notes: [] },
   { id: 'in101', name: '인101', floor: '1F', category: '강의실', images: ['/images/in101.jpg'], notes: [] },
   { id: 'in102', name: '인102', floor: '1F', category: '강의실', images: ['/images/in102.jpg'], notes: [] },
@@ -367,7 +369,7 @@ export const PLACES: Place[] = [
   { id: 'cha420', name: '차420', floor: '4F', category: '강의실', images: ['/images/cha420.jpg'], notes: ['전산물품보관실'] },
   { id: 'cha421', name: '차421', floor: '4F', category: '강의실', images: ['/images/cha421.jpg'], notes: ['전산시스템실'] },
   { id: 'cha422', name: '차422', floor: '4F', category: '강의실', images: ['/images/cha422.jpg'], notes: ['디지털정보기술원'] },
-  { id: 'cha423', name: '차423', floor: '4F', category: '강의실', images: [], notes: [] },
+  { id: 'cha423', name: '차423', floor: '4F', category: '강의실', images: [], notes: ['외부인 출입 금지'] },
   { id: 'cha424', name: '차424', floor: '4F', category: '강의실', images: ['/images/cha424.jpg'], notes: ['정보지원센터 차세대개발실'] },
   { id: 'cha425', name: '차425', floor: '4F', category: '강의실', images: [], notes: ['연구실 구역'] },
   { id: 'cha426', name: '차426', floor: '4F', category: '강의실', images: ['/images/cha426.jpg'], notes: ['프레젠테이션실'] },
@@ -506,8 +508,8 @@ export const PLACES: Place[] = [
   { id: 'natC110', name: 'C110', floor: '1F', category: '강의실', images: ['/images/C110.jpg'], notes: ['화학실험실1'] },
   { id: 'natC111', name: 'C111', floor: '1F', category: '강의실', images: ['/images/C111.jpg'], notes: ['생화학실험실', '화학과 실험실'] },
   { id: 'natC112', name: 'C112', floor: '1F', category: '강의실', images: ['/images/C112.jpg'], notes: ['기사대기실'] },
-  { id: 'natC113', name: 'C113', floor: '1F', category: '강의실', images: ['/images/C113-114.jpg'], notes: ['폐기물보관실'] },
-  { id: 'natC114', name: 'C114', floor: '1F', category: '강의실', images: ['/images/C113-114.jpg'], notes: ['의료폐기물'] },
+  { id: 'natC113', name: 'C113', floor: '1F', category: '강의실', images: ['/images/C113.jpg'], notes: ['폐기물보관실'] },
+  { id: 'natC114', name: 'C114', floor: '1F', category: '강의실', images: ['/images/C113.jpg'], notes: ['의료폐기물'] },
   { id: 'natC115', name: 'C115', floor: '1F', category: '강의실', images: ['/images/C115.jpg'], notes: ['바이오공학과', '근무시간 오전 9시 ~ 오후 5시', '점심시간 오후 12시 ~ 오후 1시'], aliases: ['바공', '바이오', '바이오공학', '바이오공학과', '바이오공학부'] },
   { id: 'natC116', name: 'C116', floor: '1F', category: '강의실', images: [], notes: ['연구실 구역'] },
   { id: 'natC117', name: 'C117', floor: '1F', category: '강의실', images: ['/images/C117.jpg'], notes: ['연구실 구역', 'Biotechnology Creative Lab'], aliases: ['C117-1', '117-1'] },
@@ -573,7 +575,7 @@ export const PLACES: Place[] = [
   { id: 'stuCopy', name: '복사실', floor: '1F', category: '편의시설', images: ['/images/hak1Fcopy.jpg'], notes: ['평일 영업 시간: 09:00~19:00', '공휴일 휴무'] },
   { id: 'stuOptical', name: '안경점', floor: '1F', category: '편의시설', images: ['/images/hak1Fglassess.jpg'], notes: ['평일 영업 시간: 10:00~18:00', '토요일 영업 시간: 10:00~14:00', '공휴일 휴무'] },
   { id: 'stuBook', name: '서점', floor: '1F', category: '편의시설', images: ['/images/bookstore.jpg'], notes: ['평일 영업 시간: 10:00~15:30', '금요일 휴무'] },
-  { id: 'stuPC', name: '컴퓨터매장', floor: '1F', category: '편의시설', images: ['/images/hak1Fcomputer.jpg'], notes: ['평일 영업 시간: ?'] },
+  { id: 'stuPC', name: '컴퓨터매장', floor: '1F', category: '편의시설', images: ['/images/hak1Fcomputer.jpg'], notes: [] },
   { id: 'stuCU', name: 'CU', floor: '1F', category: '편의시설', images: ['/images/hak1Fcu.jpg'], notes: ['유인 영업 시간: 07:00~21:00', '무인 시간 출입 시 결제 수단 인증 필요'] },
   { id: 'hak1Fcert', name: '증명서 발급기', floor: '1F', category: '편의시설', images: ['/images/hak1Fcertificate.jpg'], notes: ['QR코드, 교통카드, 신용카드 결제 가능'] },
   { id: 'hak1Fatm', name: '하나은행 ATM', floor: '1F', category: '편의시설', images: ['/images/hak1Fatm.jpg'], notes: [] },
@@ -733,7 +735,30 @@ const SEARCH_LANG_ALIASES: Array<[string, string]> = [
   ['sofa zone', '소파존'], ['electronic piano', '전자피아노'],
   ['student union', '학생회관'], ['science hall', '자연관'],
   ['lecture hall', '대강의동'], ['cha hall', '차미리사관'],
-  ['humanities', '인문사회관'],
+  ['humanities hall', '인문사회관'], ['humanities', '인문사회관'],
+  ['arts hall', '예술관'], ['arts', '예술관'],
+  ['pharmacy hall', '약학관'], ['pharmacy', '약학관'],
+  ['education hall', '유아교육관'], ['early childhood', '유아교육관'],
+  ['raon center', '라온센터'], ['raon', '라온센터'],
+  ['power plant', '파워 플랜트'],
+  ['deokudang', '덕우당'],
+  ['univ. hq', '대학본부'], ['university hq', '대학본부'], ['main building', '대학본부'],
+  ['lost & found', '분실물'], ['lost and found', '분실물'],
+  ['student council', '학생회실'], ['student government', '총학생회'],
+  ['dept. office', '과사무실'], ['department office', '과사무실'],
+  ['admin office', '행정실'], ['admin. office', '행정실'],
+  ["dean's office", '학장실'],
+  ['seminar room', '세미나실'], ['conference room', '회의실'],
+  ['prayer room', '기도실'], ['auditorium', '강당'],
+  ['practice room', '실습실'], ['laboratory', '실험실'], ['lab', '실험실'],
+  ['research lab', '연구실'],
+  ['copy room', '복사실'], ['stationery', '문구점'], ['bookstore', '서점'],
+  ['post office', '우편취급국'],
+  ['optician', '안경점'],
+  ['museum', '박물관'],
+  ['certificate', '증명서'],
+  ['disability', '장애학생'],
+  ['ta room', '조교실'],
   ['cafeteria', '식당'], ['dining', '식당'], ['restaurant', '식당'],
   ['printer', '프린터'], ['print', '프린터'],
   ['locker', '사물함'],
@@ -751,11 +776,11 @@ const SEARCH_LANG_ALIASES: Array<[string, string]> = [
 ]
 
 const BUILDING_SEARCH_FILTERS: Array<{ keywords: string[]; match: (id: string) => boolean }> = [
-  { keywords: ['인대', '인문사회관', '인문관', '인문', '인사관', 'hum'], match: id => id.startsWith('in') },
-  { keywords: ['차관', '차미관', '차미리사관', '차미리', 'cha'], match: id => id.startsWith('cha') },
-  { keywords: ['학관', '학생관', '학생회관', 'stu', 'student'], match: id => id.startsWith('stu') || id.startsWith('hak') },
-  { keywords: ['대강의동', '대강의', '대강', 'dae', 'lecture'], match: id => id.startsWith('dae') },
-  { keywords: ['자연대', '자대', '자연관', 'nat', 'science'], match: id => id.startsWith('ja') || id.startsWith('nat') },
+  { keywords: ['인대', '인문사회관', '인문관', '인문', '인사관', 'hum', 'humanities'], match: id => id.startsWith('in') },
+  { keywords: ['차관', '차미관', '차미리사관', '차미리', 'cha', 'cha hall'], match: id => id.startsWith('cha') },
+  { keywords: ['학관', '학생관', '학생회관', 'stu', 'student', 'student union'], match: id => id.startsWith('stu') || id.startsWith('hak') },
+  { keywords: ['대강의동', '대강의', '대강', 'dae', 'lecture', 'lecture hall'], match: id => id.startsWith('dae') },
+  { keywords: ['자연대', '자대', '자연관', 'nat', 'science', 'science hall'], match: id => id.startsWith('ja') || id.startsWith('nat') },
 ]
 
 function normalizeSearchQuery(raw: string): string {
@@ -771,11 +796,27 @@ function matchesKeyword(p: Place, kw: string): boolean {
     (p.aliases?.some(a => a.toLowerCase().includes(kw)) ?? false)
 }
 
+// Lazily built English search index (first English search triggers build)
+let _enPlaceIndex: Map<string, string> | null = null
+function getEnPlaceIndex(): Map<string, string> {
+  if (!_enPlaceIndex) {
+    _enPlaceIndex = new Map(
+      PLACES.map(p => [p.id, [
+        translatePlaceName(p.name, 'en'),
+        p.category ? translatePlaceName(p.category, 'en') : '',
+        ...p.notes.map(n => translatePlaceName(n, 'en')),
+      ].join(' ').toLowerCase()])
+    )
+  }
+  return _enPlaceIndex
+}
+
 export function searchPlaces(query: string): Place[] {
   const q = normalizeSearchQuery(query.trim())
-  if (!q) return []
+  const qRaw = query.trim().toLowerCase()
+  if (!q && !qRaw) return []
 
-  // Compound "건물 + 키워드" search (e.g. "인대 소파")
+  // Compound "건물 + 키워드" search (e.g. "인대 소파", "cha sofa")
   const tokens = q.split(/\s+/)
   if (tokens.length >= 2) {
     for (const entry of BUILDING_SEARCH_FILTERS) {
@@ -791,12 +832,17 @@ export function searchPlaces(query: string): Place[] {
     }
   }
 
+  const enIdx = qRaw.length >= 2 ? getEnPlaceIndex() : null
+  const buildingPlaceIds = new Set(BUILDINGS.filter(b => b.placeId).map(b => b.placeId!))
   return PLACES.filter(p =>
-    p.name.toLowerCase().includes(q) ||
-    (p.floor?.toLowerCase().includes(q) ?? false) ||
-    (p.category?.toLowerCase().includes(q) ?? false) ||
-    p.notes.some(n => n.toLowerCase().includes(q)) ||
-    (p.aliases?.some(a => a.toLowerCase().includes(q)) ?? false)
+    !buildingPlaceIds.has(p.id) && (
+      p.name.toLowerCase().includes(q) ||
+      (p.floor?.toLowerCase().includes(q) ?? false) ||
+      (p.category?.toLowerCase().includes(q) ?? false) ||
+      p.notes.some(n => n.toLowerCase().includes(q)) ||
+      (p.aliases?.some(a => a.toLowerCase().includes(q)) ?? false) ||
+      (enIdx !== null && (enIdx.get(p.id) ?? '').includes(qRaw))
+    )
   )
 }
 
@@ -868,31 +914,31 @@ export type BuildingResult = {
 }
 
 const BUILDING_ALIASES: Array<{ aliases: string[]; result: BuildingResult }> = [
-  { aliases: ['인대', '인문사회관', '인문관', '인문', '인사관'],          result: { id: 'hum',        label: '인문사회관' } },
-  { aliases: ['차관', '차미관', '차미리사관', '차미리'],                  result: { id: 'cha',        label: '차미리사관' } },
-  { aliases: ['학관', '학생관', '학생회관'],                              result: { id: 'stu',        label: '학생회관' } },
-  { aliases: ['대강의동', '대강의', '대강'],                              result: { id: 'dae',        label: '대강의동' } },
-  { aliases: ['자연대', '자대', '자연관'],                                result: { id: 'nat',        label: '자연관' } },
-  { aliases: ['자A', '자대A', '자연관A', '자연대A'],                      result: { id: 'nat',        label: '자연관 A동', sub: 'natA' } },
-  { aliases: ['자B', '자대B', '자연관B', '자연대B'],                      result: { id: 'nat',        label: '자연관 B동', sub: 'natB' } },
-  { aliases: ['자C', '자대C', '자연관C', '자연대C'],                      result: { id: 'nat',        label: '자연관 C동', sub: 'natC' } },
-  { aliases: ['예술관', '예대', '예관'],                                  result: { id: 'art',        label: '예술관' } },
-  { aliases: ['도서관'],                                                  result: { id: 'lib',        label: '도서관' } },
-  { aliases: ['대학본부', '본부'],                                        result: { id: 'main',       label: '대학본부' } },
-  { aliases: ['약학관', '약관'],                                          result: { id: 'yak',        label: '약학관' } },
-  { aliases: ['라온센터', '라온'],                                        result: { id: 'la',         label: '라온센터' } },
-  { aliases: ['덕우당', '덕우'],                                          result: { id: 'duk',        label: '덕우당' } },
-  { aliases: ['유아교육관', '유아관', '유아교육'],                        result: { id: 'yu',         label: '유아교육관' } },
-  { aliases: ['파워플랜트', '파워 플랜트', '파워'],                       result: { id: 'power',      label: '파워 플랜트' } },
-  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-1', label: '차미리사관-대강의동 흡연 구역' } },
-  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-2', label: '인문사회관 흡연 구역' } },
-  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-3', label: '인문사회관-대강의동 흡연 구역' } },
-  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-4', label: '도서관 흡연 구역' } },
-  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-5', label: '예술관 흡연 구역' } },
-  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-6', label: '학생회관 1층 흡연 구역' } },
-  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연'], result: { id: 'smoke-7', label: '학생회관 3층 흡연 구역' } },
-  { aliases: ['음식물쓰레기', '음식물 쓰레기', '음쓰', '음식물'],        result: { id: 'food-waste', label: '음식물 쓰레기 처리 장소' } },
-  { aliases: ['폐지처리', '폐지 처리', '폐지'],                          result: { id: 'paper-waste', label: '폐지 처리 장소' } },
+  { aliases: ['인대', '인문사회관', '인문관', '인문', '인사관', 'humanities', 'humanities hall', 'hum'],          result: { id: 'hum',        label: '인문사회관' } },
+  { aliases: ['차관', '차미관', '차미리사관', '차미리', 'cha hall', 'cha'],                  result: { id: 'cha',        label: '차미리사관' } },
+  { aliases: ['학관', '학생관', '학생회관', 'student union', 'student hall', 'stu'],          result: { id: 'stu',        label: '학생회관' } },
+  { aliases: ['대강의동', '대강의', '대강', 'lecture hall', 'dae'],                           result: { id: 'dae',        label: '대강의동' } },
+  { aliases: ['자연대', '자대', '자연관', 'science hall', 'science', 'nat'],                  result: { id: 'nat',        label: '자연관' } },
+  { aliases: ['자A', '자대A', '자연관A', '자연대A', 'science hall a'],                        result: { id: 'nat',        label: '자연관 A동', sub: 'natA' } },
+  { aliases: ['자B', '자대B', '자연관B', '자연대B', 'science hall b'],                        result: { id: 'nat',        label: '자연관 B동', sub: 'natB' } },
+  { aliases: ['자C', '자대C', '자연관C', '자연대C', 'science hall c'],                        result: { id: 'nat',        label: '자연관 C동', sub: 'natC' } },
+  { aliases: ['예술관', '예대', '예관', 'arts hall', 'arts'],                                 result: { id: 'art',        label: '예술관' } },
+  { aliases: ['도서관', 'library', 'lib'],                                                    result: { id: 'lib',        label: '도서관' } },
+  { aliases: ['대학본부', '본부', 'univ. hq', 'university hq', 'main building', 'main'],     result: { id: 'main',       label: '대학본부' } },
+  { aliases: ['약학관', '약관', 'pharmacy hall', 'pharmacy'],                                 result: { id: 'yak',        label: '약학관' } },
+  { aliases: ['라온센터', '라온', 'raon center', 'raon'],                                     result: { id: 'la',         label: '라온센터' } },
+  { aliases: ['덕우당', '덕우', 'deokudang'],                                                 result: { id: 'duk',        label: '덕우당' } },
+  { aliases: ['유아교육관', '유아관', '유아교육', 'education hall', 'early childhood'],       result: { id: 'yu',         label: '유아교육관' } },
+  { aliases: ['파워플랜트', '파워 플랜트', '파워', 'power plant'],                            result: { id: 'power',      label: '파워 플랜트' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연', 'smoking area', 'smoking'], result: { id: 'smoke-1', label: '차미리사관-대강의동 흡연 구역' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연', 'smoking area', 'smoking'], result: { id: 'smoke-2', label: '인문사회관 흡연 구역' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연', 'smoking area', 'smoking'], result: { id: 'smoke-3', label: '인문사회관-대강의동 흡연 구역' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연', 'smoking area', 'smoking'], result: { id: 'smoke-4', label: '도서관 흡연 구역' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연', 'smoking area', 'smoking'], result: { id: 'smoke-5', label: '예술관 흡연 구역' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연', 'smoking area', 'smoking'], result: { id: 'smoke-6', label: '학생회관 1층 흡연 구역' } },
+  { aliases: ['흡연구역', '흡연 구역', '흡구', '흡연', 'smoking area', 'smoking'], result: { id: 'smoke-7', label: '학생회관 3층 흡연 구역' } },
+  { aliases: ['음식물쓰레기', '음식물 쓰레기', '음쓰', '음식물', 'food waste', 'food'],      result: { id: 'food-waste', label: '음식물 쓰레기 처리 장소' } },
+  { aliases: ['폐지처리', '폐지 처리', '폐지', 'paper waste', 'paper'],                      result: { id: 'paper-waste', label: '폐지 처리 장소' } },
 ]
 
 export function searchBuildings(query: string): BuildingResult[] {
