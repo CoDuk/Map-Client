@@ -102,6 +102,7 @@
   --color-accent-blue: #08397A;
   --color-accent-blue-light: #C2D6F1;
   --color-accent-orange: #E99015;
+  --color-accent-yellow: #FFD666;
   --color-accent-green: #005208;
   --color-accent-green-light: #D2D8C9;
 }
@@ -120,6 +121,13 @@
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+.place-selected-highlight {
+  fill: var(--color-accent-yellow) !important;
+  stroke: var(--color-accent-orange) !important;
+  stroke-width: 3px;
+  transition: fill 0.2s ease, stroke 0.2s ease;
 }
 
 html,

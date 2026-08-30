@@ -54,7 +54,9 @@ type Props = {
   floorKey: string
   viewKey: ViewKey
   onRoomClick: (placeId: string) => void
+  onBackgroundClick?: () => void
   focusPlaceId?: string
+  highlightPlaceId?: string
 }
 
 const LEGEND_ITEMS: Record<ViewKey, { color?: string; borderColor?: string; icon?: string; svgIcon?: string; iconClass?: string; iconClass2?: string; labelKey: string }[]> = {
@@ -74,7 +76,7 @@ const LEGEND_ITEMS: Record<ViewKey, { color?: string; borderColor?: string; icon
   ],
 }
 
-function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick, focusPlaceId }: Props) {
+function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick, onBackgroundClick, focusPlaceId, highlightPlaceId }: Props) {
   const { lang } = useLanguage()
   const [svgContent, setSvgContent] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
@@ -87,6 +89,8 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick, focusPlaceId }: P
   const lastPinchDistRef = useRef<number | null>(null)
   const lastPinchAngleRef = useRef<number | null>(null)
   const hasDraggedRef = useRef(false)
+  const highlightedElsRef = useRef<Element[]>([])
+  const centeredForRef = useRef<string | undefined>(undefined)
 
   // Load SVG when cfg/floor/view changes
   useEffect(() => {
@@ -131,7 +135,13 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick, focusPlaceId }: P
     svg.style.transform = `translate(${t.x}px, ${t.y}px) rotate(${t.rotation}deg) scale(${t.scale})`
   }, [])
 
-  // After SVG content renders, wire up the SVG ref and reset/center transform
+  // Wire up the SVG ref and (re)apply the tracked transform after every
+  // render — deliberately with NO dependency array. React replaces this
+  // div's children (dangerouslySetInnerHTML) on some re-renders even when
+  // svgContent's value is unchanged (e.g. just clicking a room, which only
+  // changes highlightPlaceId), which silently drops the inline transform
+  // we'd set on the old SVG node. Re-asserting it every commit is what
+  // keeps the user's pan/zoom from "snapping back" to identity.
   useLayoutEffect(() => {
     const container = containerRef.current
     if (!container || !svgContent) {
@@ -146,28 +156,72 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick, focusPlaceId }: P
     svg.style.transformOrigin = '0 0'
     svg.setAttribute('preserveAspectRatio', 'xMidYMid meet')
 
-    // Reset to identity first — required before reading element positions
-    svg.style.transform = ''
-    transformRef.current = { scale: 1, x: 0, y: 0, rotation: 0 }
+    // A genuine, NEW focus target (search flow only) recenters the view —
+    // guarded by centeredForRef so this never re-fires just because this
+    // effect runs again (e.g. on the resync-only passes below). Tapping a
+    // room never sets focusPlaceId, so it can never trigger this branch.
+    if (focusPlaceId && focusPlaceId !== centeredForRef.current) {
+      // A room can be split across multiple SVG shapes sharing the same
+      // data-place-id (e.g. an L-shaped auditorium) — union their boxes so
+      // we center on the whole room, not just whichever piece is first.
+      const els = container.querySelectorAll(`[data-place-id="${focusPlaceId}"]`)
+      if (els.length > 0) {
+        // Reset to identity first — required before reading element positions
+        svg.style.transform = ''
+        transformRef.current = { scale: 1, x: 0, y: 0, rotation: 0 }
 
-    // If a place should be centered, find its element and compute the transform
-    if (focusPlaceId) {
-      const el = container.querySelector(`[data-place-id="${focusPlaceId}"]`)
-      if (el) {
         // getBoundingClientRect() forces a synchronous layout flush,
         // so we get positions relative to the identity-transform SVG
         const containerRect = container.getBoundingClientRect()
-        const elRect = el.getBoundingClientRect()
-        const elCX = elRect.left - containerRect.left + elRect.width / 2
-        const elCY = elRect.top  - containerRect.top  + elRect.height / 2
+        const rects = Array.from(els).map(el => el.getBoundingClientRect())
+        const left = Math.min(...rects.map(r => r.left))
+        const right = Math.max(...rects.map(r => r.right))
+        const top = Math.min(...rects.map(r => r.top))
+        const bottom = Math.max(...rects.map(r => r.bottom))
+        const elCX = (left + right) / 2 - containerRect.left
+        const elCY = (top + bottom) / 2 - containerRect.top
         const s = clamp(2.5, MIN_SCALE, MAX_SCALE)
         const tx = containerRect.width  / 2 - elCX * s
-        const ty = containerRect.height / 2 - elCY * s
+        // Anchor toward the upper third rather than dead-center — the detail
+        // modal covers up to ~70% of the viewport from the bottom, so a
+        // centered focus point often ends up hidden underneath it.
+        const ty = containerRect.height * 0.3 - elCY * s
         transformRef.current = { scale: s, x: tx, y: ty, rotation: 0 }
-        applyTransform(transformRef.current)
+        centeredForRef.current = focusPlaceId
       }
+    } else if (!focusPlaceId) {
+      centeredForRef.current = undefined
     }
-  }, [svgContent, cfg.subId, viewKey, floorKey, focusPlaceId, applyTransform])
+
+    // Always (re)apply whatever transform is currently tracked — either the
+    // focus transform just computed above, or the user's pre-existing
+    // pan/zoom. This guarantees the DOM never silently reverts to identity
+    // while transformRef still holds a different value.
+    applyTransform(transformRef.current)
+  })
+
+  // Keep the currently-selected place highlighted on the map — whether it got
+  // selected via search focus or a direct tap — for as long as its modal is
+  // open. A room can be made of multiple SVG shapes sharing the same
+  // data-place-id (e.g. an L-shaped auditorium), so all of them get the
+  // class, not just the first match. No dependency array for the same
+  // reason as above: the highlighted nodes can get silently swapped out by
+  // an unrelated re-render, so we re-verify (cheaply) on every commit
+  // instead of trusting a stale ref.
+  useLayoutEffect(() => {
+    const container = containerRef.current
+    const targets = container && svgContent && highlightPlaceId
+      ? Array.from(container.querySelectorAll(`[data-place-id="${highlightPlaceId}"]`))
+      : []
+
+    const prev = highlightedElsRef.current
+    const unchanged = prev.length === targets.length && prev.every((el, i) => el === targets[i])
+    if (unchanged) return
+
+    prev.forEach(el => el.classList.remove('place-selected-highlight'))
+    targets.forEach(el => el.classList.add('place-selected-highlight'))
+    highlightedElsRef.current = targets
+  })
 
   const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     e.currentTarget.setPointerCapture(e.pointerId)
@@ -251,7 +305,8 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick, focusPlaceId }: P
     const placeEl = els.find(el => el.hasAttribute('data-place-id'))
     const placeId = placeEl?.getAttribute('data-place-id')
     if (placeId) onRoomClick(placeId)
-  }, [onRoomClick])
+    else onBackgroundClick?.()
+  }, [onRoomClick, onBackgroundClick])
 
   const onWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
     e.preventDefault()

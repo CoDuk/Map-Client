@@ -32,6 +32,11 @@ export default function MainPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.key])
 
+  function handleCloseDetail() {
+    setSelectedPlace(null)
+    setFocusBuildingId(undefined)
+  }
+
   function handleBuildingSelect(id: string) {
     if (id === '전체') {
       // 전체 지도 유지
@@ -56,6 +61,7 @@ export default function MainPage() {
         active="전체"
         onChange={handleBuildingSelect}
         onSelectPlace={setSelectedPlace}
+        onSearchOpen={handleCloseDetail}
       />
 
       <CampusMap
@@ -66,7 +72,7 @@ export default function MainPage() {
 
       <DetailModal
         place={selectedPlace}
-        onClose={() => { setSelectedPlace(null); setFocusBuildingId(undefined) }}
+        onClose={handleCloseDetail}
         showBackdrop
       />
     </div>

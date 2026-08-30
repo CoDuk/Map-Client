@@ -37,10 +37,13 @@ export default function MapPage() {
     localStorage.setItem('lastMapPath', location.pathname + location.search)
   }, [location])
 
-  // Reset floor/view when building/sub changes
+  // Reset floor/view when building/sub changes, and close any open detail modal
   useEffect(() => {
     setActiveFloor(activeCfg.floors[0]?.key ?? '1')
     setActiveView('basic')
+    setSelectedPlace(null)
+    setFocusPlaceId(undefined)
+    setInitialExpandedMenuKey(undefined)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cfg.id, activeCfg.id])
 
@@ -86,6 +89,12 @@ export default function MapPage() {
     setSelectedPlace(place ?? { id: placeId, name: '', floor: null, category: null, images: [], notes: [] })
   }, [])
 
+  const handleCloseDetail = useCallback(() => {
+    setSelectedPlace(null)
+    setFocusPlaceId(undefined)
+    setInitialExpandedMenuKey(undefined)
+  }, [])
+
   const activeSub = activeCfg.id
 
   return (
@@ -96,6 +105,7 @@ export default function MapPage() {
         onChange={handleBuildingChange}
         activeSub={activeSub}
         onSelectPlace={setSelectedPlace}
+        onSearchOpen={handleCloseDetail}
       />
 
       {/* 평면도 뷰어 */}
@@ -105,7 +115,9 @@ export default function MapPage() {
         floorKey={safeFloor}
         viewKey={safeView}
         onRoomClick={handleRoomClick}
+        onBackgroundClick={handleCloseDetail}
         focusPlaceId={focusPlaceId}
+        highlightPlaceId={selectedPlace?.id}
       />
 
       {/* 하단 툴바: 뷰 아이콘 + 층 선택 */}
@@ -118,7 +130,7 @@ export default function MapPage() {
         onViewChange={setActiveView}
       />
 
-      <DetailModal place={selectedPlace} onClose={() => { setSelectedPlace(null); setFocusPlaceId(undefined); setInitialExpandedMenuKey(undefined) }} showBackdrop initialExpandedMenuKey={initialExpandedMenuKey} />
+      <DetailModal place={selectedPlace} onClose={handleCloseDetail} initialExpandedMenuKey={initialExpandedMenuKey} />
     </div>
   )
 }

@@ -57,7 +57,7 @@ export default function CategoryTabs({ active, onChange, onSearchClick, hideAll 
             {t(`building.${allItem.id}`, lang) || allItem.label}
           </button>
         )}
-        <div ref={containerRef} className="relative flex items-center gap-1 flex-1 min-w-0 overflow-x-auto no-scrollbar">
+        <div ref={containerRef} className="relative flex items-center justify-between gap-1 flex-1 min-w-0 overflow-x-auto no-scrollbar">
           {/* Sliding background */}
           <div
             className="absolute top-0 bottom-0 rounded-[5px] bg-cream-200 transition-all duration-300 ease-in-out pointer-events-none"

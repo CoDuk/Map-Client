@@ -10,9 +10,10 @@ type Props = {
   onChange: (id: string) => void
   activeSub?: string
   onSelectPlace: (place: Place) => void
+  onSearchOpen?: () => void
 }
 
-export default function BuildingNavBar({ active, onChange, activeSub, onSelectPlace }: Props) {
+export default function BuildingNavBar({ active, onChange, activeSub, onSelectPlace, onSearchOpen }: Props) {
   const navigate = useNavigate()
   const [isSearchMode, setIsSearchMode] = useState(false)
   const cfg = getBuildingMapCfg(active)
@@ -31,7 +32,7 @@ export default function BuildingNavBar({ active, onChange, activeSub, onSelectPl
       <CategoryTabs
         active={active}
         onChange={onChange}
-        onSearchClick={() => setIsSearchMode(true)}
+        onSearchClick={() => { onSearchOpen?.(); setIsSearchMode(true) }}
       />
 
       {cfg?.subs && (

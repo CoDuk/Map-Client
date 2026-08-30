@@ -32,8 +32,8 @@
 <rect x="72.5" y="399" width="30" height="42" fill="#E7C9D0" stroke="#50001B" stroke-width="2" data-place-id="stuSick"/>
 <path d="M103 328.5V383H42.5V328.5H103Z" fill="#E7C9D0" stroke="#50001B" stroke-width="2" data-place-id="stuDisLounge"/>
 <path d="M217.5 121V270.5H163.606V328H1.5V121H217.5Z" fill="#E7C9D0" stroke="#50001B" stroke-width="2" data-place-id="stu113"/>
-<path d="M163.5 329V356.5H102.5V329H163.5Z" fill="#E7C9D0" stroke="#50001B" stroke-width="2" data-place-id="stuDisLounge"/>
-<path d="M163.5 356V383H102.5V356H163.5Z" fill="#E7C9D0" stroke="#50001B" stroke-width="2" data-place-id="stuDisLounge"/>
+<path d="M163.5 329V356.5H102.5V329H163.5Z" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
+<path d="M163.5 356V383H102.5V356H163.5Z" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
 <rect x="42.5" y="399" width="30" height="42" fill="#E7C9D0" stroke="#50001B" stroke-width="2" data-place-id="stu109"/>
 <path d="M493.5 387V466H436.5V410.5H456.87L456.99 409.639C457.436 406.448 458.149 404.556 459.327 403.276C460.506 401.995 462.286 401.18 465.233 400.473L466 400.288V387H493.5Z" fill="#E7C9D0" stroke="#50001B" stroke-width="2" data-place-id="stuOptical"/>
 <path d="M736 1V332H662V304.5H636.5V187H662V172.5H636.5V72.4033L705.425 1H736Z" fill="#E7C9D0" stroke="#50001B" stroke-width="2" data-place-id="stuCU"/>
