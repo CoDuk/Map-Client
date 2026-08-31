@@ -102,8 +102,8 @@ export default function PlaceSearch({ onClose, onSelectPlace }: Props) {
     } else {
       const placeId = br.id === 'main'
         ? 'main_office'
-        : BUILDINGS.find(b => b.id === br.id)?.placeId
-      navigate('/main', placeId ? { state: { placeId } } : undefined)
+        : (BUILDINGS.find(b => b.id === br.id)?.placeId ?? br.id)
+      navigate('/main', { state: { placeId } })
     }
     onClose()
   }

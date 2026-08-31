@@ -758,6 +758,14 @@ export function getPlacesByBuilding(buildingId: string): Place[] {
   return PLACES.filter(p => p.id.startsWith(building.prefix))
 }
 
+// 검색 등에서 넘어온 id(건물 id, 'main_office', 혹은 building.placeId로 연결된 개별 장소 id)를
+// 전체 지도에서 강조/포커싱할 BUILDINGS id로 역매핑
+export function getBuildingIdForPlace(id: string): string | undefined {
+  if (id === 'main_office') return 'main'
+  if (BUILDINGS.some(b => b.id === id)) return id
+  return BUILDINGS.find(b => b.placeId === id)?.id
+}
+
 const QUERY_ALIASES: Array<[string, string]> = [
   ['쇼파', '소파'],
 ]

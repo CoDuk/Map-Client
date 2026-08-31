@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import BuildingNavBar from './components/BuildingNavBar'
 import CampusMap from './components/CampusMap'
 import DetailModal from './components/DetailModal'
-import { PLACES, BUILDINGS, getBuildingMapCfg, getPlacesByBuilding } from '@/data/places'
+import { PLACES, BUILDINGS, getBuildingMapCfg, getPlacesByBuilding, getBuildingIdForPlace } from '@/data/places'
 import type { Place } from '@/data/places'
 
 export default function MainPage() {
@@ -22,8 +22,7 @@ export default function MainPage() {
     setSelectedPlace(
       place ?? { id: s.placeId, name: building?.label ?? s.placeId, floor: null, category: null, images: [], notes: [] }
     )
-    // 'main_office'는 BUILDINGS에서 'main' id로 매핑
-    const buildingId = s.placeId === 'main_office' ? 'main' : s.placeId
+    const buildingId = getBuildingIdForPlace(s.placeId)
     setFocusBuildingId(buildingId)
     setHighlightBuildingId(buildingId)
     navigate(location.pathname, { replace: true, state: null })
