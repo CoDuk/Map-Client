@@ -11,6 +11,7 @@ export default function MainPage() {
   const location = useLocation()
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null)
   const [focusBuildingId, setFocusBuildingId] = useState<string | undefined>()
+  const [highlightBuildingId, setHighlightBuildingId] = useState<string | undefined>()
 
   // 검색에서 navigate('/main', { state: { placeId } }) 로 넘어왔을 때 모달 표시
   useEffect(() => {
@@ -24,6 +25,7 @@ export default function MainPage() {
     // 'main_office'는 BUILDINGS에서 'main' id로 매핑
     const buildingId = s.placeId === 'main_office' ? 'main' : s.placeId
     setFocusBuildingId(buildingId)
+    setHighlightBuildingId(buildingId)
     navigate(location.pathname, { replace: true, state: null })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.key])
@@ -31,6 +33,7 @@ export default function MainPage() {
   function handleCloseDetail() {
     setSelectedPlace(null)
     setFocusBuildingId(undefined)
+    setHighlightBuildingId(undefined)
   }
 
   function handleBuildingSelect(id: string) {
@@ -40,6 +43,7 @@ export default function MainPage() {
       // 대학본부: 모달로 상세 정보 표시
       const place = PLACES.find(p => p.id === 'main_office')
       setSelectedPlace(place ?? { id: 'main_office', name: '대학본부', floor: null, category: null, images: [], notes: [] })
+      setHighlightBuildingId('main')
     } else if (getBuildingMapCfg(id)) {
       // 층별 지도가 있는 건물: 해당 건물 페이지로 이동
       navigate(`/map?building=${id}`)
@@ -48,6 +52,7 @@ export default function MainPage() {
       const buildingInfo = BUILDINGS.find(b => b.id === id)
       const places = getPlacesByBuilding(id)
       setSelectedPlace(places[0] ?? { id, name: buildingInfo?.label ?? '', floor: null, category: null, images: [], notes: [] })
+      setHighlightBuildingId(id)
     }
   }
 
@@ -62,14 +67,14 @@ export default function MainPage() {
 
       <CampusMap
         onBuildingClick={id => handleBuildingSelect(id)}
-        onEmptyClick={() => setSelectedPlace(null)}
+        onEmptyClick={handleCloseDetail}
         focusBuildingId={focusBuildingId}
+        highlightBuildingId={highlightBuildingId}
       />
 
       <DetailModal
         place={selectedPlace}
         onClose={handleCloseDetail}
-        showBackdrop
       />
     </div>
   )

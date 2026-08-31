@@ -63,6 +63,10 @@ export const UI: Record<string, Dict> = {
   'login.browseWithout':  { ko: '로그인 없이 둘러보기',    en: 'Browse without login',      zh: '免登录浏览',        ja: 'ログインせずに閲覧' },
   'login.serverDown':     { ko: '서버가 종료된 서비스입니다.', en: 'Service is currently unavailable.', zh: '服务暂时不可用。', ja: 'サービスが停止中です。' },
   'login.resend':         { ko: '인증 번호 재전송',         en: 'Resend code',               zh: '重新发送',          ja: '再送信' },
+  // Update prompt
+  'update.available':     { ko: '새로운 버전이 있어요.',    en: 'A new version is available.', zh: '有新版本可用。',   ja: '新しいバージョンがあります。' },
+  'update.reload':        { ko: '업데이트',                en: 'Update',                    zh: '更新',             ja: 'アップデート' },
+  'update.dismiss':       { ko: '나중에',                  en: 'Later',                     zh: '稍后',             ja: '後で' },
 }
 
 export function t(key: string, lang: Lang): string {

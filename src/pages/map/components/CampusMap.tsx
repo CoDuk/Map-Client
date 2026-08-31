@@ -9,6 +9,7 @@ type Props = {
   onBuildingClick: (buildingId: string) => void
   onEmptyClick?: () => void
   focusBuildingId?: string
+  highlightBuildingId?: string
 }
 
 type Transform = { scale: number; x: number; y: number; rotation: number }
@@ -36,13 +37,14 @@ function getPinchAngle(pointers: PointerMap) {
   return Math.atan2(b.y - a.y, b.x - a.x) * (180 / Math.PI)
 }
 
-export default function CampusMap({ onBuildingClick, onEmptyClick, focusBuildingId }: Props) {
+export default function CampusMap({ onBuildingClick, onEmptyClick, focusBuildingId, highlightBuildingId }: Props) {
   const { lang } = useLanguage()
   const containerRef = useRef<HTMLDivElement>(null)
-  
+
   const svgWrapperRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement | null>(null)
   const transformRef = useRef<Transform>({ scale: 1, x: 0, y: 0, rotation: 0 })
+  const highlightedElsRef = useRef<Element[]>([])
 
   const pointersRef = useRef<PointerMap>(new Map())
   const pointerStartRef = useRef<PointerMap>(new Map())
@@ -107,6 +109,22 @@ export default function CampusMap({ onBuildingClick, onEmptyClick, focusBuilding
     transformRef.current = { scale: s, x: tx, y: ty, rotation: 0 }
     applyTransform(transformRef.current)
   }, [focusBuildingId, applyTransform])
+
+  // 선택된(하지만 다른 탭으로 이동하지 않는) 건물/지점 강조 표시
+  useEffect(() => {
+    const wrapper = svgWrapperRef.current
+    if (!wrapper) return
+
+    for (const el of highlightedElsRef.current) el.classList.remove('place-selected-highlight')
+    highlightedElsRef.current = []
+
+    if (!highlightBuildingId) return
+    const building = BUILDINGS.find(b => b.id === highlightBuildingId)
+    if (!building?.svgId) return
+    const els = wrapper.querySelectorAll(`[data-building="${building.svgId}"]`)
+    els.forEach(el => el.classList.add('place-selected-highlight'))
+    highlightedElsRef.current = Array.from(els)
+  }, [highlightBuildingId])
 
   const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     if (pointersRef.current.size === 0) {
