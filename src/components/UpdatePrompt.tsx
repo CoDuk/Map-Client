@@ -17,7 +17,7 @@ export default function UpdatePrompt() {
   if (!needRefresh) return null
 
   return (
-    <div className="fixed top-[calc(var(--sat)+69px)] left-1/2 -translate-x-1/2 z-60 w-[calc(100%-32px)] max-w-[360px] bg-cream-0 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.15)] px-4 py-3 flex items-center gap-3">
+    <div className="fixed bottom-[calc(43px+var(--sab))] left-1/2 -translate-x-1/2 z-60 w-[calc(100%-32px)] max-w-[360px] bg-cream-0 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.15)] px-4 py-3 flex items-center gap-3">
       <p className="flex-1 text-[13px] font-medium text-neutral-500">{t('update.available', lang)}</p>
       <button
         type="button"
