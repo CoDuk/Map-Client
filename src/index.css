@@ -130,6 +130,14 @@
   transition: fill 0.2s ease, stroke 0.2s ease;
 }
 
+.place-icon-invert-fill {
+  fill: #000 !important;
+}
+
+.place-icon-invert-stroke {
+  stroke: #000 !important;
+}
+
 html,
 body {
   height: 100%;

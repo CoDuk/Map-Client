@@ -33,9 +33,9 @@
 <path data-place-id="jaB2Fsofa1" d="M252.095 240.768L276.055 304.5H202.824L200.085 290.348L252.095 240.768Z" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
 <rect data-place-id="jaB2Fsofa2" x="159" y="736" width="106" height="106" transform="rotate(-90 159 736)" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
 <rect data-place-id="jaB2Fsofa3" x="302" y="591" width="155" height="12" transform="rotate(-90 302 591)" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
-<rect x="191.414" y="281.19" width="73.6034" height="8" transform="rotate(-44.7037 191.414 281.19)" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
-<rect x="203" y="309" width="73.6034" height="8" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
-<rect x="306" y="609" width="16" height="8" transform="rotate(-90 306 609)" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
+<rect x="191.414" y="281.19" width="73.6034" height="8" transform="rotate(-44.7037 191.414 281.19)" fill="#C2D6F1" stroke="#08397A" stroke-width="2" data-place-id="jaB2Flocker"/>
+<rect x="203" y="309" width="73.6034" height="8" fill="#C2D6F1" stroke="#08397A" stroke-width="2" data-place-id="jaB2Flocker"/>
+<rect x="306" y="609" width="16" height="8" transform="rotate(-90 306 609)" fill="#C2D6F1" stroke="#08397A" stroke-width="2" data-place-id="jaB2Flocker"/>
 <mask id="path-36-inside-2_576_159" fill="white">
 <path d="M346.359 276.2L366.291 296.914L352.468 310.215L332.536 289.501L346.359 276.2Z"/>
 </mask>

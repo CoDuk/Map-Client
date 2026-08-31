@@ -70,16 +70,16 @@
 <rect data-place-id="cha4Fsofa4" x="489.999" y="356" width="25" height="11" transform="rotate(-90 489.999 356)" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
 <rect data-place-id="cha4Fsofa5" x="484.999" y="242" width="12" height="16" transform="rotate(-90 484.999 242)" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
 <path data-place-id="cha4Fsofa6" d="M445.999 398.39H475.325V365H488.999V416H445.999V398.39Z" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
-<rect x="427.999" y="266" width="39" height="8" transform="rotate(-90 427.999 266)" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
-<rect x="480.999" y="218" width="20" height="8" transform="rotate(-90 480.999 218)" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
-<rect x="480.999" y="187" width="20" height="8" transform="rotate(-90 480.999 187)" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
-<rect x="427.999" y="158" width="32" height="8" transform="rotate(-90 427.999 158)" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
-<rect x="488.999" y="218" width="6" height="8" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
-<rect x="385.999" y="107" width="29" height="8" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
-<rect x="520.999" y="97" width="49" height="8" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
-<rect x="615.999" y="97" width="51" height="8" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
-<rect x="586.999" y="97" width="13" height="8" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
-<rect x="454.999" y="313" width="58" height="8" transform="rotate(-90 454.999 313)" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
+<rect x="427.999" y="266" width="39" height="8" transform="rotate(-90 427.999 266)" fill="#C2D6F1" stroke="#08397A" stroke-width="2" data-place-id="cha4Flocker"/>
+<rect x="480.999" y="218" width="20" height="8" transform="rotate(-90 480.999 218)" fill="#C2D6F1" stroke="#08397A" stroke-width="2" data-place-id="cha4Flocker"/>
+<rect x="480.999" y="187" width="20" height="8" transform="rotate(-90 480.999 187)" fill="#C2D6F1" stroke="#08397A" stroke-width="2" data-place-id="cha4Flocker"/>
+<rect x="427.999" y="158" width="32" height="8" transform="rotate(-90 427.999 158)" fill="#C2D6F1" stroke="#08397A" stroke-width="2" data-place-id="cha4Flocker"/>
+<rect x="488.999" y="218" width="6" height="8" fill="#C2D6F1" stroke="#08397A" stroke-width="2" data-place-id="cha4Flocker"/>
+<rect x="385.999" y="107" width="29" height="8" fill="#C2D6F1" stroke="#08397A" stroke-width="2" data-place-id="cha4Flocker"/>
+<rect x="520.999" y="97" width="49" height="8" fill="#C2D6F1" stroke="#08397A" stroke-width="2" data-place-id="cha4Flocker"/>
+<rect x="615.999" y="97" width="51" height="8" fill="#C2D6F1" stroke="#08397A" stroke-width="2" data-place-id="cha4Flocker"/>
+<rect x="586.999" y="97" width="13" height="8" fill="#C2D6F1" stroke="#08397A" stroke-width="2" data-place-id="cha4Flocker"/>
+<rect x="454.999" y="313" width="58" height="8" transform="rotate(-90 454.999 313)" fill="#C2D6F1" stroke="#08397A" stroke-width="2" data-place-id="cha4Flocker"/>
 <rect x="488.999" y="148" width="15" height="17" fill="#FDFAF7" stroke="#A27578" stroke-width="2"/>
 <path d="M497.427 155.687H499.156L498.291 154.302L497.427 155.687ZM498.291 158.698L499.156 157.312H497.427L498.291 158.698ZM493.041 160.833C492.792 160.833 492.584 160.75 492.417 160.583C492.25 160.416 492.166 160.208 492.166 159.958V153.042C492.166 152.792 492.25 152.584 492.417 152.417C492.584 152.25 492.792 152.167 493.041 152.167H499.958C500.207 152.167 500.415 152.25 500.582 152.417C500.75 152.584 500.833 152.793 500.833 153.042V159.958C500.833 160.208 500.749 160.416 500.582 160.583C500.416 160.75 500.207 160.834 499.957 160.833H493.041ZM493.041 160.292H499.958C500.055 160.292 500.135 160.26 500.197 160.198C500.26 160.135 500.291 160.056 500.291 159.958V153.041C500.291 152.944 500.26 152.864 500.197 152.802C500.135 152.739 500.055 152.708 499.958 152.708H493.041C492.944 152.708 492.864 152.739 492.801 152.802C492.739 152.864 492.708 152.944 492.708 153.042V159.958C492.708 160.056 492.739 160.135 492.801 160.198C492.864 160.26 492.944 160.292 493.041 160.292Z" fill="#A27578"/>
 <path d="M495.262 154.876C495.504 154.876 495.7 154.68 495.7 154.438C495.7 154.196 495.504 154 495.262 154C495.02 154 494.824 154.196 494.824 154.438C494.824 154.68 495.02 154.876 495.262 154.876Z" fill="#A27578"/>

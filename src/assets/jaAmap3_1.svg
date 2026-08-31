@@ -46,8 +46,8 @@
 </mask>
 <path d="M104 87H106V46H104H102V87H104Z" fill="#A27578" mask="url(#path-43-inside-1_576_154)"/>
 <path d="M208.5 496H159V454.5H192" stroke="#A27578" stroke-width="2"/>
-<path d="M97 424H105V444H152.5V451.5H97V424Z" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
-<rect x="39" y="103" width="56" height="8" transform="rotate(-90 39 103)" fill="#C2D6F1" stroke="#08397A" stroke-width="2"/>
+<path d="M97 424H105V444H152.5V451.5H97V424Z" fill="#C2D6F1" stroke="#08397A" stroke-width="2" data-place-id="jaA3Flocker"/>
+<rect x="39" y="103" width="56" height="8" transform="rotate(-90 39 103)" fill="#C2D6F1" stroke="#08397A" stroke-width="2" data-place-id="jaA3Flocker"/>
 <rect data-place-id="jaA3Fsofa1" x="10" y="494" width="46" height="59" transform="rotate(-90 10 494)" fill="#E7C9D0" stroke="#50001B" stroke-width="2"/>
 <ellipse cx="75" cy="46.5" rx="9" ry="9.5" fill="#3F2629"/>
 <path d="M76.1111 46.5V46.505M70 51H80M71.6667 51V43C71.6667 42.7348 71.7837 42.4804 71.9921 42.2929C72.2005 42.1054 72.4831 42 72.7778 42H77.2222C77.5169 42 77.7995 42.1054 78.0079 42.2929C78.2163 42.4804 78.3333 42.7348 78.3333 43V51" stroke="#EFEAE3" stroke-opacity="0.5" stroke-linecap="round" stroke-linejoin="round"/>

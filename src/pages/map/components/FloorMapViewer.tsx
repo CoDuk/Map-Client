@@ -49,6 +49,39 @@ function getSvgFilename(subId: string, view: ViewKey, floor: string): string {
   return `${subId}map${floor}${suffix}.svg`
 }
 
+// Amenity-view icon glyphs (water dispenser, vending machine, etc.) are drawn
+// in this off-white color on top of a colored circle/ellipse anchor. Collect
+// them so they can be inverted to black when their anchor is highlighted —
+// otherwise they'd fade into the yellow highlight fill.
+const ICON_GLYPH_COLOR = '#efeae3'
+
+type IconGlyphMatch = { el: Element; hasFill: boolean; hasStroke: boolean }
+
+function collectIconGlyphElements(anchor: Element): IconGlyphMatch[] {
+  const collected: IconGlyphMatch[] = []
+  function walk(node: Element) {
+    // Only override whichever attribute the element actually uses for its
+    // glyph color — adding a stroke to a fill-only path (or vice versa)
+    // draws a new outline that was never there, distorting the icon shape.
+    const hasFill = node.getAttribute('fill')?.toLowerCase() === ICON_GLYPH_COLOR
+    const hasStroke = node.getAttribute('stroke')?.toLowerCase() === ICON_GLYPH_COLOR
+    if (hasFill || hasStroke) collected.push({ el: node, hasFill, hasStroke })
+    for (const child of Array.from(node.children)) walk(child)
+  }
+  // The icon's own glyph shapes are the siblings immediately following its
+  // anchor, up to (not including) the next icon's own anchor — any circle
+  // or ellipse, tagged or not, marks the start of a different icon. Several
+  // floors have untagged decorative circles/ellipses using this exact same
+  // convention right next to a tagged one, so stopping only at the next
+  // data-place-id would sweep their glyphs in too.
+  let sib = anchor.nextElementSibling
+  while (sib && sib.tagName !== 'circle' && sib.tagName !== 'ellipse') {
+    walk(sib)
+    sib = sib.nextElementSibling
+  }
+  return collected
+}
+
 type Props = {
   cfg: BuildingMapCfg
   floorKey: string
@@ -90,6 +123,7 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick, onBackgroundClick
   const lastPinchAngleRef = useRef<number | null>(null)
   const hasDraggedRef = useRef(false)
   const highlightedElsRef = useRef<Element[]>([])
+  const invertedIconElsRef = useRef<Element[]>([])
   const centeredForRef = useRef<string | undefined>(undefined)
 
   // Load SVG when cfg/floor/view changes
@@ -221,6 +255,18 @@ function FloorMapViewer({ cfg, floorKey, viewKey, onRoomClick, onBackgroundClick
     prev.forEach(el => el.classList.remove('place-selected-highlight'))
     targets.forEach(el => el.classList.add('place-selected-highlight'))
     highlightedElsRef.current = targets
+
+    // In the amenity view, a highlighted icon's off-white glyph would
+    // otherwise blend into the yellow highlight fill — invert it to black.
+    invertedIconElsRef.current.forEach(el => {
+      el.classList.remove('place-icon-invert-fill', 'place-icon-invert-stroke')
+    })
+    const iconMatches = viewKey === 'amenity' ? targets.flatMap(collectIconGlyphElements) : []
+    iconMatches.forEach(({ el, hasFill, hasStroke }) => {
+      if (hasFill) el.classList.add('place-icon-invert-fill')
+      if (hasStroke) el.classList.add('place-icon-invert-stroke')
+    })
+    invertedIconElsRef.current = iconMatches.map(m => m.el)
   })
 
   const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
