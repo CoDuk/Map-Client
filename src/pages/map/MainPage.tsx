@@ -12,10 +12,6 @@ export default function MainPage() {
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null)
   const [focusBuildingId, setFocusBuildingId] = useState<string | undefined>()
 
-  useEffect(() => {
-    localStorage.setItem('lastMapPath', location.pathname + location.search)
-  }, [location])
-
   // 검색에서 navigate('/main', { state: { placeId } }) 로 넘어왔을 때 모달 표시
   useEffect(() => {
     const s = location.state as { placeId?: string } | null

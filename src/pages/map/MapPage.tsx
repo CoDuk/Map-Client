@@ -33,10 +33,6 @@ export default function MapPage() {
   const [focusPlaceId, setFocusPlaceId] = useState<string | undefined>()
   const [initialExpandedMenuKey, setInitialExpandedMenuKey] = useState<string | undefined>()
 
-  useEffect(() => {
-    localStorage.setItem('lastMapPath', location.pathname + location.search)
-  }, [location])
-
   // Reset floor/view when building/sub changes, and close any open detail modal
   useEffect(() => {
     setActiveFloor(activeCfg.floors[0]?.key ?? '1')

@@ -1,59 +1,51 @@
-import { useMemo } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-
-import MapFloating from '@/assets/mapFloating.svg'
-import AdminFloating from '@/assets/adminFloating.svg'
-import QnaFloating from '@/assets/qnaFloating.svg'
+import { useState } from 'react'
+import LangKoIcon from '@/assets/langKo.svg'
+import LangEnIcon from '@/assets/langEn.svg'
+import LangKoLightIcon from '@/assets/langKoLight.svg'
+import LangEnLightIcon from '@/assets/langEnLight.svg'
 import { useLanguage } from '@/contexts/LanguageContext'
-import { t } from '@/i18n'
+import { LANGS } from '@/i18n'
+import type { Lang } from '@/i18n'
+
+const LANG_ICONS: Record<Lang, string> = {
+  ko: LangKoIcon,
+  en: LangEnIcon,
+  zh: LangEnIcon,
+  ja: LangEnIcon,
+}
+
+const LANG_ICONS_LIGHT: Record<Lang, string> = {
+  ko: LangKoLightIcon,
+  en: LangEnLightIcon,
+  zh: LangEnLightIcon,
+  ja: LangEnLightIcon,
+}
 
 export default function FloatingMenu() {
-  const { pathname } = useLocation()
-  const navigate = useNavigate()
-  const { lang } = useLanguage()
-
-  const { primary, secondary } = useMemo(() => {
-    const path = pathname.toLowerCase()
-
-    if (path.includes('qna')) {
-      return {
-        primary: { icon: MapFloating, to: '/main', alt: 'map' },
-        secondary: { icon: AdminFloating, to: '/my', alt: 'admin' },
-      }
-    }
-
-    if (path.includes('my')) {
-      return {
-        primary: { icon: MapFloating, to: '/main', alt: 'map' },
-        secondary: { icon: QnaFloating, to: '/qna', alt: 'qna' },
-      }
-    }
-
-    return {
-      primary: { icon: QnaFloating, to: '/qna', alt: 'qna' },
-      secondary: { icon: AdminFloating, to: '/my', alt: 'admin' },
-    }
-  }, [pathname])
+  const { lang, setLang } = useLanguage()
+  const [open, setOpen] = useState(false)
 
   return (
-    <div className="fixed right-[21px] z-50 bottom-[calc(43px+var(--sab))] flex flex-col items-center gap-2">
-      <button type="button" onClick={() => navigate(primary.to)} className="block">
-        <img src={primary.icon} alt={primary.alt} className="block" />
-      </button>
-      <button
-        type="button"
-        onClick={() => {
-          if (secondary.to === '/my') {
-            alert(t('login.serverDown', lang))
-            navigate('/')
-          } else {
-            navigate(secondary.to)
-          }
-        }}
-        className="block"
-      >
-        <img src={secondary.icon} alt={secondary.alt} className="block" />
-      </button>
-    </div>
+    <>
+      {open && (
+        <div className="fixed inset-0 z-40 bg-black/30" onClick={() => setOpen(false)} />
+      )}
+      <div className="fixed right-[21px] z-50 bottom-[calc(43px+var(--sab))] flex flex-col items-center gap-3">
+        {open && LANGS.map((l, i) => (
+          <button
+            key={l.code}
+            type="button"
+            onClick={() => { setLang(l.code); setOpen(false) }}
+            className="floating-option-enter block"
+            style={{ animationDelay: `${(LANGS.length - 1 - i) * 40}ms` }}
+          >
+            <img src={LANG_ICONS_LIGHT[l.code]} alt={l.label} className="block w-16 h-16" />
+          </button>
+        ))}
+        <button type="button" onClick={() => setOpen(o => !o)} className="block">
+          <img src={LANG_ICONS[lang]} alt={lang} className="block w-16 h-16" />
+        </button>
+      </div>
+    </>
   )
 }
