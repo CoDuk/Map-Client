@@ -129,12 +129,29 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
                   <div
                     className="relative w-full aspect-4/3 rounded-xl overflow-hidden bg-cream-200 cursor-pointer"
                     onClick={() => setPreviewOpen(true)}
+                    onTouchStart={e => { swipeTouchX.current = e.touches[0].clientX }}
+                    onTouchEnd={e => {
+                      const dx = e.changedTouches[0].clientX - swipeTouchX.current
+                      if (Math.abs(dx) < 40) return
+                      setImgIndex(i => dx < 0
+                        ? (i + 1) % place.images.length
+                        : (i - 1 + place.images.length) % place.images.length
+                      )
+                    }}
                   >
-                    <img
-                      src={place.images[imgIndex]}
-                      alt={place.name}
-                      className="w-full h-full object-cover"
-                    />
+                    <div
+                      className="flex h-full transition-transform duration-300 ease-out"
+                      style={{ transform: `translateX(-${imgIndex * 100}%)` }}
+                    >
+                      {place.images.map((src, i) => (
+                        <img
+                          key={i}
+                          src={src}
+                          alt={place.name}
+                          className="w-full h-full object-cover shrink-0"
+                        />
+                      ))}
+                    </div>
                     {place.images.length > 1 && (
                       <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5">
                         {place.images.map((_, i) => (
@@ -332,12 +349,23 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
           </button>
 
           {/* Image */}
-          <img
-            src={place.images[imgIndex]}
-            alt={place.name}
-            className="max-w-full max-h-[80vh] object-contain rounded-lg"
-            onClick={e => e.stopPropagation()}
-          />
+          <div className="w-full h-[80vh] overflow-hidden">
+            <div
+              className="flex h-full transition-transform duration-300 ease-out"
+              style={{ transform: `translateX(-${imgIndex * 100}%)` }}
+            >
+              {place.images.map((src, i) => (
+                <div key={i} className="w-full h-full shrink-0 flex items-center justify-center">
+                  <img
+                    src={src}
+                    alt={place.name}
+                    className="max-w-full max-h-full object-contain rounded-lg"
+                    onClick={e => e.stopPropagation()}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
 
           {/* Prev / Next */}
           {place.images.length > 1 && (

@@ -39,11 +39,11 @@ export default function FloatingMenu() {
             className="floating-option-enter block"
             style={{ animationDelay: `${(LANGS.length - 1 - i) * 40}ms` }}
           >
-            <img src={LANG_ICONS_LIGHT[l.code]} alt={l.label} className="block w-16 h-16" />
+            <img src={LANG_ICONS_LIGHT[l.code]} alt={l.label} className="block w-16 h-16 drop-shadow-[2px_2px_2px_rgba(0,0,0,0.25)]" />
           </button>
         ))}
         <button type="button" onClick={() => setOpen(o => !o)} className="block">
-          <img src={LANG_ICONS[lang]} alt={lang} className="block w-16 h-16" />
+          <img src={LANG_ICONS[lang]} alt={lang} className="block w-16 h-16 drop-shadow-[2px_2px_2px_rgba(0,0,0,0.25)]" />
         </button>
       </div>
     </>
