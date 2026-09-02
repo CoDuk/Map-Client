@@ -24,6 +24,41 @@ function formatDate(dateStr: string) {
   return `${d.getMonth() + 1}/${d.getDate()}`
 }
 
+// Slides a cloned edge image into view on wrap, then snaps back without
+// animating so the perceived slide direction stays consistent both ways.
+// `stepDir` carries the caller's intent (+1 next / -1 prev / 0 jump) since,
+// for a 2-image carousel, the index values alone can't tell a wrap from a
+// plain adjacent step (0 -> 1 IS 0 -> length-1).
+function useLoopTrack(index: number, length: number, stepDir: 1 | -1 | 0) {
+  const [track, setTrack] = useState(index + 1)
+  const [animate, setAnimate] = useState(true)
+  const [prevIndex, setPrevIndex] = useState(index)
+
+  if (prevIndex !== index) {
+    setPrevIndex(index)
+    setAnimate(true)
+    if (stepDir === 1) {
+      setTrack(t => t + 1)
+    } else if (stepDir === -1) {
+      setTrack(t => t - 1)
+    } else {
+      setTrack(index + 1)
+    }
+  }
+
+  function handleTransitionEnd() {
+    if (track === length + 1) {
+      setAnimate(false)
+      setTrack(1)
+    } else if (track === 0) {
+      setAnimate(false)
+      setTrack(length)
+    }
+  }
+
+  return { track, animate, handleTransitionEnd }
+}
+
 type Props = {
   place: Place | null
   onClose: () => void
@@ -38,6 +73,10 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
   const [menuData, setMenuData] = useState<MenuData | null>(null)
   const [expandedMenus, setExpandedMenus] = useState<Set<string>>(new Set())
   const swipeTouchX = useRef(0)
+  const [stepDir, setStepDir] = useState<1 | -1 | 0>(0)
+  const imagesLength = place?.images.length ?? 0
+  const inlineTrack = useLoopTrack(imgIndex, imagesLength, stepDir)
+  const previewTrack = useLoopTrack(imgIndex, imagesLength, stepDir)
 
   function toggleMenu(key: string) {
     setExpandedMenus(prev => {
@@ -50,6 +89,7 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
 
   useEffect(() => {
     const id = setTimeout(() => {
+      setStepDir(0)
       setImgIndex(0)
       setPreviewOpen(false)
       setExpandedMenus(initialExpandedMenuKey ? new Set([initialExpandedMenuKey]) : new Set())
@@ -69,6 +109,21 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
   }, [place?.menuUrl])
 
   if (!place) return null
+
+  const images = place.images
+
+  function goNext() {
+    setStepDir(1)
+    setImgIndex(i => (i + 1) % images.length)
+  }
+  function goPrev() {
+    setStepDir(-1)
+    setImgIndex(i => (i - 1 + images.length) % images.length)
+  }
+  function jumpTo(i: number) {
+    setStepDir(0)
+    setImgIndex(i)
+  }
 
   const hasContent = place.images.length > 0 || place.notes.length > 0 || (place.directory?.length ?? 0) > 0 || !!place.menuUrl
 
@@ -133,17 +188,16 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
                     onTouchEnd={e => {
                       const dx = e.changedTouches[0].clientX - swipeTouchX.current
                       if (Math.abs(dx) < 40) return
-                      setImgIndex(i => dx < 0
-                        ? (i + 1) % place.images.length
-                        : (i - 1 + place.images.length) % place.images.length
-                      )
+                      if (dx < 0) goNext()
+                      else goPrev()
                     }}
                   >
                     <div
-                      className="flex h-full transition-transform duration-300 ease-out"
-                      style={{ transform: `translateX(-${imgIndex * 100}%)` }}
+                      className={`flex h-full ${inlineTrack.animate ? 'transition-transform duration-300 ease-out' : ''}`}
+                      style={{ transform: `translateX(-${inlineTrack.track * 100}%)` }}
+                      onTransitionEnd={inlineTrack.handleTransitionEnd}
                     >
-                      {place.images.map((src, i) => (
+                      {[place.images[place.images.length - 1], ...place.images, place.images[0]].map((src, i) => (
                         <img
                           key={i}
                           src={src}
@@ -158,7 +212,7 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
                           <button
                             key={i}
                             type="button"
-                            onClick={() => setImgIndex(i)}
+                            onClick={() => jumpTo(i)}
                             className={`w-1.5 h-1.5 rounded-full transition-colors ${
                               i === imgIndex ? 'bg-white' : 'bg-white/50'
                             }`}
@@ -173,7 +227,7 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
                         <button
                           key={i}
                           type="button"
-                          onClick={() => setImgIndex(i)}
+                          onClick={() => jumpTo(i)}
                           className={`shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-colors ${
                             i === imgIndex ? 'border-primary' : 'border-transparent'
                           }`}
@@ -333,10 +387,8 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
           onTouchEnd={e => {
             const dx = e.changedTouches[0].clientX - swipeTouchX.current
             if (Math.abs(dx) < 40) return
-            setImgIndex(i => dx < 0
-              ? (i + 1) % place.images.length
-              : (i - 1 + place.images.length) % place.images.length
-            )
+            if (dx < 0) goNext()
+            else goPrev()
           }}
         >
           {/* Close button */}
@@ -351,10 +403,11 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
           {/* Image */}
           <div className="w-full h-[80vh] overflow-hidden">
             <div
-              className="flex h-full transition-transform duration-300 ease-out"
-              style={{ transform: `translateX(-${imgIndex * 100}%)` }}
+              className={`flex h-full ${previewTrack.animate ? 'transition-transform duration-300 ease-out' : ''}`}
+              style={{ transform: `translateX(-${previewTrack.track * 100}%)` }}
+              onTransitionEnd={previewTrack.handleTransitionEnd}
             >
-              {place.images.map((src, i) => (
+              {[place.images[place.images.length - 1], ...place.images, place.images[0]].map((src, i) => (
                 <div key={i} className="w-full h-full shrink-0 flex items-center justify-center">
                   <img
                     src={src}
@@ -372,14 +425,14 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
             <>
               <button
                 type="button"
-                onClick={e => { e.stopPropagation(); setImgIndex(i => (i - 1 + place.images.length) % place.images.length) }}
+                onClick={e => { e.stopPropagation(); goPrev() }}
                 className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white/20 text-white text-xl"
               >
                 ‹
               </button>
               <button
                 type="button"
-                onClick={e => { e.stopPropagation(); setImgIndex(i => (i + 1) % place.images.length) }}
+                onClick={e => { e.stopPropagation(); goNext() }}
                 className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white/20 text-white text-xl"
               >
                 ›
@@ -390,7 +443,7 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
                   <button
                     key={i}
                     type="button"
-                    onClick={e => { e.stopPropagation(); setImgIndex(i) }}
+                    onClick={e => { e.stopPropagation(); jumpTo(i) }}
                     className={`w-1.5 h-1.5 rounded-full transition-colors ${i === imgIndex ? 'bg-white' : 'bg-white/40'}`}
                   />
                 ))}
