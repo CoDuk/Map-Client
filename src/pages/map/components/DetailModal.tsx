@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import type { TouchEvent as ReactTouchEvent } from 'react'
 import type { Place } from '@/data/places'
 import HakdukIcon from '@/assets/hakduk.svg'
 import CloseIcon from '@/assets/close.svg'
@@ -59,6 +60,195 @@ function useLoopTrack(index: number, length: number, stepDir: 1 | -1 | 0) {
   return { track, animate, handleTransitionEnd }
 }
 
+// How much of the sheet stays on screen when collapsed — big enough to still
+// be grabbable above an iOS home indicator / browser toolbar.
+const PEEK_HEIGHT = 64
+const SNAP_MS = 250
+// Movement past this (px) means the finger travelled, so it wasn't a tap.
+const TAP_SLOP = 8
+// px per ms; past this a flick wins over the midpoint rule, so a short fast
+// drag settles the way it was thrown instead of springing back.
+const FLICK_VELOCITY = 0.5
+
+/**
+ * Drag-to-collapse for the bottom sheet, ported from the native app: the sheet
+ * slides down until only PEEK_HEIGHT shows, and settles to whichever end is
+ * nearer on release.
+ *
+ * The offset lives in refs and is written straight to `style.transform` rather
+ * than going through state: a setState per pointermove re-renders this whole
+ * (large) component on every frame, which is what makes the sheet stutter and
+ * lag behind the finger on iOS.
+ */
+function useDraggableSheet(place: Place | null) {
+  const sheetRef = useRef<HTMLDivElement>(null)
+  const handleRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const offsetRef = useRef(0)
+  const maxCollapseRef = useRef(0)
+  const collapsedRef = useRef(false)
+  const draggingRef = useRef(false)
+  // True once a gesture has actually moved the sheet, so the tap handlers
+  // underneath (e.g. the photo opening the lightbox) can ignore the click
+  // that follows a drag.
+  const movedRef = useRef(false)
+
+  useEffect(() => {
+    const sheet = sheetRef.current
+    if (!sheet) return
+
+    function apply(y: number, animate: boolean) {
+      sheet!.style.transition = animate ? `transform ${SNAP_MS}ms cubic-bezier(0.22, 1, 0.36, 1)` : 'none'
+      sheet!.style.transform = `translate3d(0, ${y}px, 0)`
+    }
+
+    // A newly opened place starts expanded.
+    collapsedRef.current = false
+    offsetRef.current = 0
+    apply(0, false)
+
+    // Content height changes as menus expand, so the collapsed resting point
+    // has to be recomputed rather than measured once.
+    const observer = new ResizeObserver(() => {
+      maxCollapseRef.current = Math.max(sheet.offsetHeight - PEEK_HEIGHT, 0)
+      if (draggingRef.current) return
+      const y = collapsedRef.current ? maxCollapseRef.current : 0
+      offsetRef.current = y
+      apply(y, false)
+    })
+    observer.observe(sheet)
+    return () => observer.disconnect()
+  }, [place])
+
+  useEffect(() => {
+    const sheet = sheetRef.current
+    const handle = handleRef.current
+    const content = contentRef.current
+    if (!sheet || !handle) return
+
+    let startY = 0
+    let startOffset = 0
+    let lastY = 0
+    let lastT = 0
+    let velocity = 0
+
+    function begin(clientY: number, t: number) {
+      draggingRef.current = true
+      startY = lastY = clientY
+      lastT = t
+      velocity = 0
+      startOffset = offsetRef.current
+      sheet!.style.transition = 'none'
+    }
+
+    function move(clientY: number, t: number) {
+      const dt = t - lastT
+      if (dt > 0) velocity = (clientY - lastY) / dt
+      lastY = clientY
+      lastT = t
+      const y = Math.min(Math.max(startOffset + (clientY - startY), 0), maxCollapseRef.current)
+      if (y !== offsetRef.current) movedRef.current = true
+      offsetRef.current = y
+      sheet!.style.transform = `translate3d(0, ${y}px, 0)`
+    }
+
+    function end() {
+      if (!draggingRef.current) return
+      draggingRef.current = false
+      const max = maxCollapseRef.current
+      const collapse = Math.abs(velocity) > FLICK_VELOCITY ? velocity > 0 : offsetRef.current > max / 2
+      const target = collapse ? max : 0
+      collapsedRef.current = collapse
+      offsetRef.current = target
+      sheet!.style.transition = `transform ${SNAP_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`
+      sheet!.style.transform = `translate3d(0, ${target}px, 0)`
+    }
+
+    // Mouse only: touches go through the touch listeners below, so a single
+    // finger isn't processed twice. Dragging with a mouse works from the
+    // handle strip, which is what the cursor affordance points at.
+    function onPointerDown(e: PointerEvent) {
+      if (!e.isPrimary || e.pointerType === 'touch') return
+      movedRef.current = false
+      handle!.setPointerCapture(e.pointerId)
+      begin(e.clientY, e.timeStamp)
+    }
+    function onPointerMove(e: PointerEvent) {
+      if (!draggingRef.current || e.pointerType === 'touch') return
+      e.preventDefault()
+      move(e.clientY, e.timeStamp)
+    }
+    function onPointerEnd(e: PointerEvent) {
+      if (e.pointerType === 'touch') return
+      if (handle!.hasPointerCapture(e.pointerId)) handle!.releasePointerCapture(e.pointerId)
+      end()
+    }
+
+    // Touch: listening on the whole sheet means a drag can start anywhere on
+    // it, not just the handle. A vertical drag the content can't consume
+    // moves the sheet — pulling down from the top collapses it, and any
+    // vertical drag re-expands it while collapsed. Touch (not pointer)
+    // events, because only a non-passive touchmove can actually stop iOS
+    // from scrolling instead.
+    let takeover: boolean | null = null
+    let touchStartX = 0
+    let touchStartY = 0
+
+    function onTouchStart(e: TouchEvent) {
+      takeover = null
+      movedRef.current = false
+      if (e.touches.length !== 1) return
+      touchStartX = e.touches[0].clientX
+      touchStartY = e.touches[0].clientY
+    }
+
+    function onTouchMove(e: TouchEvent) {
+      if (e.touches.length !== 1) return
+      const y = e.touches[0].clientY
+      if (takeover === null) {
+        const dy = y - touchStartY
+        const dx = e.touches[0].clientX - touchStartX
+        if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return
+        // Horizontal gestures belong to the image carousel, not the sheet.
+        const vertical = Math.abs(dy) > Math.abs(dx)
+        const atTop = !content || content.scrollTop <= 0
+        takeover = vertical && (collapsedRef.current || (dy > 0 && atTop))
+        if (!takeover) return
+        begin(y, e.timeStamp)
+      }
+      if (!takeover) return
+      e.preventDefault()
+      move(y, e.timeStamp)
+    }
+
+    function onTouchEnd() {
+      if (takeover) end()
+      takeover = null
+    }
+
+    handle.addEventListener('pointerdown', onPointerDown)
+    handle.addEventListener('pointermove', onPointerMove, { passive: false })
+    handle.addEventListener('pointerup', onPointerEnd)
+    handle.addEventListener('pointercancel', onPointerEnd)
+    sheet.addEventListener('touchstart', onTouchStart, { passive: true })
+    sheet.addEventListener('touchmove', onTouchMove, { passive: false })
+    sheet.addEventListener('touchend', onTouchEnd)
+    sheet.addEventListener('touchcancel', onTouchEnd)
+    return () => {
+      handle.removeEventListener('pointerdown', onPointerDown)
+      handle.removeEventListener('pointermove', onPointerMove)
+      handle.removeEventListener('pointerup', onPointerEnd)
+      handle.removeEventListener('pointercancel', onPointerEnd)
+      sheet.removeEventListener('touchstart', onTouchStart)
+      sheet.removeEventListener('touchmove', onTouchMove)
+      sheet.removeEventListener('touchend', onTouchEnd)
+      sheet.removeEventListener('touchcancel', onTouchEnd)
+    }
+  }, [place])
+
+  return { sheetRef, handleRef, contentRef, movedRef }
+}
+
 type Props = {
   place: Place | null
   onClose: () => void
@@ -73,10 +263,15 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
   const [menuData, setMenuData] = useState<MenuData | null>(null)
   const [expandedMenus, setExpandedMenus] = useState<Set<string>>(new Set())
   const swipeTouchX = useRef(0)
+  const swipeTouchY = useRef(0)
+  // A tap only counts as a tap if the finger stayed put: a carousel swipe or
+  // a sheet drag that happens to end over the photo must not open the preview.
+  const gestureMovedRef = useRef(false)
   const [stepDir, setStepDir] = useState<1 | -1 | 0>(0)
   const imagesLength = place?.images.length ?? 0
   const inlineTrack = useLoopTrack(imgIndex, imagesLength, stepDir)
   const previewTrack = useLoopTrack(imgIndex, imagesLength, stepDir)
+  const { sheetRef, handleRef, contentRef, movedRef: sheetMovedRef } = useDraggableSheet(place)
 
   function toggleMenu(key: string) {
     setExpandedMenus(prev => {
@@ -125,6 +320,27 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
     setImgIndex(i)
   }
 
+  function onMediaTouchStart(e: ReactTouchEvent) {
+    swipeTouchX.current = e.touches[0].clientX
+    swipeTouchY.current = e.touches[0].clientY
+    gestureMovedRef.current = false
+  }
+
+  function onMediaTouchEnd(e: ReactTouchEvent) {
+    const dx = e.changedTouches[0].clientX - swipeTouchX.current
+    const dy = e.changedTouches[0].clientY - swipeTouchY.current
+    if (Math.abs(dx) > TAP_SLOP || Math.abs(dy) > TAP_SLOP) gestureMovedRef.current = true
+    if (Math.abs(dx) < 40) return
+    if (dx < 0) goNext()
+    else goPrev()
+  }
+
+  // The sheet drag wins over the tap, so a drag or swipe that happens to end
+  // on the photo doesn't also open the preview.
+  function isTap() {
+    return !gestureMovedRef.current && !sheetMovedRef.current
+  }
+
   const hasContent = place.images.length > 0 || place.notes.length > 0 || (place.directory?.length ?? 0) > 0 || !!place.menuUrl
 
   const shortNotes = place.notes.filter(n => !n.startsWith('※') && n.length <= 50)
@@ -136,21 +352,20 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
         <div className="fixed inset-0 z-40" onClick={onClose} />
       )}
       {/* Bottom sheet */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-cream-0 rounded-t-[24px] shadow-[0_-4px_20px_rgba(0,0,0,0.15)] pb-(--sab)">
-        {/* Handle bar — tap to close */}
-        <div className="flex justify-center pt-3 pb-2" onClick={onClose}>
-        </div>
+      <div
+        ref={sheetRef}
+        className="fixed bottom-0 left-0 right-0 z-50 bg-cream-0 rounded-t-[24px] shadow-[0_-4px_20px_rgba(0,0,0,0.15)] pb-(--sab) will-change-transform"
+      >
+        {/* Drag handle — pull down to peek at the map, up to expand.
+            touch-none hands the gesture to us instead of Safari's scroller. */}
+        <div ref={handleRef} className="h-7 w-full touch-none select-none cursor-grab active:cursor-grabbing" />
 
-        {/* Close button */}
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center"
+        {/* dvh tracks Safari's collapsing toolbar; plain vh measures the
+            taller "toolbar hidden" viewport and overflows the screen. */}
+        <div
+          ref={contentRef}
+          className="px-5 pb-6 max-h-[70vh] supports-[height:100dvh]:max-h-[70dvh] overflow-y-auto overscroll-contain no-scrollbar"
         >
-          <img src={CloseIcon} alt={t('detail.close', lang)} className="w-5 h-5" />
-        </button>
-
-        <div className="px-5 pb-6 max-h-[70vh] overflow-y-auto no-scrollbar">
           {/* Title + tags */}
           {place.name && (
             <div className="flex items-center gap-2 flex-wrap mb-4">
@@ -183,14 +398,9 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
                 <div className="mb-4">
                   <div
                     className="relative w-full aspect-4/3 rounded-xl overflow-hidden bg-cream-200 cursor-pointer"
-                    onClick={() => setPreviewOpen(true)}
-                    onTouchStart={e => { swipeTouchX.current = e.touches[0].clientX }}
-                    onTouchEnd={e => {
-                      const dx = e.changedTouches[0].clientX - swipeTouchX.current
-                      if (Math.abs(dx) < 40) return
-                      if (dx < 0) goNext()
-                      else goPrev()
-                    }}
+                    onClick={() => { if (isTap()) setPreviewOpen(true) }}
+                    onTouchStart={onMediaTouchStart}
+                    onTouchEnd={onMediaTouchEnd}
                   >
                     <div
                       className={`flex h-full ${inlineTrack.animate ? 'transition-transform duration-300 ease-out' : ''}`}
@@ -382,14 +592,9 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
       {previewOpen && place.images.length > 0 && (
         <div
           className="fixed inset-0 z-60 bg-black/90 flex items-center justify-center"
-          onClick={() => setPreviewOpen(false)}
-          onTouchStart={e => { swipeTouchX.current = e.touches[0].clientX }}
-          onTouchEnd={e => {
-            const dx = e.changedTouches[0].clientX - swipeTouchX.current
-            if (Math.abs(dx) < 40) return
-            if (dx < 0) goNext()
-            else goPrev()
-          }}
+          onClick={() => { if (isTap()) setPreviewOpen(false) }}
+          onTouchStart={onMediaTouchStart}
+          onTouchEnd={onMediaTouchEnd}
         >
           {/* Close button */}
           <button
