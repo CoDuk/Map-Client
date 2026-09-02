@@ -5,7 +5,7 @@ import LangKoLightIcon from '@/assets/langKoLight.svg'
 import LangEnLightIcon from '@/assets/langEnLight.svg'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { LANGS } from '@/i18n'
-import { ABOVE_SHEET_BOTTOM } from '@/constants/layout'
+import { FLOATING_BOTTOM_VAR } from '@/constants/layout'
 import type { Lang } from '@/i18n'
 
 const LANG_ICONS: Record<Lang, string> = {
@@ -32,8 +32,8 @@ export default function FloatingMenu() {
         <div className="fixed inset-0 z-40 bg-black/30" onClick={() => setOpen(false)} />
       )}
       <div
-        className="fixed right-[21px] z-50 flex flex-col items-center gap-3"
-        style={{ bottom: ABOVE_SHEET_BOTTOM }}
+        className="fixed right-[21px] z-50 flex flex-col items-center gap-3 transition-[bottom] duration-[250ms] ease-out"
+        style={{ bottom: `var(${FLOATING_BOTTOM_VAR}, calc(43px + var(--sab)))` }}
       >
         {open && LANGS.map((l, i) => (
           <button

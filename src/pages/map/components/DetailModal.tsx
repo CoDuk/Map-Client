@@ -4,7 +4,7 @@ import type { Place } from '@/data/places'
 import HakdukIcon from '@/assets/hakduk.svg'
 import CloseIcon from '@/assets/close.svg'
 import { useLanguage } from '@/contexts/LanguageContext'
-import { SHEET_PEEK_HEIGHT } from '@/constants/layout'
+import { SHEET_PEEK_HEIGHT, setFloatingBottomRaised } from '@/constants/layout'
 import { t, translatePlaceName } from '@/i18n'
 
 type DayMenu = { date: string; menu: string[] }
@@ -97,7 +97,12 @@ function useDraggableSheet(place: Place | null) {
 
   useEffect(() => {
     const sheet = sheetRef.current
-    if (!sheet) return
+    // No sheet on screen — the floating controls go back to their own resting
+    // position, and so must they whenever this sheet goes away.
+    if (!sheet) {
+      setFloatingBottomRaised(false)
+      return
+    }
 
     function apply(y: number, animate: boolean) {
       sheet!.style.transition = animate ? `transform ${SNAP_MS}ms cubic-bezier(0.22, 1, 0.36, 1)` : 'none'
@@ -108,6 +113,7 @@ function useDraggableSheet(place: Place | null) {
     collapsedRef.current = false
     offsetRef.current = 0
     apply(0, false)
+    setFloatingBottomRaised(false)
 
     // Content height changes as menus expand, so the collapsed resting point
     // has to be recomputed rather than measured once.
@@ -119,7 +125,10 @@ function useDraggableSheet(place: Place | null) {
       apply(y, false)
     })
     observer.observe(sheet)
-    return () => observer.disconnect()
+    return () => {
+      observer.disconnect()
+      setFloatingBottomRaised(false)
+    }
   }, [place])
 
   useEffect(() => {
@@ -162,6 +171,9 @@ function useDraggableSheet(place: Place | null) {
       const target = collapse ? max : 0
       collapsedRef.current = collapse
       offsetRef.current = target
+      // Only on settle, so the floating controls make one move per gesture
+      // instead of tracking every frame of the drag.
+      setFloatingBottomRaised(collapse)
       sheet!.style.transition = `transform ${SNAP_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`
       sheet!.style.transform = `translate3d(0, ${target}px, 0)`
     }
