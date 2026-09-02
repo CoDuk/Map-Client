@@ -3,6 +3,7 @@ import type { BuildingMapCfg, ViewKey } from '@/data/places'
 import LectureIcon from '@/assets/lecture.svg'
 import LockerIcon from '@/assets/locker.svg'
 import InformationIcon from '@/assets/information.svg'
+import { ABOVE_SHEET_BOTTOM } from '@/constants/layout'
 
 type Props = {
   cfg: BuildingMapCfg
@@ -56,8 +57,13 @@ export default function FloorViewToolbar({
     setFloorSlider({ left: btn.offsetLeft, width: btn.offsetWidth })
   }, [activeFloor, cfg.floors])
 
+  // Sits above the collapsed detail sheet so it stays reachable while the
+  // sheet is peeking.
   return (
-    <div className="shrink-0 flex flex-col w-fit gap-2.5 absolute bottom-12 left-5">
+    <div
+      className="shrink-0 flex flex-col w-fit gap-2.5 absolute left-5"
+      style={{ bottom: ABOVE_SHEET_BOTTOM }}
+    >
       {/* 뷰 아이콘 */}
       <div
         ref={viewContainerRef}

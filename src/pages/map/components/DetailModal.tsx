@@ -4,6 +4,7 @@ import type { Place } from '@/data/places'
 import HakdukIcon from '@/assets/hakduk.svg'
 import CloseIcon from '@/assets/close.svg'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { SHEET_PEEK_HEIGHT } from '@/constants/layout'
 import { t, translatePlaceName } from '@/i18n'
 
 type DayMenu = { date: string; menu: string[] }
@@ -61,8 +62,9 @@ function useLoopTrack(index: number, length: number, stepDir: 1 | -1 | 0) {
 }
 
 // How much of the sheet stays on screen when collapsed — big enough to still
-// be grabbable above an iOS home indicator / browser toolbar.
-const PEEK_HEIGHT = 64
+// be grabbable above an iOS home indicator / browser toolbar. Shared so the
+// controls floating over the map can clear it.
+const PEEK_HEIGHT = SHEET_PEEK_HEIGHT
 const SNAP_MS = 250
 // Movement past this (px) means the finger travelled, so it wasn't a tap.
 const TAP_SLOP = 8
@@ -407,11 +409,16 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
                       style={{ transform: `translateX(-${inlineTrack.track * 100}%)` }}
                       onTransitionEnd={inlineTrack.handleTransitionEnd}
                     >
+                      {/* The wrap clone sits at slot 0, so without an explicit
+                          priority the browser would fetch an off-screen image
+                          before the one actually on screen. */}
                       {[place.images[place.images.length - 1], ...place.images, place.images[0]].map((src, i) => (
                         <img
                           key={i}
                           src={src}
                           alt={place.name}
+                          decoding="async"
+                          fetchPriority={i === inlineTrack.track ? 'high' : 'low'}
                           className="w-full h-full object-cover shrink-0"
                         />
                       ))}
@@ -442,7 +449,7 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
                             i === imgIndex ? 'border-primary' : 'border-transparent'
                           }`}
                         >
-                          <img src={src} alt="" className="w-full h-full object-cover" />
+                          <img src={src} alt="" decoding="async" fetchPriority="low" className="w-full h-full object-cover" />
                         </button>
                       ))}
                     </div>
@@ -617,6 +624,8 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
                   <img
                     src={src}
                     alt={place.name}
+                    decoding="async"
+                    fetchPriority={i === previewTrack.track ? 'high' : 'low'}
                     className="max-w-full max-h-full object-contain rounded-lg"
                     onClick={e => e.stopPropagation()}
                   />
