@@ -3,8 +3,10 @@ import type { TouchEvent as ReactTouchEvent } from 'react'
 import type { Place } from '@/data/places'
 import HakdukIcon from '@/assets/hakduk.svg'
 import CloseIcon from '@/assets/close.svg'
+import ShareIcon from '@/assets/share.svg'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { SHEET_PEEK_HEIGHT, setFloatingBottomRaised } from '@/constants/layout'
+import { sharePlace } from '@/utils/share'
 import { t, translatePlaceName } from '@/i18n'
 
 type DayMenu = { date: string; menu: string[] }
@@ -276,6 +278,9 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
   const [previewOpen, setPreviewOpen] = useState(false)
   const [menuData, setMenuData] = useState<MenuData | null>(null)
   const [expandedMenus, setExpandedMenus] = useState<Set<string>>(new Set())
+  // Shown only when the link went to the clipboard: a share sheet is its own
+  // confirmation, a silent clipboard write is not.
+  const [copied, setCopied] = useState(false)
   const swipeTouchX = useRef(0)
   const swipeTouchY = useRef(0)
   // A tap only counts as a tap if the finger stayed put: a carousel swipe or
@@ -303,9 +308,16 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
       setPreviewOpen(false)
       setExpandedMenus(initialExpandedMenuKey ? new Set([initialExpandedMenuKey]) : new Set())
       setMenuData(null)
+      setCopied(false)
     }, 0)
     return () => clearTimeout(id)
   }, [place, initialExpandedMenuKey])
+
+  useEffect(() => {
+    if (!copied) return
+    const id = setTimeout(() => setCopied(false), 2000)
+    return () => clearTimeout(id)
+  }, [copied])
 
   useEffect(() => {
     if (!place?.menuUrl) return
@@ -347,6 +359,12 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
     if (Math.abs(dx) < 40) return
     if (dx < 0) goNext()
     else goPrev()
+  }
+
+  async function handleShare() {
+    if (!place) return
+    const outcome = await sharePlace(place, translatePlaceName(place.name, lang))
+    setCopied(outcome === 'copied')
   }
 
   // The sheet drag wins over the tap, so a drag or swipe that happens to end
@@ -396,6 +414,19 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
                   {translatePlaceName(place.category, lang)}
                 </span>
               )}
+              <button
+                type="button"
+                aria-label={t('detail.share', lang)}
+                onClick={handleShare}
+                className="ml-auto shrink-0 flex items-center gap-1.5 p-1"
+              >
+                {copied && (
+                  <span className="text-[12px] font-medium text-primary-dark whitespace-nowrap">
+                    {t('detail.linkCopied', lang)}
+                  </span>
+                )}
+                <img src={ShareIcon} alt="" className="w-5 h-5" />
+              </button>
             </div>
           )}
 

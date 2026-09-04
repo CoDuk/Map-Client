@@ -55,6 +55,8 @@ export const UI: Record<string, Dict> = {
   'map.notReady':         { ko: '서비스 준비중',            en: 'Coming soon.',              zh: '即将上线。',        ja: '準備中です。' },
   // Detail
   'detail.close':         { ko: '닫기',                   en: 'Close',                     zh: '关闭',             ja: '閉じる' },
+  'detail.share':         { ko: '공유하기',                en: 'Share',                     zh: '分享',             ja: '共有' },
+  'detail.linkCopied':    { ko: '링크를 복사했어요',        en: 'Link copied',               zh: '已复制链接',        ja: 'リンクをコピーしました' },
   // QnA
   'qna.placeholder':      { ko: '질문을 입력해주세요.',     en: 'Enter your question.',      zh: '请输入您的问题。',  ja: 'ご質問を入力してください。' },
   'qna.empty':            { ko: '문의사항이 없습니다.',     en: 'No inquiries yet.',         zh: '暂无咨询。',        ja: 'お問い合わせはありません。' },
@@ -413,7 +415,6 @@ const NAME_PATTERNS: PatternSet[] = [
   { ko: /덕새/g,                  en: 'Deoksae',                 zh: 'Deoksae',       ja: 'ドクセ' },
   { ko: /지도상/g,                en: 'on map,',                 zh: '地图上',        ja: '地図上' },
   { ko: /오른편 위치/g,           en: 'right side',              zh: '右侧',          ja: '右側' },
-  { ko: /g,                  en: 'Recently',                zh: '近期',          ja: '最近' },
   { ko: /으로 이전/g,             en: '(relocated)',             zh: '（已迁移）',    ja: '（移転済み）' },
   // Button labels for restaurant menu toggles
   { ko: /메뉴/g,                  en: 'Menu',                    zh: '菜单',          ja: 'メニュー' },

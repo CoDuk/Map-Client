@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.duksungmap.app",
+      "sha256_cert_fingerprints": [
+        "48:1F:4F:E3:35:95:4D:26:01:C0:E3:64:04:78:ED:25:BA:F8:C3:3B:D0:65:A5:92:22:95:8C:86:BE:93:8B:84"
+      ]
+    }
+  }
+]

@@ -43,18 +43,28 @@ export default function MapPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cfg.id, activeCfg.id])
 
-  // Consume navigation state from place search (navigate to correct floor + show modal)
+  // Consume navigation state from place search (navigate to correct floor + show modal).
+  // A shared link carries the same thing in the query string
+  // (`?place=in101&floor=1&view=basic`), since router state does not survive a
+  // URL being copied into another app.
   useEffect(() => {
     const s = location.state as { placeId?: string; initialFloor?: string; initialView?: ViewKey; initialExpandedMenuKey?: string } | null
-    if (!s?.placeId) return
-    if (s.initialFloor) setActiveFloor(s.initialFloor)
-    if (s.initialView) setActiveView(s.initialView)
-    setInitialExpandedMenuKey(s.initialExpandedMenuKey)
-    const place = PLACES.find(p => p.id === s.placeId)
-    setSelectedPlace(place ?? { id: s.placeId, name: '', floor: null, category: null, images: [], notes: [] })
-    setFocusPlaceId(s.placeId)
-    // Clear state so it doesn't re-apply on back/forward navigation
-    navigate(location.pathname + location.search, { replace: true, state: null })
+    const params = new URLSearchParams(location.search)
+    const placeId = s?.placeId ?? params.get('place')
+    if (!placeId) return
+    const floor = s?.initialFloor ?? params.get('floor')
+    const view = s?.initialView ?? (params.get('view') as ViewKey | null)
+    // Both are validated downstream (safeFloor/safeView), so a hand-edited
+    // link can't leave the viewer on a floor this building doesn't have.
+    if (floor) setActiveFloor(floor)
+    if (view) setActiveView(view)
+    setInitialExpandedMenuKey(s?.initialExpandedMenuKey)
+    const place = PLACES.find(p => p.id === placeId)
+    setSelectedPlace(place ?? { id: placeId, name: '', floor: null, category: null, images: [], notes: [] })
+    setFocusPlaceId(placeId)
+    // Clear state so it doesn't re-apply on back/forward navigation. The query
+    // string stays: it is the link, and a reload has to land here again.
+    if (s?.placeId) navigate(location.pathname + location.search, { replace: true, state: null })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.key])
 

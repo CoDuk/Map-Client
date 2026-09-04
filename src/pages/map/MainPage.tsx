@@ -13,19 +13,25 @@ export default function MainPage() {
   const [focusBuildingId, setFocusBuildingId] = useState<string | undefined>()
   const [highlightBuildingId, setHighlightBuildingId] = useState<string | undefined>()
 
-  // 검색에서 navigate('/main', { state: { placeId } }) 로 넘어왔을 때 모달 표시
+  // 검색에서 navigate('/main', { state: { placeId } }) 로 넘어왔을 때 모달 표시.
+  // A shared link carries the same place in the query string instead
+  // (`/main?place=lib`) — router state is gone the moment the URL is copied
+  // into another app, so the link has to stand on its own.
   useEffect(() => {
     const s = location.state as { placeId?: string } | null
-    if (!s?.placeId) return
-    const place = PLACES.find(p => p.id === s.placeId)
-    const building = BUILDINGS.find(b => b.id === s.placeId)
+    const placeId = s?.placeId ?? new URLSearchParams(location.search).get('place')
+    if (!placeId) return
+    const place = PLACES.find(p => p.id === placeId)
+    const building = BUILDINGS.find(b => b.id === placeId)
     setSelectedPlace(
-      place ?? { id: s.placeId, name: building?.label ?? s.placeId, floor: null, category: null, images: [], notes: [] }
+      place ?? { id: placeId, name: building?.label ?? placeId, floor: null, category: null, images: [], notes: [] }
     )
-    const buildingId = getBuildingIdForPlace(s.placeId)
+    const buildingId = getBuildingIdForPlace(placeId)
     setFocusBuildingId(buildingId)
     setHighlightBuildingId(buildingId)
-    navigate(location.pathname, { replace: true, state: null })
+    // Only the state is cleared; the query string stays so the address bar
+    // remains the link, and a reload still lands on the same place.
+    if (s?.placeId) navigate(location.pathname + location.search, { replace: true, state: null })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.key])
 
