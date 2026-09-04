@@ -612,7 +612,7 @@ export const PLACES: Place[] = [
   { id: 'stuCU', name: 'CU', floor: '1F', category: '편의시설', images: ['/images/hak1Fcu.jpg'], notes: ['유인 영업 시간: 07:00~21:00', '무인 시간 출입 시 결제 수단 인증 필요'] },
   { id: 'hak1Fcert', name: '증명서 발급기', floor: '1F', category: '편의시설', images: ['/images/hak1Fcertificate.jpg'], notes: ['QR코드, 교통카드, 신용카드 결제 가능'] },
   { id: 'hak1Fatm', name: '하나은행 ATM', floor: '1F', category: '편의시설', images: ['/images/hak1Fatm.jpg'], notes: [] },
-  { id: 'hak1Fduksae', name: '덕새 자판기', floor: '1F', category: '편의시설', images: ['/images/hak1Fgoods.jpg'], notes: ['최근 학생회관 문구점으로 이전'] },
+  { id: 'hak1Fduksae', name: '덕새 자판기', floor: '1F', category: '편의시설', images: ['/images/hak1Fgoods.jpg'], notes: ['학생회관 문구점으로 이전'] },
   { id: 'hak1Fwater', name: '정수기', floor: '1F', category: '편의시설', images: [], notes: ['정수기'] },
   { id: 'hak1Fdrink', name: '음료 자판기', floor: '1F', category: '편의시설', images: [], notes: ['음료 자판기'] },
   { id: 'hak1sFshower1', name: '학생회관 1층 샤워실', floor: '1F', category: '편의시설', images: ['/images/hak1Fshower1.jpg'], notes: [] },
@@ -704,7 +704,7 @@ export const PLACES: Place[] = [
   { id: 'stu419', name: '학419', floor: '4F', category: '강의실', images: [], notes: ['동아리방'] },
   // 흡연 구역
   { id: 'hakCigarette1', name: '학생회관 1층 흡연 구역', floor: null, category: null, images: ['/images/hakCigarette1.jpg'], notes: [] },
-  { id: 'hakCigarette2', name: '학생회관 3층 옥상 흡연 구역', floor: null, category: null, images: [], notes: ['최근 금연 구역으로 변경'] },
+  { id: 'hakCigarette2', name: '학생회관 3층 옥상 흡연 구역', floor: null, category: null, images: [], notes: ['금연 구역으로 변경'] },
   { id: 'inCigarette', name: '인문사회관 흡연 구역', floor: null, category: null, images: ['/images/inCigarette.jpg'], notes: [] },
   { id: 'inDaeCigarette', name: '인문사회관-대강의동 흡연 구역', floor: null, category: null, images: ['/images/inDaeCigarette.jpg'], notes: [] },
   { id: 'chaDaeCigarette', name: '차미리사관-대강의동 흡연 구역', floor: null, category: null, images: ['/images/chaDaeCigarette.jpg'], notes: ['자전거 거치대 옆'] },
