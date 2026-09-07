@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import type { TouchEvent as ReactTouchEvent } from 'react'
+import type { MouseEvent as ReactMouseEvent, TouchEvent as ReactTouchEvent } from 'react'
 import type { Place } from '@/data/places'
 import HakdukIcon from '@/assets/hakduk.svg'
 import CloseIcon from '@/assets/close.svg'
@@ -61,6 +61,58 @@ function useLoopTrack(index: number, length: number, stepDir: 1 | -1 | 0) {
   }
 
   return { track, animate, handleTransitionEnd }
+}
+
+// A photo request that stalls mid-transfer fires neither `load` nor `error`,
+// so a baseline-decoded <img> can sit half-painted on screen indefinitely with
+// nothing to recover it. Re-issue the request under a fresh query string once
+// it has been quiet for too long, which also steps around whatever half-cached
+// response the browser is holding on to.
+const STALL_MS = 8000
+const MAX_RETRIES = 2
+
+function PlaceImage({
+  src,
+  alt,
+  priority,
+  className,
+  onClick,
+}: {
+  src: string
+  alt: string
+  priority: 'high' | 'low'
+  className: string
+  onClick?: (e: ReactMouseEvent) => void
+}) {
+  const [attempt, setAttempt] = useState(0)
+  const [loaded, setLoaded] = useState(false)
+
+  // A new place reuses this element, so the retry state has to follow the src.
+  const [prevSrc, setPrevSrc] = useState(src)
+  if (prevSrc !== src) {
+    setPrevSrc(src)
+    setAttempt(0)
+    setLoaded(false)
+  }
+
+  useEffect(() => {
+    if (loaded || attempt >= MAX_RETRIES) return
+    const id = setTimeout(() => setAttempt(a => a + 1), STALL_MS)
+    return () => clearTimeout(id)
+  }, [src, attempt, loaded])
+
+  return (
+    <img
+      src={attempt === 0 ? src : `${src}?retry=${attempt}`}
+      alt={alt}
+      decoding="async"
+      fetchPriority={priority}
+      onLoad={() => setLoaded(true)}
+      onError={() => setAttempt(a => (a >= MAX_RETRIES ? a : a + 1))}
+      onClick={onClick}
+      className={className}
+    />
+  )
 }
 
 // How much of the sheet stays on screen when collapsed — big enough to still
@@ -452,16 +504,18 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
                       style={{ transform: `translateX(-${inlineTrack.track * 100}%)` }}
                       onTransitionEnd={inlineTrack.handleTransitionEnd}
                     >
-                      {/* The wrap clone sits at slot 0, so without an explicit
-                          priority the browser would fetch an off-screen image
-                          before the one actually on screen. */}
+                      {/* Priority goes by URL, not by slot: the wrap clone at
+                          slot 0 renders first, and for a single-photo place it
+                          holds the SAME url as the visible slide. Keying off
+                          the slot index there would start the one request the
+                          user is waiting on at low priority, since the browser
+                          keeps the priority of the request already in flight. */}
                       {[place.images[place.images.length - 1], ...place.images, place.images[0]].map((src, i) => (
-                        <img
-                          key={i}
+                        <PlaceImage
+                          key={`${i}-${src}`}
                           src={src}
                           alt={place.name}
-                          decoding="async"
-                          fetchPriority={i === inlineTrack.track ? 'high' : 'low'}
+                          priority={src === place.images[imgIndex] ? 'high' : 'low'}
                           className="w-full h-full object-cover shrink-0"
                         />
                       ))}
@@ -492,7 +546,12 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
                             i === imgIndex ? 'border-primary' : 'border-transparent'
                           }`}
                         >
-                          <img src={src} alt="" decoding="async" fetchPriority="low" className="w-full h-full object-cover" />
+                          <PlaceImage
+                            src={src}
+                            alt=""
+                            priority={src === place.images[imgIndex] ? 'high' : 'low'}
+                            className="w-full h-full object-cover"
+                          />
                         </button>
                       ))}
                     </div>
@@ -663,12 +722,11 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
               onTransitionEnd={previewTrack.handleTransitionEnd}
             >
               {[place.images[place.images.length - 1], ...place.images, place.images[0]].map((src, i) => (
-                <div key={i} className="w-full h-full shrink-0 flex items-center justify-center">
-                  <img
+                <div key={`${i}-${src}`} className="w-full h-full shrink-0 flex items-center justify-center">
+                  <PlaceImage
                     src={src}
                     alt={place.name}
-                    decoding="async"
-                    fetchPriority={i === previewTrack.track ? 'high' : 'low'}
+                    priority={src === place.images[imgIndex] ? 'high' : 'low'}
                     className="max-w-full max-h-full object-contain rounded-lg"
                     onClick={e => e.stopPropagation()}
                   />
