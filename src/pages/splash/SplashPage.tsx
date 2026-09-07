@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Logo from '@/assets/logo.svg'
+import Logo from '@/assets/logo.webp'
 import LogoName from '@/assets/logoName.svg'
 
 const NAV_DELAY_MS = 1800

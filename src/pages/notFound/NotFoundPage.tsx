@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import Bird404 from '@/assets/404bird.svg'
+import Bird404 from '@/assets/404bird.webp'
 
 export default function NotFoundPage() {
   const navigate = useNavigate()

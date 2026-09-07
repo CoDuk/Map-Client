@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import type { MouseEvent as ReactMouseEvent, TouchEvent as ReactTouchEvent } from 'react'
 import type { Place } from '@/data/places'
-import HakdukIcon from '@/assets/hakduk.svg'
+import HakdukIcon from '@/assets/hakduk.webp'
 import CloseIcon from '@/assets/close.svg'
 import ShareIcon from '@/assets/share.svg'
 import { useLanguage } from '@/contexts/LanguageContext'

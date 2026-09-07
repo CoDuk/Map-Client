@@ -1,6 +1,6 @@
 import { useRef, useEffect, useLayoutEffect, useCallback, useState, memo } from 'react'
 import type React from 'react'
-import HakdukIcon from '@/assets/hakduk.svg'
+import HakdukIcon from '@/assets/hakduk.webp'
 import GirlIcon from '@/assets/girl.svg'
 import BoyIcon from '@/assets/boy.svg'
 import StairsIcon from '@/assets/stairs.svg'
@@ -10,8 +10,11 @@ import type { BuildingMapCfg, ViewKey } from '@/data/places'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { t } from '@/i18n'
 
-// Vite glob import for all floor plan SVGs (raw)
-const svgModules = import.meta.glob<string>('/src/assets/*.svg', {
+// Vite glob import for the floor plan SVGs (raw). The pattern has to stay
+// narrow: every file it matches becomes its own JS chunk AND lands in the
+// service worker's precache, so a bare *.svg would ship every icon in the
+// folder — a second time for the ones already imported by url elsewhere.
+const svgModules = import.meta.glob<string>('/src/assets/*map*.svg', {
   query: '?raw',
   import: 'default',
 })

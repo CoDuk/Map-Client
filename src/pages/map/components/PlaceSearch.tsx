@@ -14,7 +14,7 @@ import {
 import type { Place, BuildingResult, DirectoryRoomResult, VendorResult, MenuResult } from '@/data/places'
 import NextIcon from '@/assets/next.svg?react'
 import SearchIcon from '@/assets/search.svg?react'
-import LogoIcon from '@/assets/logo.svg?react'
+import LogoIcon from '@/assets/logo.webp'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { t, translatePlaceName, buildingLabel } from '@/i18n'
 
@@ -171,7 +171,7 @@ export default function PlaceSearch({ onClose, onSelectPlace }: Props) {
                   onClick={() => handleBuildingClick(br)}
                   className="w-full flex items-center gap-3 px-4 py-3 active:bg-cream-200 transition-colors text-left"
                 >
-                  <LogoIcon className="w-9 h-9" />
+                  <img src={LogoIcon} alt="" className="w-9 h-9 object-contain" />
                   <div className="flex-1 min-w-0">
                     <p className="text-[15px] font-semibold text-neutral-300 truncate">{br.sub ? translatePlaceName(br.label, lang) : (buildingLabel(br.id, lang) || translatePlaceName(br.label, lang))}</p>
                   </div>

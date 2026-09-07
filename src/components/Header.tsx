@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import Logo from '@/assets/logo.svg'
+import Logo from '@/assets/logo.webp'
 
 export default function Header() {
   const navigate = useNavigate()
