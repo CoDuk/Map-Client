@@ -10,6 +10,7 @@ export type Place = {
   aliases?: string[]
   directory?: { floor: string; rooms: string[] }[]
   menuUrl?: string
+  siteUrl?: string
   vendors?: { name: string; aliases?: string[] }[]
   restaurants?: { key: string; label: string; aliases?: string[] }[]
 }
@@ -710,6 +711,7 @@ export const PLACES: Place[] = [
   { id: 'chaDaeCigarette', name: '차미리사관-대강의동 흡연 구역', floor: null, category: null, images: ['/images/chaDaeCigarette.jpg'], notes: ['자전거 거치대 옆'] },
   { id: 'yeCigarette', name: '예술관 흡연 구역', floor: null, category: null, images: ['/images/yeCigarette.jpg'], notes: ['예술관 N동-L동 사이'] },
   { id: 'libraryCigarette', name: '도서관 옥상 흡연 구역', floor: null, category: null, images: [], notes: ['도서관 옥상 전체 흡연 가능'] },
+  { id: 'lib', name: '도서관', floor: null, category: null, images: [], notes: [], siteUrl: 'https://discover.duksung.ac.kr' },
   { id: 'foodWaste', name: '음식물 쓰레기 처리 장소', floor: null, category: null, images: ['/images/foodTrash.jpg'], notes: [] },
   { id: 'paperWaste', name: '폐지 처리 장소', floor: null, category: null, images: ['/images/paperTrash.jpg'], notes: [] },
 ]
@@ -731,7 +733,7 @@ export const BUILDINGS: BuildingConfig[] = [
   { id: 'nat', label: '자연관', svgId: 'building-nat', prefix: 'nat' },
   { id: 'stu', label: '학생회관', svgId: 'building-stu', prefix: 'stu' },
   { id: 'main', label: '대학본부', svgId: 'building-main', prefix: 'main', noTab: true },
-  { id: 'lib', label: '도서관', svgId: 'building-lib', prefix: '', noTab: true },
+  { id: 'lib', label: '도서관', svgId: 'building-lib', prefix: '', placeId: 'lib', noTab: true },
   { id: 'art', label: '예술관', svgId: 'building-art', prefix: '', noTab: true },
   { id: 'yak', label: '약학관', svgId: 'building-yak', prefix: '', noTab: true },
   { id: 'la', label: '라온센터', svgId: 'building-la', prefix: '', noTab: true },

@@ -15,6 +15,7 @@ export const UI: Record<string, Dict> = {
   'detail.comingSoon':    { ko: '서비스 제공 예정입니다.', en: 'Coming soon.',               zh: '即将上线。',       ja: '準備中です。' },
   'detail.restaurant':    { ko: '식당',                   en: 'Dining',                    zh: '食堂',             ja: '食堂' },
   'detail.todayMenu':     { ko: '오늘의',                 en: "Today's",                   zh: '今日',             ja: '本日の' },
+  'detail.visitSite':     { ko: '홈페이지 바로가기',       en: 'Visit website',             zh: '前往官网',         ja: '公式サイトへ' },
   // Search
   'search.placeholder':   { ko: '장소를 입력해주세요.  ex) 인대, 차124', en: 'Search a place  ex) hum, cha124', zh: '请输入地点  ex) 인대, 차124', ja: '場所を入力  ex) 인대, 차124' },
   'search.suggestions':   { ko: '추천검색어',              en: 'Suggested',                 zh: '推荐搜索',         ja: 'おすすめ' },

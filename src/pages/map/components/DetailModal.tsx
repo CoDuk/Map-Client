@@ -4,6 +4,7 @@ import type { Place } from '@/data/places'
 import HakdukIcon from '@/assets/hakduk.webp'
 import CloseIcon from '@/assets/close.svg'
 import ShareIcon from '@/assets/share.svg'
+import ExternalIcon from '@/assets/external.svg?react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { SHEET_PEEK_HEIGHT, setFloatingBottomRaised } from '@/constants/layout'
 import { sharePlace } from '@/utils/share'
@@ -425,7 +426,7 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
     return !gestureMovedRef.current && !sheetMovedRef.current
   }
 
-  const hasContent = place.images.length > 0 || place.notes.length > 0 || (place.directory?.length ?? 0) > 0 || !!place.menuUrl
+  const hasContent = place.images.length > 0 || place.notes.length > 0 || (place.directory?.length ?? 0) > 0 || !!place.menuUrl || !!place.siteUrl
 
   const shortNotes = place.notes.filter(n => !n.startsWith('※') && n.length <= 50)
   const longNotes = place.notes.filter(n => n.startsWith('※') || n.length > 50)
@@ -692,6 +693,19 @@ export default function DetailModal({ place, onClose, showBackdrop, initialExpan
                     </li>
                   ))}
                 </ul>
+              )}
+
+              {/* External site link (e.g. 도서관 홈페이지) */}
+              {place.siteUrl && (
+                <a
+                  href={place.siteUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 flex items-center justify-between gap-2 px-4 py-3 rounded-xl bg-cream-200 text-primary-dark text-[14px] font-semibold"
+                >
+                  {t('detail.visitSite', lang)}
+                  <ExternalIcon className="w-[18px] h-[18px] shrink-0" />
+                </a>
               )}
             </>
           )}
