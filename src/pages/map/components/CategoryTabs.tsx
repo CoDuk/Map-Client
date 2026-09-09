@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useMemo } from 'react'
+import { useRef, useLayoutEffect, useState, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { BUILDINGS } from '@/data/places'
 import SearchIcon from '@/assets/search.svg?react'
@@ -31,17 +31,24 @@ export default function CategoryTabs({ active, onChange, onSearchClick, hideAll 
   const [sliderStyle, setSliderStyle] = useState<{ left: number; width: number }>({ left: 0, width: 0 })
 
   const isAllActive = allItem !== undefined && active === allItem.id
+  const activeIdx = items.findIndex(b => b.id === active)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isAllActive) return
-    const activeIdx = items.findIndex(b => b.id === active)
     const btn = buttonRefs.current[activeIdx]
     const container = containerRef.current
     if (!btn || !container) return
 
-    setSliderStyle({ left: btn.offsetLeft, width: btn.offsetWidth })
+    const sync = () => setSliderStyle({ left: btn.offsetLeft, width: btn.offsetWidth })
+    sync()
     btn.scrollIntoView({ inline: 'nearest', block: 'nearest', behavior: 'smooth' })
-  }, [active, items, isAllActive])
+
+    // 언어 변경/폰트 로드로 탭 텍스트 길이가 바뀌면 슬라이더도 다시 맞춘다
+    const ro = new ResizeObserver(sync)
+    ro.observe(container)
+    buttonRefs.current.forEach(el => el && ro.observe(el))
+    return () => ro.disconnect()
+  }, [activeIdx, items, isAllActive, lang])
 
   return (
     <div className={`flex items-center gap-3 px-4 py-3 shrink-0 ${bgColor}`}>
